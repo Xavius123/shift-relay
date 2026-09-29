@@ -8,13 +8,10 @@ import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
 import { phaseLabels } from '@/features/logs/logTemplates';
 import type { ShiftLog } from '@/features/logs/types';
 
+import { formatDateTime } from '@/features/common/formatDateTime';
+
 import { issueCategories, issueTitle } from './issueCategories';
 import type { Issue } from './types';
-
-const dateTime = new Intl.DateTimeFormat(undefined, {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-});
 
 const eventVerbs = {
   raised: 'Raised',
@@ -125,7 +122,7 @@ export function IssueRow({
           <View key={`${line.type}-${line.at}`} style={styles.eventRow}>
             <Initials names={[line.actor]} />
             <Text variant="caption" tone="muted">
-              {`${eventVerbs[line.type]} by ${line.actor} · ${dateTime.format(new Date(line.at))}${line.photos > 0 ? ` · ${line.photos} ${line.photos === 1 ? 'photo' : 'photos'}` : ''}`}
+              {`${eventVerbs[line.type]} by ${line.actor} · ${formatDateTime(line.at)}${line.photos > 0 ? ` · ${line.photos} ${line.photos === 1 ? 'photo' : 'photos'}` : ''}`}
             </Text>
           </View>
         ))}

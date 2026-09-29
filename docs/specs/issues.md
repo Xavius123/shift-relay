@@ -17,4 +17,4 @@ An issue stores its category, details, source log ID or null, status, raiser, ti
 - A log modal shows issues linked to that log and lets a Shift Manager flag another issue on today's log.
 - When Avery receives Midday, every issue open at that point must be acknowledged. The receipt stores the issue IDs, actor, and time in `issueReview` and appends a check-history event. The mock API rejects a receipt that omits an open issue.
 
-The Issues screen has loading, empty, error with Retry, and stale-data states. Resolution failure leaves the issue open and shows an error. Every issue's status and actions are labeled in words. Issue evidence photos are Phase 5 work in [issue-photos.md](issue-photos.md); this spec describes the current issue flow.
+The Issues screen has loading, empty, error with Retry, and stale-data states. Resolution failure leaves the issue open and shows an error. Every issue's status and actions are labeled in words. Evidence and proof photos are covered in [issue-photos.md](issue-photos.md).

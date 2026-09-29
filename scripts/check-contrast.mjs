@@ -1,6 +1,6 @@
 // `npm run tokens` (step 2 of 2): checks every required color pair in every scheme × accent
 // against its WCAG 2.x minimum, and exits 1 if any pair fails. Pairs are listed in
-// docs/design-system/tokens.md.
+// docs/design-system.md.
 //
 // `node scripts/check-contrast.mjs --self-test` proves the check can fail: it makes
 // light textMuted too light (ink.300) and passes only if the check catches it.

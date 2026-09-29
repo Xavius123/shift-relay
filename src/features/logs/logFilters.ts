@@ -2,7 +2,7 @@ import { groupDailySheets, logStatusLabel, type DailySheet } from './dailySheet'
 import { phaseLabels, phaseOrder } from './logTemplates';
 import type { ShiftLog } from './types';
 
-export const dayFormat = new Intl.DateTimeFormat(undefined, {
+const dayFormat = new Intl.DateTimeFormat(undefined, {
   weekday: 'short',
   month: 'short',
   day: 'numeric',
@@ -33,7 +33,7 @@ function searchText(log: ShiftLog): string {
     .toLowerCase();
 }
 
-export function matchesSearch(log: ShiftLog, query: string): boolean {
+function matchesSearch(log: ShiftLog, query: string): boolean {
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if (terms.length === 0) return true;
   const text = searchText(log);

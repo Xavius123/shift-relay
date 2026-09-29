@@ -3,6 +3,7 @@ import { Image, Modal, Pressable, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, makeStyles, Text } from '@/design-system';
+import { formatDateTime } from '@/features/common/formatDateTime';
 import { Initials } from '@/features/common/Initials';
 
 import type { WalkPhoto } from './types';
@@ -12,8 +13,6 @@ export interface PreviewPhoto {
   /** Where it was taken, e.g. "Morning · Sep 28". */
   context: string;
 }
-
-const dateTime = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 
 /**
  * One shift photo at full size, with who took it and when; Previous and Next step through the set.
@@ -97,7 +96,7 @@ export function PhotoPreview({
                         {current.photo.actor}
                       </Text>
                       <Text variant="caption" tone="muted">
-                        {dateTime.format(new Date(current.photo.at))}
+                        {formatDateTime(current.photo.at)}
                       </Text>
                     </View>
                   </View>

@@ -2,138 +2,54 @@
 
 Status: built · 2026-09-26
 
-## Outcome
+Shift Managers can photograph an issue when they raise it and when they resolve it. The photos belong to the issue, every issue belongs to one shift log, and the Operations Manager reviews a day's logs, issues, and photos on a Manager-only **Daily Report** page. Storage follows [ADR 0009](../decisions/0009-issue-photos-in-the-mock-api.md): photo URIs live in the mock API's memory.
 
-Morning and Night Shift Managers can photograph an issue when they raise it and when they resolve it. The photos are part of the issue, and every issue is part of one shift log, so each day's logs, issues, and photos form one reviewable record. The Operations Manager reviews that record for a date on a Manager-only **Daily Report** page.
+## Rules
 
-## Decisions
-
-- Photos are **optional**, except a **Safety hazard** issue needs at least one evidence photo before it can be raised.
-- Resolution photos are always optional.
-- The Daily Report is a page, not a modal, and only a Manager account can see it. Shift forms stay modals.
-- Storage follows [ADR 0009](../decisions/0009-issue-photos-in-the-mock-api.md): photo URIs are kept in the mock API's memory with the rest of the session's data.
-
-## Data
-
-```ts
-export type IssuePhotoPurpose = 'evidence' | 'resolution';
-
-export interface IssuePhoto {
-  id: string;
-  uri: string;
-  purpose: IssuePhotoPurpose;
-  takenBy: string;
-  takenAt: string;
-}
-
-export interface Issue {
-  // existing fields
-  sourceLogId: string; // now required: every issue belongs to one log
-  photos: IssuePhoto[]; // oldest first
-  events: IssueEvent[]; // IssueEvent.type gains 'photoAdded'
-}
-
-export interface RaiseIssueInput {
-  // existing fields
-  sourceLogId: string | null; // null from the Issues tab: the API links the active log
-  photoUris: string[];
-}
-
-export interface ResolveIssueInput {
-  // existing fields
-  photoUris: string[];
-}
-```
-
-- `sourceLogId` becomes required on the stored issue. An issue raised from the Issues tab links to **today's active log**: the first of Morning → Midday → Night that is not signed off, or Night when all are signed. No issue exists outside a report.
-- Each photo appends a `photoAdded` event after the `raised` event, and before the `resolved` event when added at resolution.
-- Photos are never edited or removed after submission. A form can remove a photo before it submits.
-
-## Rules (enforced by the mock API, not only the screen)
+Enforced by the mock API as well as the screens.
 
 | Rule | Error |
 |------|-------|
 | Only a Shift Manager can raise, resolve, or attach photos | 409 `A Shift Manager must …` |
-| `safety` needs at least one evidence photo | 409 `Add a photo of the safety hazard.` |
+| A **Safety** issue needs at least one evidence photo | 409 `Add a photo of the safety hazard.` |
 | At most 5 photos per submission | 409 `Attach up to 5 photos.` |
-| Resolution photos only while the issue is open | Resolving is already once only |
+| Resolution photos are optional and only while the issue is open | Resolving is once only |
 
-The issue and its photos save in the same `raiseIssue` or `resolveIssue` call: both are stored, or neither is.
+- Every other category has optional photos.
+- The issue and its photos save in one `raiseIssue` or `resolveIssue` call: both are stored, or neither.
+- Photos can be removed in a form before it submits, never after.
+- `sourceLogId` is required on a stored issue. An issue raised from the Issues tab links to today's active log: the first of Morning → Midday → Night not yet signed, or Night when all are signed.
+- Each photo appends a `photoAdded` event after `raised` (or before `resolved`, when added at resolution).
+
+Types: [data-model.md](../data-model.md) (`IssuePhoto`, `Issue.photos`, and the `photoUris` inputs).
 
 ## Forms
 
-### Raise issue (inside the shift log modal and the Issues tab)
-
-- Category, details (as today), then a **Photos** section:
-  - `Take photo` (camera) and `Choose photos` (library, multi-select). Both use `expo-image-picker`, with the shared `usePhotoPicker` hook, which handles permission and errors.
-  - Thumbnails, 4 per row, each with a labeled 44×44 `Remove photo N` action.
-  - Helper text: `Optional` for most categories. For Safety: `Required: add at least one photo of the hazard.`
-- Validation joins `issueDraftError`: Safety without a photo shows the photo requirement next to the Photos section.
-- A failed submit keeps the category, details, and photos for retry.
-
-### Resolve issue
-
-- `Resolve` opens a small confirm step with an optional Photos section (`Proof of fix`) and the resolve action.
-
-### Shift log sign-off
-
-- Before signing, the modal summarizes what the signature covers: `2 issues · 3 photos raised from this log`.
+- **Raise issue** (shift log modal and Issues tab): category and details, then a **Photos** section with `Take photo` and `Choose photos` (both `expo-image-picker` through the shared `usePhotoPicker` hook, which handles permission and errors). Thumbnails have a labeled 44×44 `Remove photo N` action. Safety shows `Required: add at least one photo of the hazard.` A failed submit keeps the category, details, and photos.
+- **Resolve issue:** `Resolve` opens a confirm step with an optional `Proof of fix` photo section.
+- **Sign-off:** the modal summarizes what the signature covers, for example `2 issues · 3 photos raised from this log`.
 
 ## Daily Report (Manager only)
 
-Route: `/report/[date]`, inside the Dashboard stack. The screen itself checks for the Manager role.
+Route `/report/[date]`, inside the Dashboard stack, reached from `Today's report` on Elena's Dashboard. Shift Managers and signed-out users who open the URL get the access-required state. Read-only, in order:
 
-Entry points:
+1. Header: date, Daily Sheet status, and counts (`3 of 3 signed · 2 issues · 4 photos`).
+2. Morning, Midday handoff, and Night, each with sign-offs, final checks and history, note, Night's review of open issues (Midday), and the issues raised from that log with a photo strip (evidence, then resolution) and event timeline.
+3. Issues resolved that day but raised earlier, linking to their origin date's report.
 
-- Elena's Dashboard has a `Today's report` button.
-- Signed-out users and Shift Managers who open the URL see the existing Manager access-required state.
+Selecting a thumbnail opens a full-screen viewer with the image, purpose, who took it, when, and `Photo N of M`. It closes with Close, Escape, or the platform back action and returns focus to the thumbnail.
 
-Content, read-only, in this order:
+## States and accessibility
 
-1. Header: date, Daily Sheet status, counts (`3 of 3 signed · 2 issues · 4 photos`).
-2. For each of Morning, Midday handoff, Night:
-   - status and each sign-off (who, when; Midday shows Morning sent / Night received)
-   - required checks with the final state, and a collapsible check history
-   - note
-   - Midday: Night's review of open issues on receipt
-   - issues raised from this log: category, details, status, raised by and when, a photo strip (evidence, then resolution), and the event timeline
-3. Issues resolved that day that were raised on an earlier date: listed separately with a link to their origin date's report.
-
-Photo viewer: selecting a thumbnail opens a full-screen modal with the image, purpose, who took it, when, and `Photo N of M`. It closes with Close, Escape, or the platform back action.
+- Report: loading, not-found for a date outside the history, error with Retry, and stale data.
+- A photo that fails to load shows a `Photo unavailable` tile, never a broken image.
+- Camera permission denied: a message, plus `Open Settings` on iOS; the library still works.
+- Thumbnail labels state purpose, index, taker, and time. The Safety requirement is stated in text. Report sections use headings.
 
 ## Seed data
 
-- Add three generic, fictional placeholder images under `assets/seed-photos/`. They are illustrations or stock-free renders with no people, text, logos, or identifiable places.
-- Of the six seeded issues, four carry one evidence photo; two resolved ones also carry a resolution photo. The seeded Safety issue has a photo so seed data follows the rule.
-
-## States
-
-- Report: loading, not-found for a date outside the history (`No report for this date`), error with Retry, and stale data.
-- Photo that fails to load: a placeholder tile with `Photo unavailable` text, never a broken image.
-- Camera permission denied: message plus `Open Settings` on iOS ; library still available.
-
-## Accessibility
-
-- Each thumbnail's label states its purpose, index, taker, and time.
-- The Safety requirement is stated in text, never by color alone.
-- Report sections use headings; the photo viewer is announced as a modal and returns focus to the thumbnail.
-
-## Acceptance
-
-- Jordan raises an Equipment issue with no photo: it saves.
-- Jordan raises a Safety issue with no photo: blocked with the photo message, both in the form and by the API.
-- On web, a Playwright file chooser attaches a test image; the thumbnail appears; the issue saves with one evidence photo.
-- An issue raised from the Issues tab appears under today's active log in the report.
-- Avery resolves an issue with a proof photo; it appears after the evidence photo, with `photoAdded` and `resolved` events.
-- Elena opens a report from her Dashboard and sees all three logs, their checks, issues, and photos; the viewer opens and closes back to the thumbnail.
-- Jordan and signed-out users get the access-required state at `/report/[date]`.
-- iPhone: take a real photo while raising a Safety issue, then review it as Elena.
+Seed photos are the fictional drawings from `scripts/build-seed-photos.mjs` (`npm run seed-photos`), stored as `data:` URIs, with no real people, logos, or places. Of the six seeded issues, four carry an evidence photo and two resolved ones also carry a resolution photo, including the Safety issue.
 
 ## Non-goals
 
-- Real upload, cloud storage, or keeping photos after a restart
-- Annotating, cropping, or editing photos
-- Video
-- Photos on shift logs that aren't tied to an issue
-- Exporting or printing the report (the page layout keeps this possible later)
-- Shift Manager access to the report page
+Real upload or persistence after restart; editing, cropping, or annotating photos; video; photos not tied to an issue; exporting or printing the report; Shift Manager access to the report.

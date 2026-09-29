@@ -7,7 +7,7 @@ The app needs one installable, auditable token source for React Native and web. 
 
 ## Decision
 - Own the tokens in this repo: `tokens/` as W3C DTCG JSON, in primitive → semantic → accent tiers.
-- The palette uses `ink` neutrals, Care blue as the default accent, optional Plum and Sea glass accents, and fixed semantic status colors. Values and contrast results are in [tokens.md](../design-system/tokens.md).
+- The palette uses `ink` neutrals, Care blue as the default accent, optional Plum and Sea glass accents, and fixed semantic status colors. Values and contrast results are in [design-system.md](../design-system.md#palette).
 - Style Dictionary in this repo builds a typed React Native theme and a CSS file.
 - `scripts/check-contrast.mjs` fails the token build if any required pair falls below its WCAG minimum.
 - Components define their own shared types (`Size`, `ButtonVariant`, `StatusVariant`, …) in `src/design-system/types.ts`.

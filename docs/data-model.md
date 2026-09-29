@@ -53,16 +53,25 @@ export type IssueCategory = 'safety' | 'equipment' | 'security' | 'temperature' 
 export type IssueStatus = 'open' | 'resolved';
 
 export interface IssueEvent {
-  type: 'raised' | 'resolved';
+  type: 'raised' | 'resolved' | 'photoAdded';
   actor: string;
   at: string;
+}
+
+export interface IssuePhoto {
+  id: string;
+  uri: string;
+  purpose: 'evidence' | 'resolution';
+  takenBy: string;
+  takenAt: string;
 }
 
 export interface Issue {
   id: string; // "ISS-001"
   category: IssueCategory;
   details: string; // optional context for a preset; the description for "other"
-  sourceLogId: string | null; // null when raised from the Issues tab
+  sourceLogId: string; // every issue belongs to one log
+  photos: IssuePhoto[]; // oldest first
   status: IssueStatus;
   raisedBy: string;
   raisedAt: string;
@@ -73,6 +82,8 @@ export interface Issue {
 ```
 
 Issue types live in `src/features/issues/types.ts`; log types in `src/features/logs/types.ts`.
+
+`RaiseIssueInput.sourceLogId` is `string | null`: from the Issues tab it is `null` and the mock API links today's active log. `RaiseIssueInput` and `ResolveIssueInput` also take optional `photoUris`.
 
 **Invariants:**
 

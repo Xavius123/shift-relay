@@ -9,8 +9,8 @@ src/
   features/
     auth/           Demo accounts and session
     camera/         Shared photo picker
-    common/         Screen states and initials
-    dev/            Failure and latency controls
+    common/         Screen states, initials, and shared formatting
+    dev/            Failure simulation and mock latency
     issues/         Issue form, list, categories, permissions
     logs/           Mock API, seed, Daily Sheets, log modal, Shift Photos
     manager/        Weekly metrics and open issues on Elena's Dashboard
@@ -31,7 +31,7 @@ Routes live in `src/app/`; `@/*` maps to `src/*`. The intended dependency direct
 | --- | --- | --- |
 | Mock server data | RTK Query and `logsApi` | Logs, issues, mutations |
 | UI state | Redux slices | Demo account, theme, issue filter, unsaved shift-photo drafts |
-| Development controls | `devSlice` | Simulated failure and latency |
+| Development controls | `devSlice` | Simulated failure; mock latency (fixed) |
 | Short form state | Component state | Note, raise-issue draft, selected modal log |
 
 The mock base query serves fictional logs and issues from memory, with optional simulated latency or failure. Mutations update that source and RTK Query caches. A restart restores today's pending logs and 21 completed historical days. Screens derive Daily Sheet status, open issues, and manager metrics from query data rather than copying results into slices. Saved shift photos are local URIs; seeded historical images are generated drawings.

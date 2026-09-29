@@ -17,15 +17,11 @@ export const devSlice = createSlice({
     setSimulateFailure(state, action: PayloadAction<boolean>) {
       state.simulateFailure = action.payload;
     },
-    setLatencyMs(state, action: PayloadAction<number>) {
-      state.latencyMs = action.payload;
-    },
   },
   selectors: {
     selectSimulateFailure: (state) => state.simulateFailure,
-    selectLatencyMs: (state) => state.latencyMs,
   },
 });
 
-export const { setLatencyMs, setSimulateFailure } = devSlice.actions;
-export const { selectLatencyMs, selectSimulateFailure } = devSlice.selectors;
+export const { setSimulateFailure } = devSlice.actions;
+export const { selectSimulateFailure } = devSlice.selectors;

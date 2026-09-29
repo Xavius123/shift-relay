@@ -25,7 +25,7 @@ Read `src/design-system/types.ts`. Reuse the shared unions (`Size`, `ButtonVaria
 
 ## Step 3 — Build
 
-Create `src/design-system/components/{Name}/{Name}.tsx` and `index.ts`, following [components.md](../../../docs/design-system/components.md):
+Create `src/design-system/components/{Name}/{Name}.tsx` and `index.ts`, following the component rules in [design-system.md](../../../docs/design-system.md#components):
 
 - Props exactly as in the spec's table. Use discriminated unions where the spec makes a prop conditional.
 - Styles from `useTheme()` via `makeStyles(theme)`. No literals, no inline styles, no `style` prop.

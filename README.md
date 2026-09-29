@@ -54,15 +54,11 @@ There is no backend. A mock RTK Query API serves generated, fictional data from 
 | Doc | What it covers |
 |-----|----------------|
 | [DESIGN.md](DESIGN.md) | How screens use the design system: tokens, spacing, state patterns |
-| [docs/background.md](docs/background.md) | Product rationale and current technical direction |
-| [docs/requirements.md](docs/requirements.md) | Project goals and where each is met |
+| [docs/product.md](docs/product.md) | Goals, product flow, sign-in, technical direction, and scope |
 | [docs/setup.md](docs/setup.md) | Machine setup: Node, Playwright, Expo Go on the iPhone |
 | [docs/architecture.md](docs/architecture.md) | Folders, state, data flow, theming |
-| [docs/design-system/theming.md](docs/design-system/theming.md) | How tokens, the theme, and the Redux store fit together; how to use and change them |
-| [docs/design-system/tokens.md](docs/design-system/tokens.md) | The palette, contrast results, and the React Native output |
-| [docs/design-system/components.md](docs/design-system/components.md) | Component rules |
-| [docs/specs/](docs/specs/) | One spec per component, written before the code |
-| [docs/product.md](docs/product.md) | Current Shift Relay product flow and scope |
+| [docs/design-system.md](docs/design-system.md) | Tokens, palette, contrast gate, theme and Redux flow, component rules |
+| [docs/specs/](docs/specs/) | Component specs written before the code, plus feature specs |
 | [docs/data-model.md](docs/data-model.md) | Shift-log, issue, and photo types plus seed rules |
 | [docs/testing.md](docs/testing.md) | E2E tests, with unit tests planned |
 | [docs/decisions/](docs/decisions/) | Architecture decision records |

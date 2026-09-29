@@ -7,6 +7,7 @@ import { Badge, Button, Card, Input, makeStyles, Text, useTheme } from '@/design
 import { Initials } from '@/features/common/Initials';
 import { demoActor } from '@/features/auth/demoAccounts';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
+import { formatDateTime } from '@/features/common/formatDateTime';
 import { LoadingState, ScreenState } from '@/features/common/ScreenState';
 import { canManageIssues } from '@/features/issues/issuePermissions';
 import { issueTitle } from '@/features/issues/issueCategories';
@@ -36,11 +37,6 @@ import type { LogConfirmation } from './types';
 import { SheetCameraBar } from './SheetCameraBar';
 import { plural, WalkPhotos } from './WalkPhotos';
 import { selectWalkDrafts } from './walkDraftsSlice';
-
-const dateTime = new Intl.DateTimeFormat(undefined, {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-});
 
 export interface ShiftLogModalProps {
   logId: string | null;
@@ -345,7 +341,7 @@ function ShiftLogContent({
                       : signOff.actor}
                   </Text>
                   <Text variant="caption" tone="muted">
-                    {dateTime.format(new Date(signOff.at))}
+                    {formatDateTime(signOff.at)}
                   </Text>
                 </View>
               </View>
@@ -467,7 +463,7 @@ function ShiftLogContent({
                         {`${event.actor} ${event.checked ? 'checked' : 'unchecked'} ${event.label}`}
                       </Text>
                       <Text variant="caption" tone="muted">
-                        {dateTime.format(new Date(event.at))}
+                        {formatDateTime(event.at)}
                       </Text>
                     </View>
                   </View>

@@ -1,6 +1,6 @@
 # Design
 
-How screens in Shift Relay are put together with its design system. **Read this before building or changing any screen.** For how tokens are built see [tokens.md](docs/design-system/tokens.md); for component props see [components.md](docs/design-system/components.md) and the [specs](docs/specs/components/). This page does not repeat either.
+How screens in Shift Relay are put together with its design system. **Read this before building or changing any screen.** For how tokens are built and the component rules see [design-system.md](docs/design-system.md); for component props see the [specs](docs/specs/components/). This page does not repeat either.
 
 ## Principles
 
@@ -12,7 +12,7 @@ How screens in Shift Relay are put together with its design system. **Read this 
 
 ### Brand palette
 
-Care blue is the default theme, with Plum and Sea glass as the only alternatives. Coral urgent/error, gold warning, and green completion colors stay fixed across themes. See [the palette specification](docs/specs/palette.md).
+Care blue is the default theme, with Plum and Sea glass as the only alternatives. Coral urgent/error, gold warning, and green completion colors stay fixed across themes. Palette values are in [design-system.md](docs/design-system.md#palette).
 
 ## Which token for what
 
@@ -34,7 +34,7 @@ Care blue is the default theme, with Plum and Sea glass as the only alternatives
 
 Primitive colors (`ink.*`, `care.*`, …) are never used in screens.
 
-`textSubtle` is never placed on `bgSubtle` (fails contrast); use `textMuted` there. Contrast results are in [tokens.md](docs/design-system/tokens.md).
+`textSubtle` is never placed on `bgSubtle` (fails contrast); use `textMuted` there. The contrast gate is described in [design-system.md](docs/design-system.md#contrast-gate).
 
 ## Spacing
 

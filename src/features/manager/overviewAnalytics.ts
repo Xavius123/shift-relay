@@ -38,7 +38,7 @@ function daysBefore(today: Date, days: number): string {
 }
 
 /** Morning and Night need their one signature; Midday needs Jordan's send and Avery's receipt. */
-export function isLogComplete(log: ShiftLog): boolean {
+function isLogComplete(log: ShiftLog): boolean {
   if (log.status !== 'signedOff') return false;
   if (log.phase !== 'midday') return log.signOffs.length === 1;
   const [sent, received] = log.signOffs;

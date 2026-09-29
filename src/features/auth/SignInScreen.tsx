@@ -19,7 +19,7 @@ const accountIcons: Record<DemoAccountId, IconName> = {
   elena: 'briefcase-outline',
 };
 
-export const landingRoutes: Record<DemoAccountId, '/'> = {
+const landingRoutes: Record<DemoAccountId, '/'> = {
   jordan: '/',
   avery: '/',
   elena: '/',

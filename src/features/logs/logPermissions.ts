@@ -72,7 +72,7 @@ export function requiredSignerMessage(log: SignableLog): string {
  * The forms each Shift Manager can add photos to: the day shift opens (Morning) and hands off
  * (Midday); the night shift receives the handoff (Midday) and closes (Night).
  */
-export function photoPhasesFor(accountId: DemoAccountId | null): readonly ShiftLog['phase'][] {
+function photoPhasesFor(accountId: DemoAccountId | null): readonly ShiftLog['phase'][] {
   if (accountId === null) return [];
   const { shift } = demoAccounts[accountId];
   if (shift === 'morning') return ['morning', 'midday'];
