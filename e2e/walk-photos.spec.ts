@@ -71,11 +71,7 @@ test('walk flow: take photos, review them, save them, then close the shift', asy
   await page.getByTestId('photo-preview-close').click();
 
   // Close the shift: the checks, then sign off.
-  for (const name of [
-    'Night notes reviewed',
-    'Restock status checked',
-    'Carry-over priorities assigned',
-  ]) {
+  for (const name of ['Restock status checked']) {
     await page.getByRole('switch', { name }).click();
   }
   await page.getByTestId('sign-off-log').click();
@@ -159,22 +155,61 @@ test('Shift Photos shortcut adds photos to the current form, then opens it to re
   await expect(page.getByTestId('shift-log-modal').getByTestId('walk-draft')).toHaveCount(1);
 });
 
-test('narrow: the camera tab is open for a Shift Manager and opens the current form', async ({
+test('narrow: the camera tab is a direct camera for a Shift Manager and never dead', async ({
   page,
 }, info) => {
   test.skip(info.project.name !== 'phone', 'bottom tabs are for phones');
   // Avery is not up yet (Morning is unsigned), but Midday is his first open form.
   await openAs(page, '/', 'avery');
-  await expect(page.getByTestId('nav-camera')).toBeEnabled();
+  const chooser = page.waitForEvent('filechooser');
   await page.getByTestId('nav-camera').click();
+  await (await chooser).setFiles(fixture);
   const modal = page.getByTestId('shift-log-modal');
   await expect(modal).toContainText('Midday');
-  await expect(modal.getByTestId('walk-take-photo')).toBeVisible();
+  await expect(modal.getByTestId('walk-draft')).toHaveCount(1);
   await page.getByTestId('close-shift-log').click();
 
+  // Elena has no form to add to: the button still answers, and leads to Shift Photos.
   await openSignIn(page);
   await page.getByTestId('demo-sign-in-elena').click();
-  await expect(page.getByTestId('nav-camera')).toBeDisabled();
+  await expect(page.getByTestId('nav-camera')).toBeEnabled();
+  await page.getByTestId('nav-camera').click();
+  await expect(page.getByTestId('camera-notice')).toContainText('No open shift form');
+  await page.getByTestId('camera-notice-photos').click();
+  await expect(page.getByTestId('screen-walk-photos')).toBeVisible();
+});
+
+test('inside a shift sheet a pinned camera bar takes photos; closed forms have none', async ({
+  page,
+}) => {
+  await openAs(page, '/', 'jordan');
+  await page.getByTestId('shift-card-midday').click();
+  const modal = page.getByTestId('shift-log-modal');
+  await expect(modal.getByTestId('sheet-camera-bar')).toBeVisible();
+  const chooser = page.waitForEvent('filechooser');
+  await modal.getByTestId('sheet-choose-photos').click();
+  await (await chooser).setFiles(fixture);
+  await expect(modal.getByTestId('walk-draft')).toHaveCount(1);
+  await page.getByTestId('close-shift-log').click();
+
+  // Elena cannot add photos, so the bar is not there.
+  await openSignIn(page);
+  await page.getByTestId('demo-sign-in-elena').click();
+  await page.getByTestId('shift-card-midday').click();
+  await expect(page.getByTestId('sheet-camera-bar')).toHaveCount(0);
+});
+
+test('Dashboard shift cards: Take photo is on the forms a Shift Manager owns', async ({ page }) => {
+  await openAs(page, '/', 'jordan');
+  await expect(page.getByTestId('shift-card-morning-take-photo')).toBeVisible();
+  await expect(page.getByTestId('shift-card-midday-take-photo')).toBeVisible();
+  await expect(page.getByTestId('shift-card-night-take-photo')).toHaveCount(0);
+
+  // Choosing a photo opens the sheet with it waiting for review.
+  const chooser = page.waitForEvent('filechooser');
+  await page.getByTestId('shift-card-morning-take-photo').click();
+  await (await chooser).setFiles(fixture);
+  await expect(page.getByTestId('shift-log-modal').getByTestId('walk-draft')).toHaveCount(1);
 });
 
 test('each past day has one to three shift photos, including the mouse', async ({ page }) => {

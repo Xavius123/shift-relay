@@ -16,7 +16,8 @@ const pickerOptions: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], 
  */
 export function usePhotoPicker(onPicked: (uris: string[]) => void) {
   const [error, setError] = useState<PickerError | null>(null);
-  const [busy, setBusy] = useState(false);
+  // Which button is working, so only that one shows a spinner.
+  const [working, setWorking] = useState<'camera' | 'library' | null>(null);
 
   const handle = (result: ImagePicker.ImagePickerResult) => {
     if (!result.canceled) onPicked(result.assets.map((asset) => asset.uri));
@@ -24,7 +25,7 @@ export function usePhotoPicker(onPicked: (uris: string[]) => void) {
 
   const takePhoto = async () => {
     setError(null);
-    setBusy(true);
+    setWorking('camera');
     try {
       // Web opens a file input straight from the tap; there is no permission prompt to await.
       if (Platform.OS !== 'web') {
@@ -41,13 +42,13 @@ export function usePhotoPicker(onPicked: (uris: string[]) => void) {
     } catch {
       setError({ message: "Couldn't open the camera. Try again.", openSettings: false });
     } finally {
-      setBusy(false);
+      setWorking(null);
     }
   };
 
   const choosePhotos = async () => {
     setError(null);
-    setBusy(true);
+    setWorking('library');
     try {
       // The iOS system photo picker needs no library permission.
       handle(
@@ -60,9 +61,11 @@ export function usePhotoPicker(onPicked: (uris: string[]) => void) {
     } catch {
       setError({ message: "Couldn't open your photos. Try again.", openSettings: false });
     } finally {
-      setBusy(false);
+      setWorking(null);
     }
   };
 
-  return { takePhoto, choosePhotos, busy, error };
+  const clearError = () => setError(null);
+
+  return { takePhoto, choosePhotos, busy: working !== null, working, error, clearError };
 }

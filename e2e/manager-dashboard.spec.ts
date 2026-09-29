@@ -47,10 +47,7 @@ test("a sent handoff counts as awaiting Night on the manager's Dashboard", async
   await page.getByTestId('demo-sign-in-jordan').click();
   await expect(page.getByTestId('manager-week')).toHaveCount(0);
 
-  for (const labels of [
-    ['Night notes reviewed', 'Restock status checked', 'Carry-over priorities assigned'],
-    ['Completed work recorded', 'Remaining work reviewed', 'Night manager briefed'],
-  ]) {
+  for (const labels of [['Restock status checked'], ['Restock status handed off']]) {
     await page.getByTestId('next-action-button').click();
     for (const name of labels) {
       const check = page.getByRole('switch', { name });

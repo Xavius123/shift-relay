@@ -150,6 +150,7 @@ export function IssueRow({
               size="sm"
               disabled={picker.busy || resolutionPhotos.length >= 5}
               onPress={() => void picker.takePhoto()}
+              loading={picker.working === 'camera'}
               accessibilityLabel="Take a resolution photo"
             >
               Camera
@@ -159,6 +160,7 @@ export function IssueRow({
               size="sm"
               disabled={picker.busy || resolutionPhotos.length >= 5}
               onPress={() => void picker.choosePhotos()}
+              loading={picker.working === 'library'}
               accessibilityLabel="Choose resolution photos"
             >
               Choose photos

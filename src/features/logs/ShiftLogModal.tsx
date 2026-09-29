@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { AccessibilityInfo, Modal, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
@@ -33,6 +33,7 @@ import {
   useToggleLogCheckMutation,
 } from './logsApi';
 import type { LogConfirmation } from './types';
+import { SheetCameraBar } from './SheetCameraBar';
 import { plural, WalkPhotos } from './WalkPhotos';
 import { selectWalkDrafts } from './walkDraftsSlice';
 
@@ -130,6 +131,7 @@ function ShiftLogContent({
   const [historyOpen, setHistoryOpen] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const unsavedPhotos = useAppSelector((state) => selectWalkDrafts(state, logId)).length;
+  const scrollRef = useRef<ScrollView>(null);
 
   if (isLoading) {
     return (
@@ -193,7 +195,7 @@ function ShiftLogContent({
       return;
     }
     if (!awaitingSecond && !allChecked) {
-      setValidationError('Confirm all three items before signing off.');
+      setValidationError('Confirm the restock check before signing off.');
       return;
     }
     if (needsIssueReview && !issuesReviewed) return;
@@ -223,7 +225,7 @@ function ShiftLogContent({
         onClose={onClose}
         busy={busy}
       />
-      <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent}>
+      <ScrollView ref={scrollRef} style={styles.body} contentContainerStyle={styles.bodyContent}>
         <Text tone="muted">{phaseDescriptions[log.phase]}</Text>
 
         <WalkPhotos log={log} accountId={accountId} canEdit={canAddWalkPhotos(accountId, log)} />
@@ -475,6 +477,11 @@ function ShiftLogContent({
           </View>
         ) : null}
       </ScrollView>
+      <SheetCameraBar
+        log={log}
+        accountId={accountId}
+        onAdded={() => scrollRef.current?.scrollTo({ y: 0, animated: true })}
+      />
     </>
   );
 }

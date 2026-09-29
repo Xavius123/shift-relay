@@ -4,17 +4,17 @@ Status: built · updated 2026-09-28
 
 ## Daily Sheet
 
-Each operational date has one Morning, one Midday handoff, and one Night log. The Daily Sheet groups these records; it is derived, not stored. The previous 21 days are complete fictional history. Today starts with three pending logs. Each log has three required checks, an optional note, sign-offs, a check history, and Shift Photos.
+Each operational date has one Morning, one Midday handoff, and one Night log. The Daily Sheet groups these records; it is derived, not stored. The previous 21 days are complete fictional history. Today starts with three pending logs. Each log has one required check (restock), an optional note, sign-offs, a check history, and Shift Photos.
 
 The day runs in order. Jordan signs Morning, then sends the Midday handoff. Avery reviews the open issues, acknowledges them when receiving Midday, then signs Night. Elena can inspect logs and issues but cannot sign or raise them. The mock API enforces sequence and account permissions as well as the UI.
 
 | Phase | Required checks |
 | --- | --- |
-| Morning | Night notes reviewed · Restock status checked · Carry-over priorities assigned |
-| Midday | Completed work recorded · Remaining work reviewed · Incoming manager briefed |
-| Night | Work areas checked · Restock staged or shortage recorded · Morning priorities recorded |
+| Morning | Restock status checked |
+| Midday | Restock status handed off |
+| Night | Restock staged or shortage recorded |
 
-Checking a box saves immediately and records the actor and time. Sign-off requires all three checks. Midday needs Jordan's outgoing and Avery's receiving signatures. The Daily Sheet is complete only after all three logs have their required signatures. Open issues do not change this status.
+Checking a box saves immediately and records the actor and time. Sign-off requires the check. Midday needs Jordan's outgoing and Avery's receiving signatures. The Daily Sheet is complete only after all three logs have their required signatures. Open issues do not change this status.
 
 ## Screens and actions
 

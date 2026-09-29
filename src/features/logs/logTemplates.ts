@@ -19,20 +19,17 @@ export const phaseLabels = {
 } as const satisfies Record<ShiftPhase, string>;
 
 export const phaseDescriptions = {
-  morning: 'Review night notes, restock status, and carry-over priorities.',
+  morning: 'Check restock status before the shift opens.',
   midday: 'Send the Morning handoff and record Night receiving it.',
-  night: 'Check work areas, stage restock, and prepare morning priorities.',
+  night: 'Stage restock, or record any shortage, before the shift closes.',
 } as const satisfies Record<ShiftPhase, string>;
 
+/** One required check per shift, and it is about restock. */
 export const confirmationTemplates = {
-  morning: ['Night notes reviewed', 'Restock status checked', 'Carry-over priorities assigned'],
-  midday: ['Completed work recorded', 'Remaining work reviewed', 'Night manager briefed'],
-  night: [
-    'Work areas checked',
-    'Restock staged or shortage recorded',
-    'Morning priorities recorded',
-  ],
-} as const satisfies Record<ShiftPhase, readonly [string, string, string]>;
+  morning: ['Restock status checked'],
+  midday: ['Restock status handed off'],
+  night: ['Restock staged or shortage recorded'],
+} as const satisfies Record<ShiftPhase, readonly [string]>;
 
 export function localDateKey(date: Date): string {
   const year = date.getFullYear();

@@ -182,7 +182,7 @@ const mockBaseQuery: BaseQueryFn<MockQuery, unknown, LogsApiError> = async (quer
     }
 
     if (!log.confirmations.every((item) => item.confirmed)) {
-      return error(409, 'Confirm all three items before signing off.');
+      return error(409, 'Confirm the restock check before signing off.');
     }
 
     log.note = input.note.trim() || null;

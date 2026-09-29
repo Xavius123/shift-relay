@@ -8,21 +8,29 @@ export function NoPhotosTile({ testID }: { testID?: string }) {
   const styles = useStyles();
   const theme = useTheme();
   return (
-    <View
-      style={styles.tile}
-      accessible
-      accessibilityLabel="No photos from this shift"
-      {...(testID ? { testID } : {})}
-    >
-      <Ionicons name="images-outline" size={theme.fontSize['2xl']} color={theme.color.textSubtle} />
-      <Text variant="caption" tone="subtle">
-        No photos
-      </Text>
+    <View style={styles.row}>
+      <View
+        style={styles.tile}
+        accessible
+        accessibilityLabel="No photos from this shift"
+        {...(testID ? { testID } : {})}
+      >
+        <Ionicons
+          name="images-outline"
+          size={theme.fontSize['2xl']}
+          color={theme.color.textSubtle}
+        />
+        <Text variant="caption" tone="subtle">
+          No photos
+        </Text>
+      </View>
     </View>
   );
 }
 
 const useStyles = makeStyles((t) => ({
+  // Full width, so the tile sits in the middle of the card.
+  row: { width: '100%', alignItems: 'center' },
   tile: {
     width: t.spacing[16] + t.spacing[12],
     aspectRatio: 1,

@@ -33,7 +33,7 @@ export interface ShiftLog {
   operationalDate: string; // local YYYY-MM-DD
   phase: ShiftPhase;
   status: LogStatus;
-  confirmations: LogConfirmation[]; // exactly three
+  confirmations: LogConfirmation[]; // exactly one
   note: string | null;
   signOffs: LogSignOff[];
   checkEvents: CheckEvent[]; // oldest first
@@ -77,9 +77,9 @@ Issue types live in `src/features/issues/types.ts`; log types in `src/features/l
 **Invariants:**
 
 - Each operational date has exactly one log for each phase.
-- Each log has exactly three phase-specific confirmations.
+- Each log has exactly one phase-specific confirmation, about restock.
 - Checks toggle only on today's pending log, by the Shift Manager whose turn it is. Every toggle appends a `CheckEvent`.
-- Sign-off requires all three confirmations to be set on the stored log.
+- Sign-off requires the confirmation to be set on the stored log.
 - A signed Morning or Night log has all confirmations set and one sign-off.
 - A Midday log with the Morning Shift Manager's sign-off has `awaitingSecondSignOff`.
 - A signed Midday log has all confirmations set, followed by the Night Shift Manager's receipt sign-off.

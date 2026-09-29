@@ -84,7 +84,9 @@ export function WalkPhotos({
     saved.length === 0
       ? canEdit
         ? 'Take photos during your shift, review them, then save them to this log.'
-        : 'No photos from this shift.'
+        : log.status === 'signedOff'
+          ? 'No photos from this shift.'
+          : 'No photos yet. The Shift Managers on this form add them.'
       : `${plural(saved.length, 'photo')} saved to this log`;
 
   return (
@@ -100,6 +102,7 @@ export function WalkPhotos({
         <View style={styles.actions}>
           <Button
             onPress={() => void picker.takePhoto()}
+            loading={picker.working === 'camera'}
             disabled={busy}
             accessibilityLabel="Take a shift photo"
             testID="walk-take-photo"
@@ -109,6 +112,7 @@ export function WalkPhotos({
           <Button
             variant="secondary"
             onPress={() => void picker.choosePhotos()}
+            loading={picker.working === 'library'}
             disabled={busy}
             accessibilityLabel="Choose shift photos from library"
             testID="walk-choose-photos"

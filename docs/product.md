@@ -8,7 +8,7 @@ Jordan is the Morning Shift Manager, Avery is the Night Shift Manager, and Elena
 
 1. **Dashboard:** today's Morning, Midday, and Night Daily Sheet. Jordan and Avery see their next action. Elena sees this week's metrics and all open issues.
 2. **Logs:** today and 21 complete prior operational days, grouped by date. A log opens in a shared modal over the current section.
-3. **Shift log:** three required checks with history, an optional note, sign-offs, linked issues, and Shift Photos. Jordan signs Morning and sends Midday; Avery reviews open issues, receives Midday, and signs Night.
+3. **Shift log:** one required restock check with history, an optional note, sign-offs, linked issues, and Shift Photos. Jordan signs Morning and sends Midday; Avery reviews open issues, receives Midday, and signs Night.
 4. **Issues:** Shift Managers can flag and resolve multiple high-priority issues per log or flag an issue from the Issues tab. Open issues remain visible until resolved; resolved issues remain in history.
 5. **Shift Photos:** each shift can save reviewed photos. Every account can view saved photos; only Elena can delete one. Historical examples are generated drawings, including a mouse on duty.
 6. **Design system:** token-driven themes, reusable components, and a failure simulator for development.

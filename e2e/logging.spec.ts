@@ -36,12 +36,8 @@ test('Daily Sheet runs Morning, handoff, and Night in modals, with a flagged iss
   await page.getByTestId('next-action-button').click();
   await expect(modal).toBeVisible();
   await page.getByTestId('sign-off-log').click();
-  await expect(page.getByTestId('log-validation-error')).toContainText('Confirm all three');
-  await checkAll(page, [
-    'Night notes reviewed',
-    'Restock status checked',
-    'Carry-over priorities assigned',
-  ]);
+  await expect(page.getByTestId('log-validation-error')).toContainText('Confirm the restock check');
+  await checkAll(page, ['Restock status checked']);
   await page.getByTestId('sign-off-log').click();
   await expect(modal).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
@@ -51,11 +47,7 @@ test('Daily Sheet runs Morning, handoff, and Night in modals, with a flagged iss
   // Midday: Jordan flags an issue on the handoff, then sends it.
   await expect(page.getByTestId('next-action-button')).toHaveText('Send handoff to Night');
   await page.getByTestId('next-action-button').click();
-  await checkAll(page, [
-    'Completed work recorded',
-    'Remaining work reviewed',
-    'Night manager briefed',
-  ]);
+  await checkAll(page, ['Restock status handed off']);
   await page.getByTestId('log-note-field').fill('Midday turnover is ready for review.');
   await page.getByTestId('log-flag-issue').click();
   await page.getByTestId('issue-category-safety').click();
@@ -102,11 +94,7 @@ test('Daily Sheet runs Morning, handoff, and Night in modals, with a flagged iss
 
   await expect(page.getByTestId('next-action-button')).toHaveText('Complete Night');
   await page.getByTestId('next-action-button').click();
-  await checkAll(page, [
-    'Work areas checked',
-    'Restock staged or shortage recorded',
-    'Morning priorities recorded',
-  ]);
+  await checkAll(page, ['Restock staged or shortage recorded']);
   await page.getByTestId('sign-off-log').click();
   await expect(modal).toHaveCount(0);
   await expect(page.getByTestId('daily-sheet-status')).toHaveText('Complete');
@@ -159,7 +147,7 @@ test('the sequence and read-only views are enforced per account', async ({ page 
 
   await page.getByTestId('shift-card-morning').click();
   await expect(page.getByTestId('sign-off-log')).toHaveAttribute('aria-disabled', 'true');
-  await expect(page.getByRole('switch', { name: 'Night notes reviewed' })).toHaveAttribute(
+  await expect(page.getByRole('switch', { name: 'Restock status checked' })).toHaveAttribute(
     'aria-disabled',
     'true',
   );
@@ -250,7 +238,7 @@ test("required checks are switches on today's log, and every toggle is logged", 
   await page.getByTestId('demo-sign-in-jordan').click();
   await page.getByTestId('next-action-button').click();
 
-  const check = page.getByRole('switch', { name: 'Night notes reviewed' });
+  const check = page.getByRole('switch', { name: 'Restock status checked' });
   await expect(check).toHaveAttribute('aria-checked', 'false');
   await check.click();
   await expect(check).toHaveAttribute('aria-checked', 'true');
@@ -261,8 +249,8 @@ test("required checks are switches on today's log, and every toggle is logged", 
   await expect(page.getByTestId('check-events')).toHaveCount(0);
   await page.getByTestId('check-history-toggle').click();
   const events = page.getByTestId('check-events');
-  await expect(events).toContainText('Jordan Lee checked Night notes reviewed');
-  await expect(events).toContainText('Jordan Lee unchecked Night notes reviewed');
+  await expect(events).toContainText('Jordan Lee checked Restock status checked');
+  await expect(events).toContainText('Jordan Lee unchecked Restock status checked');
 
   // Toggles are saved, not a local draft: they survive closing the modal.
   await check.click();

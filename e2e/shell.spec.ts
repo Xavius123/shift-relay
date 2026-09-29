@@ -89,7 +89,7 @@ test('header theme toggle switches to dark everywhere', async ({ page }) => {
     .toBe(DARK_BG);
 });
 
-test('narrow: no Sign in tab, and the center camera opens the pending shift sheet', async ({
+test('narrow: no Sign in tab, and the center camera takes a photo for the open shift', async ({
   page,
 }, info) => {
   test.skip(info.project.name !== 'phone', 'bottom tabs are for phones');
@@ -107,6 +107,11 @@ test('narrow: no Sign in tab, and the center camera opens the pending shift shee
   const xs = boxes.map((box) => (box ? box.x : -1));
   expect(xs).toEqual([...xs].sort((a, b) => a - b));
 
+  // The camera tab goes straight to the picker (a file input on web), then opens the form.
+  const chooser = page.waitForEvent('filechooser');
   await camera.click();
-  await expect(page.getByTestId('shift-log-modal')).toBeVisible();
+  await (await chooser).setFiles('assets/favicon-shift-relay.png');
+  const modal = page.getByTestId('shift-log-modal');
+  await expect(modal).toBeVisible();
+  await expect(modal.getByTestId('walk-draft')).toHaveCount(1);
 });

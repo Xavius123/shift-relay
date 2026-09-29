@@ -40,6 +40,7 @@ export function AddPhotosCard({ onOpenLog }: { onOpenLog: (logId: string) => voi
       <View style={styles.actions}>
         <Button
           onPress={() => void picker.takePhoto()}
+          loading={picker.working === 'camera'}
           disabled={picker.busy}
           accessibilityLabel={`Take a photo for ${phaseLabels[target.phase]}`}
           testID="add-photos-take"
@@ -49,6 +50,7 @@ export function AddPhotosCard({ onOpenLog }: { onOpenLog: (logId: string) => voi
         <Button
           variant="secondary"
           onPress={() => void picker.choosePhotos()}
+          loading={picker.working === 'library'}
           disabled={picker.busy}
           accessibilityLabel={`Choose photos for ${phaseLabels[target.phase]}`}
           testID="add-photos-choose"
