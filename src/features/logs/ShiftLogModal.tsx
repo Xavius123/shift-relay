@@ -4,6 +4,7 @@ import { AccessibilityInfo, Modal, Pressable, ScrollView, View } from 'react-nat
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { Badge, Button, Card, Input, makeStyles, Text, useTheme } from '@/design-system';
+import { CloseButton } from '@/features/common/CloseButton';
 import { Initials } from '@/features/common/Initials';
 import { demoActor } from '@/features/auth/demoAccounts';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
@@ -516,15 +517,12 @@ function ModalHeader({
           </View>
         ) : null}
       </View>
-      <Button
-        variant="ghost"
+      <CloseButton
         onPress={onClose}
         disabled={busy}
         accessibilityLabel={`Close ${title}`}
         testID="close-shift-log"
-      >
-        Close
-      </Button>
+      />
     </View>
   );
 }

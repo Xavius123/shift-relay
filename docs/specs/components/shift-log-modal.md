@@ -25,7 +25,7 @@ interface ShiftLogModalProps {
 
 - React Native platform `Modal` with a semantic overlay scrim.
 - Centered surface on wide screens and a safe-area-contained near-full-screen surface on phones.
-- Header contains phase/date, written status, and a 44×44 Close action.
+- Header contains phase/date, written status, and a 44×44 close (X) button.
 - Body scrolls independently and contains Shift Photos, confirmations and check history, linked issues, note, sign-off metadata, and action.
 - One primary form action at the bottom; all other actions are outline or ghost.
 
@@ -41,8 +41,8 @@ interface ShiftLogModalProps {
 ## States
 
 - Loading: shared loading state inside the modal surface.
-- Not found: message and Close action.
-- Error: message with Retry and Close.
+- Not found: message and the close (X) button.
+- Error: message with Retry and the close (X) button.
 - Editable: only for the account owning the current sequential action.
 - Read-only: signed record, non-owning Shift Manager, or Operations Manager.
 - Mutation error: form and draft remain visible for retry.
@@ -50,7 +50,7 @@ interface ShiftLogModalProps {
 ## Accessibility
 
 - Modal content is announced as modal and traps focus on web.
-- Close has a full accessible label.
+- The close (X) button has a full accessible label.
 - Focus returns to the opening card/action after close.
 - Status, ownership, and validation are stated in text and never rely on color.
 - All existing checkbox semantics and 44×44 targets remain intact.

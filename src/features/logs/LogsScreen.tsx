@@ -383,14 +383,19 @@ function LogRow({
           </Text>
         </View>
         {wide ? null : (
+          // Narrow rows have no room for names: initials only, or a note while nobody has signed.
           <View style={styles.signers}>
-            <Initials
-              names={log.signOffs.map((signOff) => signOff.actor)}
-              testID={`log-row-${log.id}-initials`}
-            />
-            <Text variant="caption" tone="muted">
-              {signedByLabel(log)}
-            </Text>
+            {log.signOffs.length > 0 ? (
+              <Initials
+                names={log.signOffs.map((signOff) => signOff.actor)}
+                label={signedByLabel(log)}
+                testID={`log-row-${log.id}-initials`}
+              />
+            ) : (
+              <Text variant="caption" tone="muted">
+                {signedByLabel(log)}
+              </Text>
+            )}
           </View>
         )}
       </View>

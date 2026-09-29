@@ -14,6 +14,7 @@ import {
 import { Button, Card, makeStyles, Text, useTheme } from '@/design-system';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
 import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
+import { CloseButton } from '@/features/common/CloseButton';
 import { photoLogs } from '@/features/logs/logPermissions';
 import { phaseLabels } from '@/features/logs/logTemplates';
 import { useAddWalkPhotosMutation } from '@/features/logs/logsApi';
@@ -170,15 +171,24 @@ export function ShiftCaptureButton() {
       >
         <View style={styles.scrim}>
           <Card testID="camera-notice">
-            <Text variant="title">
-              {saved
-                ? 'Photo saved'
-                : picker.error
-                  ? "Can't open the camera"
-                  : saveError
-                    ? "Couldn't save the photo"
-                    : 'No open shift form'}
-            </Text>
+            <View style={styles.noticeHeader}>
+              <View style={styles.noticeTitle}>
+                <Text variant="title">
+                  {saved
+                    ? 'Photo saved'
+                    : picker.error
+                      ? "Can't open the camera"
+                      : saveError
+                        ? "Couldn't save the photo"
+                        : 'No open shift form'}
+                </Text>
+              </View>
+              <CloseButton
+                onPress={closeNotice}
+                accessibilityLabel="Close"
+                testID="camera-notice-close"
+              />
+            </View>
             <Text tone="muted">
               {saved
                 ? `${saved.count === 1 ? 'Saved' : `${saved.count} photos saved`} to the ${phaseLabels[saved.phase]} shift.`
@@ -231,14 +241,6 @@ export function ShiftCaptureButton() {
                 Shift Photos
               </Button>
             )}
-            <Button
-              variant="ghost"
-              onPress={closeNotice}
-              accessibilityLabel={saved ? 'Done' : 'Close'}
-              testID="camera-notice-close"
-            >
-              {saved ? 'Done' : 'Close'}
-            </Button>
           </Card>
         </View>
       </Modal>
@@ -258,6 +260,8 @@ const useStyles = makeStyles((t) => ({
     boxShadow: t.shadow.md,
   },
   pressed: { opacity: t.opacity.pressed },
+  noticeHeader: { flexDirection: 'row', alignItems: 'center', gap: t.spacing[3] },
+  noticeTitle: { flex: 1 },
   scrim: {
     flex: 1,
     justifyContent: 'center',

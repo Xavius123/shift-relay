@@ -37,7 +37,7 @@ Route `/report/[date]`, inside the Dashboard stack, reached from `Today's report
 2. Morning, Midday handoff, and Night, each with sign-offs, final checks and history, note, Night's review of open issues (Midday), and the issues raised from that log with a photo strip (evidence, then resolution) and event timeline.
 3. Issues resolved that day but raised earlier, linking to their origin date's report.
 
-Selecting a thumbnail opens a full-screen viewer with the image, purpose, who took it, when, and `Photo N of M`. It closes with Close, Escape, or the platform back action and returns focus to the thumbnail.
+Selecting a thumbnail opens a full-screen viewer with the image, purpose, who took it, when, and `Photo N of M`. It closes with the X button, Escape, or the platform back action and returns focus to the thumbnail.
 
 ## States and accessibility
 

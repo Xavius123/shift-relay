@@ -3,6 +3,7 @@ import { Image, Modal, Pressable, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, makeStyles, Text } from '@/design-system';
+import { CloseButton } from '@/features/common/CloseButton';
 import { formatDateTime } from '@/features/common/formatDateTime';
 import { Initials } from '@/features/common/Initials';
 
@@ -67,14 +68,11 @@ export function PhotoPreview({
                       {`Photo ${index + 1} of ${photos.length}`}
                     </Text>
                   </View>
-                  <Button
-                    variant="ghost"
+                  <CloseButton
                     onPress={onClose}
                     accessibilityLabel="Close photo"
                     testID="photo-preview-close"
-                  >
-                    Close
-                  </Button>
+                  />
                 </View>
                 <Image
                   source={{ uri: current.photo.uri }}

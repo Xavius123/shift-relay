@@ -1,6 +1,6 @@
 # Three-phase shift logging
 
-Status: built · updated 2026-09-28
+Status: built · updated 2026-09-29
 
 ## Daily Sheet
 
@@ -22,10 +22,10 @@ Checking a box saves immediately and records the actor and time. Sign-off requir
 - Logs groups Daily Sheets by date and opens a log in the shared modal without changing sections.
 - The modal shows checks and their history, issue review and linked issues, sign-off metadata, note, and Shift Photos. It is read-only when the account cannot edit the log.
 - The Issues tab lets Shift Managers raise and resolve issues across shifts. See [issues.md](issues.md).
-- Photos can be added two ways. The center camera tab (phones) asks which of the account's open forms the photo is for (Jordan: Morning or Midday; Avery: Midday or Night; Elena: any of the three), opens the camera, and saves the photo straight to that form, then shows a confirmation with Take another photo (for the same form), Open shift, and Done; it does not open the sheet. It always asks, even with one open form, and says so when none is open. The camera bar pinned to the bottom of a shift sheet is one tap from the sign-off button (Take photo and Library on a phone; a single Upload photos on a desktop browser, which has no camera, so the photos are tagged Uploaded); its photos land as drafts at the top of the sheet to review and save. Jordan can add to Morning and Midday and Avery to Midday and Night, and Elena to any of them, while the form is not signed off and it is today's.
+- Photos can be added two ways. The center camera tab (phones) asks which of the account's open forms the photo is for (Jordan: Morning or Midday; Avery: Midday or Night; Elena: any of the three), opens the camera, and saves the photo straight to that form, then shows a confirmation with Take another photo (for the same form), and Open shift, and closes with its X; it does not open the sheet. It always asks, even with one open form, and says so when none is open. The camera bar pinned to the bottom of a shift sheet is one tap from the sign-off button (Take photo and Library on a phone; a single Upload photos on a desktop browser, which has no camera, so the photos are tagged Uploaded); its photos land as drafts at the top of the sheet to review and save. Jordan can add to Morning and Midday and Avery to Midday and Night, and Elena to any of them, while the form is not signed off and it is today's.
 - Shift Photos shows saved photos by day and phase. See [the data model](../data-model.md) for draft and deletion rules.
 
-The modal has a Close action, uses safe areas, and returns to its originating screen. Sign-off is blocked while photo drafts remain unsaved. Closing the form discards its local note draft; saved checks and shift photos remain in the mock API.
+The modal has a close (X) button, uses safe areas, and returns to its originating screen. Sign-off is blocked while photo drafts remain unsaved. Closing the form discards its local note draft; saved checks and shift photos remain in the mock API.
 
 ## Data and state
 

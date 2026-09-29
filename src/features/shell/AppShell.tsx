@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { makeStyles, Text, useTheme } from '@/design-system';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
 import { SignInGate } from '@/features/auth/SignInGate';
+import { CloseButton } from '@/features/common/CloseButton';
 import { useOpenIssueCount } from '@/features/issues/useOpenIssueCount';
 import { useAppSelector } from '@/store/hooks';
 
@@ -161,15 +162,11 @@ export function AppShell() {
                       Navigation
                     </Text>
                   </View>
-                  <Pressable
+                  <CloseButton
                     onPress={() => setMenuOpen(false)}
-                    accessibilityRole="button"
                     accessibilityLabel="Close navigation menu"
                     testID="menu-close"
-                    style={({ pressed }) => [styles.closeButton, pressed && styles.pressed]}
-                  >
-                    <Ionicons name="close" size={theme.fontSize['2xl']} color={theme.color.text} />
-                  </Pressable>
+                  />
                 </View>
                 <SessionSummary testIDPrefix="drawer" />
                 {navItems.map((item) => (
@@ -268,12 +265,4 @@ const useStyles = makeStyles((t) => ({
     paddingBottom: t.spacing[4],
   },
   drawerTitle: { flex: 1, gap: t.spacing[1] },
-  closeButton: {
-    minWidth: t.size.touchTarget,
-    minHeight: t.size.touchTarget,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: t.radius.full,
-  },
-  pressed: { backgroundColor: t.color.bgSubtle },
 }));
