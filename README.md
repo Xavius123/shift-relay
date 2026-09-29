@@ -38,7 +38,7 @@ Everyone who signs, checks, raises, resolves, or photographs something shows as 
 ## Demo script
 
 1. Sign in as **Jordan**. On the Dashboard, tap **Complete Morning**.
-2. Take a photo, any of these ways: the center **camera** tab on a phone (it opens the camera, then the form), **Take photo** on a Dashboard shift card, or **Take photo** / **Choose from library** at the top or the bottom of the sheet (camera on iPhone, file picker on web). Review the photos, remove any you don't want, and **Save**. Signing off is blocked while photos are unsaved; once saved, Jordan can't delete them.
+2. Take a photo, either way: the center **camera** tab on a phone (it opens the camera, then the form), or **Take photo** / **Library** in the bar pinned to the bottom of the sheet (camera on iPhone, file picker on web). Review the photos, remove any you don't want, and **Save**. Signing off is blocked while photos are unsaved; once saved, Jordan can't delete them.
 3. Tick the restock check and sign off. Open the Midday handoff, flag an issue, and send it.
 4. Switch to **Avery**. Review the open issue, receive the handoff, and complete Night.
 5. Switch to **Elena**. Her Dashboard shows this week's numbers and every open issue. **Shift Photos** shows today's Morning photo; tap it to preview, and delete it if it shouldn't be on the record. The sheets are read-only for her.

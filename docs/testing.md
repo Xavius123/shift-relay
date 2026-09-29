@@ -19,7 +19,7 @@ Flows, all kept green:
 | `e2e/theme.spec.ts` | Dark toggle changes the background |
 | `e2e/design-system.spec.ts` | Every component `testID` is visible |
 | `e2e/logging.spec.ts` | Sign in → choose shift → sign off with issue → complete issue; verify 21-day history |
-| `e2e/sign-in.spec.ts`, `e2e/issues.spec.ts`, `e2e/walk-photos.spec.ts` | Demo sign-in (every sign-in lands on the Dashboard), issue lifecycle and trail, Shift Photos, and every camera path: the camera tab, the sheet's pinned bar, Dashboard cards, and the Shift Photos shortcut |
+| `e2e/sign-in.spec.ts`, `e2e/issues.spec.ts`, `e2e/walk-photos.spec.ts` | Demo sign-in (every sign-in lands on the Dashboard), issue lifecycle and trail, Shift Photos, and both camera paths: the center camera tab and the sheet's pinned bar |
 | `e2e/shell.spec.ts`, `e2e/initials.spec.ts`, `e2e/manager-dashboard.spec.ts` | Responsive shell, initials attribution, and the manager Dashboard |
 | `e2e/errors.spec.ts` | Simulated failure → raise-issue error shown, form kept, nothing added |
 
