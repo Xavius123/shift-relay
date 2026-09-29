@@ -64,7 +64,7 @@ All text goes through `Text`. No bare RN `<Text>` in features.
 
 ## App shell
 
-Four shared sections: Dashboard, Logs, Design system, and Sign in ([ADR 0008](docs/decisions/0008-responsive-app-shell.md)). A fifth Overview section appears only for the active Manager demo account.
+Six sections: Dashboard, Logs, Issues, Shift Photos, Design system, and Sign in ([ADR 0008](docs/decisions/0008-responsive-app-shell.md), amended 2026-09-29). Design system and Sign in live only in the side nav and the phone drawer. The phone bottom tabs are Logs, Shift Photos, a center camera button, Issues, and Dashboard.
 
 ```
 Wide (≥ breakpoint.wide, 768)                 Narrow (phones)
@@ -73,9 +73,9 @@ Wide (≥ breakpoint.wide, 768)                 Narrow (phones)
 │          ├────────────────────────────┤     ├──────────────────────┤
 │ ⌂ Dashboard│                           │     │                      │
 │ ▤ Logs    │  Content, max size.content │     │  Content             │
-│ 🎨 Design │  (880), centered           │     │                      │
-│          │                            │     ├──────────────────────┤
-│ footer   │                            │     │  ⌂    💡    🎨        │  bottom tabs
+│ ⚠ Issues  │  (880), centered           │     │                      │
+│ ▣ Photos  │                            │     ├──────────────────────┤
+│ 🎨 Design │                            │     │ ▤  ▣  [📷]  ⚠  ⌂     │  bottom tabs
 └──────────┴────────────────────────────┘     └──────────────────────┘
  side nav: size.sidebar (240), surface + border
 ```
@@ -83,6 +83,7 @@ Wide (≥ breakpoint.wide, 768)                 Narrow (phones)
 - On a narrow section-root screen, the header-leading hamburger opens the side navigation as a modal drawer. The drawer lists the same available sections as the wide side nav and closes after navigation, tapping the scrim, or pressing Escape on web.
 - The narrow drawer covers the content instead of resizing it. It uses `color.overlay` for the scrim and a `color.surface` panel no wider than `size.sidebar`. Opening it does not change the current route.
 - Narrow screens retain the persistent bottom tabs for quick switching; the hamburger provides access to the fuller labeled side navigation.
+- The center bottom-tab button is a camera, not a section. For a Shift Manager it opens the camera for their first open form of the day (Jordan: Morning, then Midday; Avery: Midday, then Night), then opens that form with the photo waiting to review and save. With no open form it explains why and links to Shift Photos; it is never a disabled dead end.
 - The current section is marked in words and state, not color alone: the wide side nav and narrow drawer fill the current row with `bgSubtle`; the bottom tabs swap to the filled icon; all presentations set `aria-selected`.
 - The wide sidebar and narrow drawer share a compact Shift Relay mark, product name, and restrained workspace labeling; navigation remains the visual priority.
 - Detail screens keep the platform Back control in the header instead of showing the hamburger.

@@ -14,11 +14,20 @@ A small React Native app for handing work from one field shift to the next. It i
 | Design system | An original palette as W3C DTCG tokens → Style Dictionary → typed React Native theme + CSS, light/dark, contrast checked at build time |
 | AI in development | Specs first, Claude Code skills and rules in the repo, a verify gate on every change, and an honest log in [AI.md](AI.md) |
 
+## Built with AI
+
+This app was built with a combination of **Cursor**, **Claude** (Opus and Sonnet), and **Codex** (Sol). What keeps that work reviewable rather than magic:
+
+- **Rules in the repo.** [AGENTS.md](AGENTS.md) is the one rule file every tool reads (strict types, tokens only, typed hooks, states on every screen); [CLAUDE.md](CLAUDE.md) imports it.
+- **Spec before code.** Components and features start as a spec in [docs/specs/](docs/specs/).
+- **A gate, not trust.** Typecheck, lint, format, a contrast check on the palette, and Playwright E2E run against AI output the same way they run against hand-written code.
+- **An honest log.** [AI.md](AI.md) records what AI did, what had to be corrected, and where it was wrong, including the mistakes the gate caught.
+
 ## Screens
 
 1. **Sign in**: three one-tap demo accounts: Jordan Lee (Morning Shift Manager), Avery Smith (Night Shift Manager), and Elena Ruiz (Operations Manager)
 2. **Dashboard**: today's Daily Sheet (Morning → Midday handoff → Night), the account's next action, and open high-priority issues. For Elena, this week's handoff and issue numbers sit above the Daily Sheet and the full open-issue list below it
-3. **Shift sheet** (a modal over Dashboard or Logs): Shift Photos at the top (take or choose, review, save), one required restock check, issues, note, and sign-off
+3. **Shift sheet** (a modal over Dashboard or Logs): Shift Photos at the top (take or choose, review, save) with a camera bar pinned to the bottom, one required restock check, issues, note, and sign-off
 4. **Logs**: today and 21 complete operational days, grouped by date, with search and sorting
 5. **Issues**: flag, resolve, and filter high-priority issues
 6. **Shift Photos** (every account): each day's saved photos, newest first, split into Morning, Midday, and Night, with a placeholder where a shift has none (past days have one to three fictional drawings, including a mouse on duty); tap one to view it full size, or open the sheet it came from. Only Elena can delete a saved photo
@@ -29,7 +38,7 @@ Everyone who signs, checks, raises, resolves, or photographs something shows as 
 ## Demo script
 
 1. Sign in as **Jordan**. On the Dashboard, tap **Complete Morning**.
-2. At the top of the sheet, **Take photo** (camera on iPhone, file picker on web) or **Choose from library**. Review the photos, remove any you don't want, and **Save**. Signing off is blocked while photos are unsaved; once saved, Jordan can't delete them.
+2. Take a photo, any of these ways: the center **camera** tab on a phone (it opens the camera, then the form), **Take photo** on a Dashboard shift card, or **Take photo** / **Choose from library** at the top or the bottom of the sheet (camera on iPhone, file picker on web). Review the photos, remove any you don't want, and **Save**. Signing off is blocked while photos are unsaved; once saved, Jordan can't delete them.
 3. Tick the restock check and sign off. Open the Midday handoff, flag an issue, and send it.
 4. Switch to **Avery**. Review the open issue, receive the handoff, and complete Night.
 5. Switch to **Elena**. Her Dashboard shows this week's numbers and every open issue. **Shift Photos** shows today's Morning photo; tap it to preview, and delete it if it shouldn't be on the record. The sheets are read-only for her.

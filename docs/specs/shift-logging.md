@@ -22,6 +22,7 @@ Checking a box saves immediately and records the actor and time. Sign-off requir
 - Logs groups Daily Sheets by date and opens a log in the shared modal without changing sections.
 - The modal shows checks and their history, issue review and linked issues, sign-off metadata, note, and Shift Photos. It is read-only when the account cannot edit the log.
 - The Issues tab lets Shift Managers raise and resolve issues across shifts. See [issues.md](issues.md).
+- Photos can be added from four places: the center camera tab (phones), the Take photo button on a Dashboard shift card, the Add photos card on Shift Photos, and inside the shift sheet (its top section and a bar pinned to the bottom). Jordan can add to Morning and Midday and Avery to Midday and Night, while the form is not signed off and it is today's. Elena cannot add photos.
 - Shift Photos shows saved photos by day and phase. See [the data model](../data-model.md) for draft and deletion rules.
 
 The modal has a Close action, uses safe areas, and returns to its originating screen. Sign-off is blocked while photo drafts remain unsaved. Closing the form discards its local note draft; saved checks and shift photos remain in the mock API.

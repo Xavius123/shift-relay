@@ -16,6 +16,37 @@ const dateTime = new Intl.DateTimeFormat(undefined, {
   timeStyle: 'short',
 });
 
+const eventVerbs = {
+  raised: 'Raised',
+  resolved: 'Resolved',
+  photoAdded: 'Photo added',
+} as const satisfies Record<Issue['events'][number]['type'], string>;
+
+interface TrailLine {
+  type: Issue['events'][number]['type'];
+  actor: string;
+  at: string;
+  /** Photos added by the same person at the same moment as this event. */
+  photos: number;
+}
+
+/** Folds each `photoAdded` event into the raised or resolved event it happened with. */
+function mergePhotoEvents(events: Issue['events']): TrailLine[] {
+  const lines: TrailLine[] = [];
+  for (const event of events) {
+    const previous = lines[lines.length - 1];
+    const together =
+      event.type === 'photoAdded' &&
+      previous !== undefined &&
+      previous.type !== 'photoAdded' &&
+      previous.actor === event.actor &&
+      previous.at === event.at;
+    if (together && previous) previous.photos += 1;
+    else lines.push({ type: event.type, actor: event.actor, at: event.at, photos: 0 });
+  }
+  return lines;
+}
+
 interface ResolveAction {
   onResolve: (photoUris: string[]) => Promise<void>;
   loading: boolean;
@@ -48,10 +79,11 @@ export function IssueRow({
   const category = issueCategories[issue.category];
   const open = issue.status === 'open';
   const title = issueTitle(issue);
-  // Phones show who raised it and who resolved it; photo events stay in the full trail.
-  const trailEvents = compact
-    ? issue.events.filter((event) => event.type !== 'photoAdded')
-    : issue.events;
+  // A photo added at the moment of raising or resolving is part of that line, not its own.
+  // Phones drop any photo that was added on its own.
+  const trailLines = mergePhotoEvents(issue.events).filter(
+    (line) => !compact || line.type !== 'photoAdded',
+  );
   const source = sourceLog
     ? `${phaseLabels[sourceLog.phase]} · ${sourceLog.operationalDate}`
     : 'Raised from Issues';
@@ -89,11 +121,11 @@ export function IssueRow({
       </View>
 
       <View style={styles.trail} testID={`issue-trail-${issue.id}`}>
-        {trailEvents.map((event) => (
-          <View key={`${event.type}-${event.at}`} style={styles.eventRow}>
-            <Initials names={[event.actor]} />
+        {trailLines.map((line) => (
+          <View key={`${line.type}-${line.at}`} style={styles.eventRow}>
+            <Initials names={[line.actor]} />
             <Text variant="caption" tone="muted">
-              {`${event.type === 'raised' ? 'Raised' : event.type === 'resolved' ? 'Resolved' : 'Photo added'} by ${event.actor} · ${dateTime.format(new Date(event.at))}`}
+              {`${eventVerbs[line.type]} by ${line.actor} · ${dateTime.format(new Date(line.at))}${line.photos > 0 ? ` · ${line.photos} ${line.photos === 1 ? 'photo' : 'photos'}` : ''}`}
             </Text>
           </View>
         ))}

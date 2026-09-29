@@ -20,3 +20,11 @@ The app had one stack and links between screens. It targets web (wide screens) a
 - `TabList` lays its children out in a row by default; the side nav sets `flexDirection: 'column'`. (Found by a failing E2E test: the side nav buttons rendered under the content.)
 - Phone bottom tabs remain the fastest path between the three primary sections. The drawer intentionally repeats those destinations in the fuller labeled side-navigation treatment requested for the shell.
 - Rejected: `@react-navigation/drawer` (extra dependency and navigator complexity for three existing tab routes); stock `Tabs` from `expo-router` alone (bottom tabs only, no responsive side layout or drawer).
+
+## Amendment · 2026-09-29
+The shell grew after this decision; the Decision section above is left as written.
+
+- The Manager-only Overview (`/overview`) was retired. Weekly metrics moved to Elena's Dashboard, and the Daily Report route is `/report/[date]`, inside the Dashboard stack.
+- Sections are now Dashboard, Logs, Issues (`/issues`), Shift Photos (`/photos`), Design system, and Sign in. Design system and Sign in appear only in the side nav and the phone drawer.
+- Phone bottom tabs are Logs, Shift Photos, a center camera button, Issues, and Dashboard. The camera is an action, not a route.
+- Every sign-in lands on the Dashboard, including after a deep link.

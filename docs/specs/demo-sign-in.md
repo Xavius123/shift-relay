@@ -4,7 +4,7 @@ Status: built · 2026-09-28 (sign-in required since 2026-09-28)
 
 ## Outcome
 
-Reviewers can choose a fictional Shift Manager or Manager identity from a top-level Sign In screen. Shift Managers provide named operational sign-offs; the Manager observes operational records without signing them. A dedicated weekly overview remains proposed.
+Reviewers can choose a fictional Shift Manager or Manager identity from a top-level Sign In screen. Shift Managers provide named operational sign-offs; the Manager observes operational records without signing them. The Manager's weekly numbers sit at the top of their Dashboard.
 
 ## Behavior
 

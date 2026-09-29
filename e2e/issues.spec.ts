@@ -47,3 +47,16 @@ test('Issues tab: nav badge, preset and written-in issues, resolve, and filters'
   await page.getByTestId('issues-filter-all').click();
   await expect(page.getByTestId('issues-filter-all')).toHaveText('All · 8');
 });
+
+test('a photo added while raising an issue is one line with the raise, not two', async ({
+  page,
+}) => {
+  await page.goto('/sign-in');
+  await page.getByTestId('demo-sign-in-jordan').click();
+  await page.getByTestId('nav-issues').click();
+  const trail = page.getByTestId('issue-trail-ISS-001');
+  await expect(trail).toContainText('Raised by Avery Smith');
+  await expect(trail).toContainText('1 photo');
+  await expect(trail).not.toContainText('Photo added');
+  await expect(trail.getByText(/Raised by/)).toHaveCount(1);
+});

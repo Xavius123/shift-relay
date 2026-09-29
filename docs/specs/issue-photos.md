@@ -65,7 +65,7 @@ The issue and its photos save in the same `raiseIssue` or `resolveIssue` call: b
 ### Raise issue (inside the shift log modal and the Issues tab)
 
 - Category, details (as today), then a **Photos** section:
-  - `Take photo` (camera) and `Choose photos` (library, multi-select). Both use `expo-image-picker`, reusing the permission and error handling proven on the `/camera` test bench.
+  - `Take photo` (camera) and `Choose photos` (library, multi-select). Both use `expo-image-picker`, with the shared `usePhotoPicker` hook, which handles permission and errors.
   - Thumbnails, 4 per row, each with a labeled 44×44 `Remove photo N` action.
   - Helper text: `Optional` for most categories. For Safety: `Required: add at least one photo of the hazard.`
 - Validation joins `issueDraftError`: Safety without a photo shows the photo requirement next to the Photos section.
@@ -81,11 +81,11 @@ The issue and its photos save in the same `raiseIssue` or `resolveIssue` call: b
 
 ## Daily Report (Manager only)
 
-Route: `/overview/report/[date]` (inside the Overview stack, so it inherits the Manager guard and keeps Overview selected).
+Route: `/report/[date]`, inside the Dashboard stack. The screen itself checks for the Manager role.
 
 Entry points:
 
-- Overview: each day listed for the current period links to its report, and each open issue has `View report`.
+- Elena's Dashboard has a `Today's report` button.
 - Signed-out users and Shift Managers who open the URL see the existing Manager access-required state.
 
 Content, read-only, in this order:
@@ -106,15 +106,11 @@ Photo viewer: selecting a thumbnail opens a full-screen modal with the image, pu
 - Add three generic, fictional placeholder images under `assets/seed-photos/`. They are illustrations or stock-free renders with no people, text, logos, or identifiable places.
 - Of the six seeded issues, four carry one evidence photo; two resolved ones also carry a resolution photo. The seeded Safety issue has a photo so seed data follows the rule.
 
-## Overview addition
-
-- One summary metric: `Issues with photos`, e.g. `4 of 6`, for the current period.
-
 ## States
 
 - Report: loading, not-found for a date outside the history (`No report for this date`), error with Retry, and stale data.
 - Photo that fails to load: a placeholder tile with `Photo unavailable` text, never a broken image.
-- Camera permission denied: message plus `Open Settings` on iOS (as on the test bench); library still available.
+- Camera permission denied: message plus `Open Settings` on iOS ; library still available.
 
 ## Accessibility
 
@@ -129,10 +125,9 @@ Photo viewer: selecting a thumbnail opens a full-screen modal with the image, pu
 - On web, a Playwright file chooser attaches a test image; the thumbnail appears; the issue saves with one evidence photo.
 - An issue raised from the Issues tab appears under today's active log in the report.
 - Avery resolves an issue with a proof photo; it appears after the evidence photo, with `photoAdded` and `resolved` events.
-- Elena opens a report from the Overview and sees all three logs, their checks, issues, and photos; the viewer opens and closes back to the thumbnail.
-- Jordan and signed-out users get the access-required state at `/overview/report/[date]`.
+- Elena opens a report from her Dashboard and sees all three logs, their checks, issues, and photos; the viewer opens and closes back to the thumbnail.
+- Jordan and signed-out users get the access-required state at `/report/[date]`.
 - iPhone: take a real photo while raising a Safety issue, then review it as Elena.
-- The `/camera` test bench and its nav item are removed once this passes.
 
 ## Non-goals
 
