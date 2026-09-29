@@ -5,13 +5,12 @@ import { ActivityIndicator, Linking, Modal, Pressable, View } from 'react-native
 
 import { Button, Card, makeStyles, Text, useTheme } from '@/design-system';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
-import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
 import { currentPhotoLog } from '@/features/logs/logPermissions';
-import { localDateKey, phaseLabels } from '@/features/logs/logTemplates';
-import { useGetShiftLogsQuery } from '@/features/logs/logsApi';
+import { phaseLabels } from '@/features/logs/logTemplates';
 import { ShiftLogModal } from '@/features/logs/ShiftLogModal';
-import { addWalkDrafts } from '@/features/logs/walkDraftsSlice';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAddPhotos } from '@/features/logs/useAddPhotos';
+import { useTodayLogs } from '@/features/logs/useTodayLogs';
+import { useAppSelector } from '@/store/hooks';
 
 /**
  * The center bottom-tab button: a direct camera. It opens the camera for the Shift Manager's
@@ -22,22 +21,14 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 export function ShiftCaptureButton() {
   const styles = useStyles();
   const theme = useTheme();
-  const dispatch = useAppDispatch();
   const accountId = useAppSelector(selectDemoAccountId);
-  const { data, isLoading } = useGetShiftLogsQuery();
+  const { todayLogs, query } = useTodayLogs();
+  const isLoading = query.isLoading;
   const [openLogId, setOpenLogId] = useState<string | null>(null);
   const [noticeOpen, setNoticeOpen] = useState(false);
 
-  const today = localDateKey(new Date());
-  const current = currentPhotoLog(
-    accountId,
-    (data ?? []).filter((log) => log.operationalDate === today),
-  );
-  const picker = usePhotoPicker((uris) => {
-    if (!current || uris.length === 0) return;
-    dispatch(addWalkDrafts(current.id, uris));
-    setOpenLogId(current.id);
-  });
+  const current = currentPhotoLog(accountId, todayLogs);
+  const picker = useAddPhotos(current?.id ?? null, setOpenLogId);
   const busy = isLoading || picker.working === 'camera';
   const showNotice = noticeOpen || picker.error !== null;
   const closeNotice = () => {

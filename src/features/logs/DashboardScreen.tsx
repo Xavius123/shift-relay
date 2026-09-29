@@ -3,13 +3,12 @@ import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { Badge, Button, Card, makeStyles, Text } from '@/design-system';
-import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
 import { Initials } from '@/features/common/Initials';
 import { demoAccounts, visiblePhases } from '@/features/auth/demoAccounts';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
 import { LoadingState, ScreenState } from '@/features/common/ScreenState';
 import { ManagerOpenIssues, ManagerWeekMetrics } from '@/features/manager/ManagerWeekSummary';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 
 import {
   dailySheetStatus,
@@ -18,14 +17,13 @@ import {
   nextActionFor,
   sheetStage,
 } from './dailySheet';
-import { canAddWalkPhotos } from './logPermissions';
-import { localDateKey, phaseDescriptions, phaseOrder } from './logTemplates';
+import { phaseDescriptions } from './logTemplates';
 import { issueTitle } from '@/features/issues/issueCategories';
 
-import { useGetIssuesQuery, useGetShiftLogsQuery } from './logsApi';
+import { useGetIssuesQuery } from './logsApi';
 import { ShiftLogModal } from './ShiftLogModal';
+import { useTodayLogs } from './useTodayLogs';
 import type { ShiftLog } from './types';
-import { addWalkDrafts } from './walkDraftsSlice';
 
 const todayLabel = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -42,15 +40,11 @@ const rowLabels = {
 export function DashboardScreen() {
   const styles = useStyles();
   const accountId = useAppSelector(selectDemoAccountId);
-  const logsQuery = useGetShiftLogsQuery();
+  const { todayLogs, today, query: logsQuery } = useTodayLogs();
   const issuesQuery = useGetIssuesQuery();
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
 
   const logs = logsQuery.data ?? [];
-  const today = localDateKey(new Date());
-  const todayLogs = phaseOrder
-    .map((phase) => logs.find((log) => log.operationalDate === today && log.phase === phase))
-    .filter((log): log is ShiftLog => log !== undefined);
   const openIssues = (issuesQuery.data ?? [])
     .filter((item) => item.status === 'open')
     .sort((left, right) => right.raisedAt.localeCompare(left.raisedAt));
@@ -209,62 +203,31 @@ export function DashboardScreen() {
 
 function SheetRow({ log, onOpen }: { log: ShiftLog; onOpen: () => void }) {
   const styles = useStyles();
-  const dispatch = useAppDispatch();
-  const accountId = useAppSelector(selectDemoAccountId);
   const statusLabel = logStatusLabel(log);
-  // Take a photo without opening the sheet first; the sheet then opens to review and save it.
-  const picker = usePhotoPicker((uris) => {
-    if (uris.length === 0) return;
-    dispatch(addWalkDrafts(log.id, uris));
-    onOpen();
-  });
-  const canPhoto = canAddWalkPhotos(accountId, log);
   return (
-    <View style={styles.sheetRow}>
-      <Card
-        variant="interactive"
-        padding="sm"
-        onPress={onOpen}
-        accessibilityLabel={`Open ${rowLabels[log.phase]}, ${statusLabel}`}
-        testID={`shift-card-${log.phase}`}
-      >
-        <View style={styles.cardHeading}>
-          <Text variant="bodySm" weight="semibold">
-            {rowLabels[log.phase]}
-          </Text>
-          <View style={styles.cardTrailing}>
-            <Initials
-              names={log.signOffs.map((signOff) => signOff.actor)}
-              testID={`shift-card-${log.phase}-initials`}
-            />
-            <Badge variant={log.status === 'signedOff' ? 'success' : 'warning'}>
-              {statusLabel}
-            </Badge>
-          </View>
+    <Card
+      variant="interactive"
+      padding="sm"
+      onPress={onOpen}
+      accessibilityLabel={`Open ${rowLabels[log.phase]}, ${statusLabel}`}
+      testID={`shift-card-${log.phase}`}
+    >
+      <View style={styles.cardHeading}>
+        <Text variant="bodySm" weight="semibold">
+          {rowLabels[log.phase]}
+        </Text>
+        <View style={styles.cardTrailing}>
+          <Initials
+            names={log.signOffs.map((signOff) => signOff.actor)}
+            testID={`shift-card-${log.phase}-initials`}
+          />
+          <Badge variant={log.status === 'signedOff' ? 'success' : 'warning'}>{statusLabel}</Badge>
         </View>
-        <Text variant="caption" tone="muted">
-          {phaseDescriptions[log.phase]}
-        </Text>
-      </Card>
-      {canPhoto ? (
-        <Button
-          variant="outline"
-          size="sm"
-          onPress={() => void picker.takePhoto()}
-          loading={picker.working === 'camera'}
-          disabled={picker.busy}
-          accessibilityLabel={`Take a photo for ${rowLabels[log.phase]}`}
-          testID={`shift-card-${log.phase}-take-photo`}
-        >
-          Take photo
-        </Button>
-      ) : null}
-      {picker.error ? (
-        <Text variant="caption" tone="error">
-          {picker.error.message}
-        </Text>
-      ) : null}
-    </View>
+      </View>
+      <Text variant="caption" tone="muted">
+        {phaseDescriptions[log.phase]}
+      </Text>
+    </Card>
   );
 }
 
@@ -279,7 +242,6 @@ const useStyles = makeStyles((t) => ({
   },
   header: { gap: t.spacing[4], paddingBottom: t.spacing[4] },
   phaseGrid: { gap: t.spacing[2] },
-  sheetRow: { gap: t.spacing[2] },
   cardTrailing: { flexDirection: 'row', alignItems: 'center', gap: t.spacing[2] },
   nextAction: { gap: t.spacing[2], paddingTop: t.spacing[1] },
   cardHeading: {

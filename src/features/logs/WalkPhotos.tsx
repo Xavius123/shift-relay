@@ -1,11 +1,10 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
-import { AccessibilityInfo, Image, Linking, Pressable, View } from 'react-native';
+import { AccessibilityInfo, Image, Pressable, View } from 'react-native';
 
 import { Button, Card, makeStyles, Text, useTheme } from '@/design-system';
 import { demoActor } from '@/features/auth/demoAccounts';
 import type { DemoAccountId } from '@/features/auth/sessionSlice';
-import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
 import { Initials } from '@/features/common/Initials';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
@@ -15,12 +14,7 @@ import { isLogsApiError, useAddWalkPhotosMutation, useRemoveWalkPhotoMutation } 
 import { NoPhotosTile } from './NoPhotosTile';
 import { PhotoPreview, type PreviewPhoto } from './PhotoPreview';
 import type { ShiftLog, WalkPhoto } from './types';
-import {
-  addWalkDrafts,
-  clearWalkDrafts,
-  discardWalkDraft,
-  selectWalkDrafts,
-} from './walkDraftsSlice';
+import { clearWalkDrafts, discardWalkDraft, selectWalkDrafts } from './walkDraftsSlice';
 
 const time = new Intl.DateTimeFormat(undefined, { timeStyle: 'short' });
 
@@ -51,11 +45,6 @@ export function WalkPhotos({
   const [savePhotos, saving] = useAddWalkPhotosMutation();
   const [removePhoto, removing] = useRemoveWalkPhotoMutation();
   const [preview, setPreview] = useState<{ set: 'drafts' | 'saved'; index: number } | null>(null);
-  const picker = usePhotoPicker((uris) => {
-    if (uris.length === 0) return;
-    dispatch(addWalkDrafts(log.id, uris));
-    AccessibilityInfo.announceForAccessibility(`${plural(uris.length, 'photo')} ready to review`);
-  });
 
   const saved = log.walkPhotos;
   const canDelete = canDeleteWalkPhotos(accountId);
@@ -66,7 +55,7 @@ export function WalkPhotos({
     context: `${context} · not saved`,
   }));
   const savedPreview: PreviewPhoto[] = saved.map((photo) => ({ photo, context }));
-  const busy = picker.busy || saving.isLoading;
+  const busy = saving.isLoading;
   const apiError = saving.error ?? removing.error;
 
   const save = async () => {
@@ -83,7 +72,7 @@ export function WalkPhotos({
   const summary =
     saved.length === 0
       ? canEdit
-        ? 'Take photos during your shift, review them, then save them to this log.'
+        ? 'Take photos with the camera below, review them, then save them to this log.'
         : log.status === 'signedOff'
           ? 'No photos from this shift.'
           : 'No photos yet. The Shift Managers on this form add them.'
@@ -97,48 +86,6 @@ export function WalkPhotos({
           {summary}
         </Text>
       </View>
-
-      {canEdit ? (
-        <View style={styles.actions}>
-          <Button
-            onPress={() => void picker.takePhoto()}
-            loading={picker.working === 'camera'}
-            disabled={busy}
-            accessibilityLabel="Take a shift photo"
-            testID="walk-take-photo"
-          >
-            Take photo
-          </Button>
-          <Button
-            variant="secondary"
-            onPress={() => void picker.choosePhotos()}
-            loading={picker.working === 'library'}
-            disabled={busy}
-            accessibilityLabel="Choose shift photos from library"
-            testID="walk-choose-photos"
-          >
-            Choose from library
-          </Button>
-        </View>
-      ) : null}
-
-      {picker.error ? (
-        <Card testID="walk-photos-error">
-          <Text variant="bodySm" tone="error" weight="semibold">
-            {picker.error.message}
-          </Text>
-          {picker.error.openSettings ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onPress={() => void Linking.openSettings()}
-              accessibilityLabel="Open Settings"
-            >
-              Open Settings
-            </Button>
-          ) : null}
-        </Card>
-      ) : null}
 
       {drafts.length > 0 ? (
         <Card testID="walk-drafts">
@@ -263,7 +210,6 @@ function SavedTile({
 const useStyles = makeStyles((t) => ({
   section: { gap: t.spacing[3] },
   copy: { gap: t.spacing[1] },
-  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: t.spacing[2] },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: t.spacing[3] },
   tile: { width: t.spacing[16] + t.spacing[12], gap: t.spacing[1] },
   image: {

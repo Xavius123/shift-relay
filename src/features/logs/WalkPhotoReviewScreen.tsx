@@ -10,7 +10,6 @@ import { useAppSelector } from '@/store/hooks';
 
 import { groupDailySheets, logStatusLabel, type DailySheet } from './dailySheet';
 import { formatOperationalDate } from './logFilters';
-import { AddPhotosCard } from './AddPhotosCard';
 import { canDeleteWalkPhotos } from './logPermissions';
 import { localDateKey, phaseIcons, phaseLabels } from './logTemplates';
 import { useGetShiftLogsQuery, useRemoveWalkPhotoMutation } from './logsApi';
@@ -85,7 +84,6 @@ export function WalkPhotoReviewScreen() {
         )}
         ListHeaderComponent={
           <View style={styles.header}>
-            <AddPhotosCard onOpenLog={setSelectedLogId} />
             <Text tone="muted">Shift photos by day. Tap a photo to see it full size.</Text>
             <Text variant="caption" tone="subtle" testID="walk-review-total">
               {total === 0

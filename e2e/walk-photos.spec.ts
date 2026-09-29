@@ -8,7 +8,7 @@ const fixture = 'assets/favicon-shift-relay.png';
 
 async function choosePhoto(page: Page) {
   const chooser = page.waitForEvent('filechooser');
-  await page.getByTestId('walk-choose-photos').click();
+  await page.getByTestId('sheet-choose-photos').click();
   await (await chooser).setFiles(fixture);
 }
 
@@ -80,7 +80,7 @@ test('walk flow: take photos, review them, save them, then close the shift', asy
   // The saved photo stays on the signed log, read-only.
   await page.getByTestId('shift-card-morning').click();
   await expect(modal.getByTestId('walk-photo')).toHaveCount(1);
-  await expect(modal.getByTestId('walk-choose-photos')).toHaveCount(0);
+  await expect(modal.getByTestId('sheet-choose-photos')).toHaveCount(0);
 });
 
 test('everyone can review shift photos by day and shift; only the Operations Manager deletes', async ({
@@ -125,34 +125,23 @@ test('a walk with no photos shows the placeholder', async ({ page }) => {
   const modal = page.getByTestId('shift-log-modal');
   await expect(modal.getByTestId('walk-photos-count')).toContainText('Take photos');
   await expect(modal.getByTestId('walk-no-photos')).toBeVisible();
-  await expect(modal.getByTestId('walk-take-photo')).toBeVisible();
+  await expect(modal.getByTestId('sheet-take-photo')).toBeVisible();
 });
 
 test("photos: each Shift Manager's forms are open, Elena's are not", async ({ page }) => {
   // Night closes: Avery can add to Midday and Night, but not to Morning.
   await openAs(page, '/', 'avery');
   await page.getByTestId('shift-card-morning').click();
-  await expect(page.getByTestId('shift-log-modal').getByTestId('walk-take-photo')).toHaveCount(0);
+  await expect(page.getByTestId('shift-log-modal').getByTestId('sheet-take-photo')).toHaveCount(0);
   await page.getByTestId('close-shift-log').click();
   await page.getByTestId('shift-card-night').click();
-  await expect(page.getByTestId('shift-log-modal').getByTestId('walk-take-photo')).toBeVisible();
+  await expect(page.getByTestId('shift-log-modal').getByTestId('sheet-take-photo')).toBeVisible();
   await page.getByTestId('close-shift-log').click();
 
   await openSignIn(page);
   await page.getByTestId('demo-sign-in-elena').click();
   await page.getByTestId('shift-card-midday').click();
-  await expect(page.getByTestId('shift-log-modal').getByTestId('walk-take-photo')).toHaveCount(0);
-});
-
-test('Shift Photos shortcut adds photos to the current form, then opens it to review', async ({
-  page,
-}) => {
-  await openAs(page, '/photos', 'jordan');
-  await expect(page.getByTestId('add-photos-card')).toContainText('Morning');
-  const chooser = page.waitForEvent('filechooser');
-  await page.getByTestId('add-photos-choose').click();
-  await (await chooser).setFiles(fixture);
-  await expect(page.getByTestId('shift-log-modal').getByTestId('walk-draft')).toHaveCount(1);
+  await expect(page.getByTestId('shift-log-modal').getByTestId('sheet-take-photo')).toHaveCount(0);
 });
 
 test('narrow: the camera tab is a direct camera for a Shift Manager and never dead', async ({
@@ -197,19 +186,6 @@ test('inside a shift sheet a pinned camera bar takes photos; closed forms have n
   await page.getByTestId('demo-sign-in-elena').click();
   await page.getByTestId('shift-card-midday').click();
   await expect(page.getByTestId('sheet-camera-bar')).toHaveCount(0);
-});
-
-test('Dashboard shift cards: Take photo is on the forms a Shift Manager owns', async ({ page }) => {
-  await openAs(page, '/', 'jordan');
-  await expect(page.getByTestId('shift-card-morning-take-photo')).toBeVisible();
-  await expect(page.getByTestId('shift-card-midday-take-photo')).toBeVisible();
-  await expect(page.getByTestId('shift-card-night-take-photo')).toHaveCount(0);
-
-  // Choosing a photo opens the sheet with it waiting for review.
-  const chooser = page.waitForEvent('filechooser');
-  await page.getByTestId('shift-card-morning-take-photo').click();
-  await (await chooser).setFiles(fixture);
-  await expect(page.getByTestId('shift-log-modal').getByTestId('walk-draft')).toHaveCount(1);
 });
 
 test('each past day has one to three shift photos, including the mouse', async ({ page }) => {
