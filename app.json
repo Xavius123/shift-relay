@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Shift Relay",
+    "slug": "shift-relay",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/favicon-shift-relay.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.shiftrelay.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon-shift-relay.png"
+    },
+    "scheme": "shiftrelay",
+    "experiments": {
+      "typedRoutes": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to take photos of issues during a walkthrough.",
+          "photosPermission": "Allow $(PRODUCT_NAME) to attach saved photos to issues."
+        }
+      ]
+    ]
+  }
+}

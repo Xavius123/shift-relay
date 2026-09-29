@@ -1,0 +1,13 @@
+{
+  "accent": {
+    "$type": "color",
+    "$description": "Accent alias set: points the semantic accent tokens at sea glass",
+    "200": { "$value": "{seaGlass.200}" },
+    "300": { "$value": "{seaGlass.300}" },
+    "400": { "$value": "{seaGlass.400}" },
+    "500": { "$value": "{seaGlass.500}" },
+    "600": { "$value": "{seaGlass.600}" },
+    "700": { "$value": "{seaGlass.700}" },
+    "800": { "$value": "{seaGlass.800}" }
+  }
+}

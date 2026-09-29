@@ -1,0 +1,72 @@
+{
+  "ink": {
+    "$type": "color",
+    "$description": "Company-adjacent blue-charcoal neutrals",
+    "0": { "$value": "#FFFFFF" },
+    "25": { "$value": "#FCFCFB" },
+    "50": { "$value": "#F6F7F7" },
+    "100": { "$value": "#ECEFEF" },
+    "200": { "$value": "#DCE1E2" },
+    "300": { "$value": "#C3CCCE" },
+    "400": { "$value": "#95A3A7" },
+    "500": { "$value": "#5E6F74" },
+    "600": { "$value": "#506166" },
+    "700": { "$value": "#405057" },
+    "800": { "$value": "#303E44" },
+    "900": { "$value": "#223137" },
+    "950": { "$value": "#152126" }
+  },
+  "care": {
+    "$type": "color",
+    "$description": "Default accent: care blue",
+    "200": { "$value": "#B7E2F2" },
+    "300": { "$value": "#7CCAE4" },
+    "400": { "$value": "#43ADD4" },
+    "500": { "$value": "#168CB8" },
+    "600": { "$value": "#0C6F96" },
+    "700": { "$value": "#0A5878" },
+    "800": { "$value": "#08435C" }
+  },
+  "plum": {
+    "$type": "color",
+    "$description": "Optional accent: muted plum",
+    "200": { "$value": "#E2CDE8" },
+    "300": { "$value": "#C9AAD3" },
+    "400": { "$value": "#B58BC3" },
+    "500": { "$value": "#9366A3" },
+    "600": { "$value": "#784B88" },
+    "700": { "$value": "#623B70" },
+    "800": { "$value": "#4D2E59" }
+  },
+  "seaGlass": {
+    "$type": "color",
+    "$description": "Optional accent: sea-glass teal",
+    "200": { "$value": "#B8E2DB" },
+    "300": { "$value": "#86CCC0" },
+    "400": { "$value": "#55B3A3" },
+    "500": { "$value": "#379484" },
+    "600": { "$value": "#287767" },
+    "700": { "$value": "#205F53" },
+    "800": { "$value": "#194A41" }
+  },
+  "status": {
+    "$type": "color",
+    "$description": "Status colors, tuned per theme",
+    "success": {
+      "light": { "fg": { "$value": "#247563" }, "bg": { "$value": "#E2F4F0" } },
+      "dark": { "fg": { "$value": "#65C5B2" }, "bg": { "$value": "#17302B" } }
+    },
+    "warning": {
+      "light": { "fg": { "$value": "#805600" }, "bg": { "$value": "#FFF1CC" } },
+      "dark": { "fg": { "$value": "#F2BD4A" }, "bg": { "$value": "#302510" } }
+    },
+    "error": {
+      "light": { "fg": { "$value": "#B43C52" }, "bg": { "$value": "#FBE8EC" } },
+      "dark": { "fg": { "$value": "#F08092" }, "bg": { "$value": "#35171E" } }
+    },
+    "info": {
+      "light": { "fg": { "$value": "#0C6F96" }, "bg": { "$value": "#E2F2F8" } },
+      "dark": { "fg": { "$value": "#65BCDB" }, "bg": { "$value": "#122B35" } }
+    }
+  }
+}

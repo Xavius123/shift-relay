@@ -1,0 +1,8 @@
+node_modules/
+.expo/
+dist/
+private/
+package-lock.json
+src/design-system/tokens/generated/
+*.md
+src/features/logs/generated/

@@ -1,0 +1,20 @@
+{
+  "enabledPlugins": {
+    "expo@claude-plugins-official": true
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/hooks/typecheck-on-edit.mjs\"",
+            "timeout": 120,
+            "statusMessage": "Typechecking..."
+          }
+        ]
+      }
+    ]
+  }
+}

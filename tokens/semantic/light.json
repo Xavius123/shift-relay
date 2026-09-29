@@ -1,0 +1,34 @@
+{
+  "color": {
+    "$type": "color",
+    "bg": { "$value": "{ink.50}" },
+    "surface": { "$value": "{ink.0}" },
+    "bgSubtle": { "$value": "{ink.100}" },
+    "bgSubtleHover": { "$value": "{ink.200}" },
+    "text": { "$value": "{ink.900}" },
+    "textMuted": { "$value": "{ink.600}" },
+    "textSubtle": { "$value": "{ink.500}" },
+    "textPlaceholder": { "$value": "{ink.500}" },
+    "textInverse": { "$value": "{ink.0}" },
+    "border": { "$value": "{ink.200}" },
+    "borderStrong": { "$value": "{ink.300}" },
+    "borderInput": {
+      "$value": "{ink.500}",
+      "$description": "Form field boundary: 3:1 against bg and surface (WCAG 1.4.11)"
+    },
+    "accent": { "$value": "{accent.600}" },
+    "accentHover": { "$value": "{accent.700}" },
+    "accentActive": { "$value": "{accent.800}" },
+    "accentFg": { "$value": "{ink.0}" },
+    "borderFocus": { "$value": "{accent.500}" },
+    "overlay": { "$value": "rgba(21, 33, 38, 0.5)" },
+    "success": { "$value": "{status.success.light.fg}" },
+    "successBg": { "$value": "{status.success.light.bg}" },
+    "warning": { "$value": "{status.warning.light.fg}" },
+    "warningBg": { "$value": "{status.warning.light.bg}" },
+    "error": { "$value": "{status.error.light.fg}" },
+    "errorBg": { "$value": "{status.error.light.bg}" },
+    "info": { "$value": "{status.info.light.fg}" },
+    "infoBg": { "$value": "{status.info.light.bg}" }
+  }
+}

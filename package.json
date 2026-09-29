@@ -1,0 +1,61 @@
+{
+  "name": "shift-relay",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "dependencies": {
+    "@expo/vector-icons": "^15.0.2",
+    "@reduxjs/toolkit": "^2.12.0",
+    "expo": "~57.0.24",
+    "expo-constants": "~57.0.19",
+    "expo-font": "~57.0.4",
+    "expo-image-picker": "~57.0.20",
+    "expo-linking": "~57.0.10",
+    "expo-router": "~57.0.22",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-web": "^0.21.2",
+    "react-redux": "^9.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/react": "~19.2.2",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~57.0.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-react-native": "^5.0.0",
+    "expo-doctor": "^1.20.4",
+    "prettier": "^3.9.8",
+    "style-dictionary": "^5.5.5",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "start:clear": "expo start --clear",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "typecheck": "node scripts/typed-routes.mjs && tsc --noEmit",
+    "lint": "expo lint",
+    "lint:fix": "expo lint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run typecheck && npm run lint && npm run format:check",
+    "e2e": "playwright test",
+    "e2e:smoke": "playwright test e2e/smoke.spec.ts",
+    "doctor": "expo-doctor",
+    "doctor:env": "node scripts/check-env.mjs",
+    "e2e:ui": "playwright test --ui",
+    "start:tunnel": "expo start --tunnel",
+    "tokens": "node scripts/build-tokens.mjs && node scripts/check-contrast.mjs",
+    "tokens:self-test": "node scripts/check-contrast.mjs --self-test",
+    "seed-photos": "node scripts/build-seed-photos.mjs"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  }
+}

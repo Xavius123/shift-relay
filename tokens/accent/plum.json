@@ -1,0 +1,13 @@
+{
+  "accent": {
+    "$type": "color",
+    "$description": "Accent alias set: points the semantic accent tokens at plum",
+    "200": { "$value": "{plum.200}" },
+    "300": { "$value": "{plum.300}" },
+    "400": { "$value": "{plum.400}" },
+    "500": { "$value": "{plum.500}" },
+    "600": { "$value": "{plum.600}" },
+    "700": { "$value": "{plum.700}" },
+    "800": { "$value": "{plum.800}" }
+  }
+}

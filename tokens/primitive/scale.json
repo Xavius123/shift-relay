@@ -1,0 +1,100 @@
+{
+  "spacing": {
+    "$type": "dimension",
+    "0": { "$value": "0px" },
+    "1": { "$value": "4px" },
+    "2": { "$value": "8px" },
+    "3": { "$value": "12px" },
+    "4": { "$value": "16px" },
+    "5": { "$value": "20px" },
+    "6": { "$value": "24px" },
+    "8": { "$value": "32px" },
+    "10": { "$value": "40px" },
+    "12": { "$value": "48px" },
+    "16": { "$value": "64px" }
+  },
+  "size": {
+    "$type": "dimension",
+    "touchTarget": { "$value": "44px", "$description": "Minimum hit area for anything pressable" },
+    "sidebar": { "$value": "240px", "$description": "Side navigation width on wide screens" },
+    "content": { "$value": "880px", "$description": "Maximum width of a page's content column" },
+    "control": {
+      "md": { "$value": "44px" },
+      "lg": { "$value": "52px" }
+    }
+  },
+  "breakpoint": {
+    "$type": "dimension",
+    "wide": {
+      "$value": "768px",
+      "$description": "At and above this width: side nav. Below: bottom tabs and modal drawer"
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "none": { "$value": "0px" },
+    "sm": { "$value": "4px" },
+    "md": { "$value": "8px" },
+    "lg": { "$value": "12px" },
+    "xl": { "$value": "16px" },
+    "full": { "$value": "9999px" }
+  },
+  "fontSize": {
+    "$type": "dimension",
+    "xs": { "$value": "12px" },
+    "sm": { "$value": "14px" },
+    "base": { "$value": "16px" },
+    "lg": { "$value": "18px" },
+    "xl": { "$value": "20px" },
+    "2xl": { "$value": "24px" },
+    "3xl": { "$value": "30px" }
+  },
+  "fontWeight": {
+    "$type": "fontWeight",
+    "regular": { "$value": 400 },
+    "medium": { "$value": 500 },
+    "semibold": { "$value": 600 },
+    "bold": { "$value": 700 }
+  },
+  "lineHeight": {
+    "$type": "number",
+    "$description": "Multipliers. Text computes fontSize × lineHeight, because RN lineHeight is absolute.",
+    "tight": { "$value": 1.25 },
+    "normal": { "$value": 1.5 }
+  },
+  "opacity": {
+    "$type": "number",
+    "disabled": { "$value": 0.4 },
+    "pressed": { "$value": 0.85 }
+  },
+  "shadow": {
+    "$type": "shadow",
+    "sm": {
+      "$value": {
+        "color": "rgba(16, 19, 23, 0.08)",
+        "offsetX": "0px",
+        "offsetY": "1px",
+        "blur": "2px",
+        "spread": "0px"
+      }
+    },
+    "md": {
+      "$value": {
+        "color": "rgba(16, 19, 23, 0.10)",
+        "offsetX": "0px",
+        "offsetY": "4px",
+        "blur": "8px",
+        "spread": "-2px"
+      }
+    },
+    "lg": {
+      "$value": {
+        "color": "rgba(16, 19, 23, 0.14)",
+        "offsetX": "0px",
+        "offsetY": "12px",
+        "blur": "24px",
+        "spread": "-4px"
+      }
+    }
+  }
+}
