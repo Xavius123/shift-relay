@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 
 import { Badge, Button, Card, makeStyles, Text } from '@/design-system';
 import { Initials } from '@/features/common/Initials';
@@ -17,13 +17,14 @@ import {
   nextActionFor,
   sheetStage,
 } from './dailySheet';
-import { phaseDescriptions } from './logTemplates';
 import { issueTitle } from '@/features/issues/issueCategories';
 
+import { canAddWalkPhotos } from './logPermissions';
 import { useGetIssuesQuery } from './logsApi';
 import { ShiftLogModal } from './ShiftLogModal';
 import { useTodayLogs } from './useTodayLogs';
 import type { ShiftLog } from './types';
+import { selectWalkDrafts } from './walkDraftsSlice';
 
 const todayLabel = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -201,15 +202,31 @@ export function DashboardScreen() {
   );
 }
 
+const maxThumbnails = 4;
+
 function SheetRow({ log, onOpen }: { log: ShiftLog; onOpen: () => void }) {
   const styles = useStyles();
+  const accountId = useAppSelector(selectDemoAccountId);
+  const storedDrafts = useAppSelector((state) => selectWalkDrafts(state, log.id));
+  // Unsaved photos belong to the Shift Manager on duty; others see only what was saved.
+  const drafts = canAddWalkPhotos(accountId, log) ? storedDrafts : [];
   const statusLabel = logStatusLabel(log);
+  const thumbnails = [
+    ...log.walkPhotos.map((photo) => ({ id: photo.id, uri: photo.uri, saved: true })),
+    ...drafts.map((draft) => ({ id: draft.id, uri: draft.uri, saved: false })),
+  ];
+  const shown = thumbnails.slice(0, maxThumbnails);
+  const hidden = thumbnails.length - shown.length;
+  const photoNote =
+    thumbnails.length > 0
+      ? `, ${thumbnails.length} ${thumbnails.length === 1 ? 'photo' : 'photos'}`
+      : '';
   return (
     <Card
       variant="interactive"
       padding="sm"
       onPress={onOpen}
-      accessibilityLabel={`Open ${rowLabels[log.phase]}, ${statusLabel}`}
+      accessibilityLabel={`Open ${rowLabels[log.phase]}, ${statusLabel}${photoNote}`}
       testID={`shift-card-${log.phase}`}
     >
       <View style={styles.cardHeading}>
@@ -224,9 +241,29 @@ function SheetRow({ log, onOpen }: { log: ShiftLog; onOpen: () => void }) {
           <Badge variant={log.status === 'signedOff' ? 'success' : 'warning'}>{statusLabel}</Badge>
         </View>
       </View>
-      <Text variant="caption" tone="muted">
-        {phaseDescriptions[log.phase]}
-      </Text>
+      {shown.length > 0 ? (
+        <View
+          style={styles.thumbnails}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          testID={`shift-card-${log.phase}-photos`}
+        >
+          {shown.map((photo) => (
+            <Image
+              key={photo.id}
+              source={{ uri: photo.uri }}
+              style={[styles.thumbnail, !photo.saved && styles.thumbnailDraft]}
+              resizeMode="cover"
+              testID={photo.saved ? 'shift-card-photo' : 'shift-card-photo-draft'}
+            />
+          ))}
+          {hidden > 0 ? (
+            <Text variant="caption" tone="muted">
+              {`+${hidden}`}
+            </Text>
+          ) : null}
+        </View>
+      ) : null}
     </Card>
   );
 }
@@ -243,6 +280,15 @@ const useStyles = makeStyles((t) => ({
   header: { gap: t.spacing[4], paddingBottom: t.spacing[4] },
   phaseGrid: { gap: t.spacing[2] },
   cardTrailing: { flexDirection: 'row', alignItems: 'center', gap: t.spacing[2] },
+  thumbnails: { flexDirection: 'row', alignItems: 'center', gap: t.spacing[1] },
+  thumbnail: {
+    width: t.spacing[10],
+    height: t.spacing[10],
+    borderRadius: t.radius.sm,
+    backgroundColor: t.color.bgSubtle,
+  },
+  // An unsaved photo: dashed, so it reads as not yet on the record.
+  thumbnailDraft: { borderWidth: 1, borderStyle: 'dashed', borderColor: t.color.borderStrong },
   nextAction: { gap: t.spacing[2], paddingTop: t.spacing[1] },
   cardHeading: {
     flexDirection: 'row',

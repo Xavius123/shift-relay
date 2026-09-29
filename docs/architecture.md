@@ -42,7 +42,7 @@ Style Dictionary builds typed theme tokens and CSS from `tokens/`. The contrast 
 
 ## Navigation and errors
 
-Expo Router provides typed routes. `AppShell` uses headless tabs with wide side navigation and narrow bottom tabs; a drawer gives narrow screens access to all sections. The center bottom-tab button is a camera (`ShiftCaptureButton`), not a route: it opens the camera for the signed-in Shift Manager's first open form and saves the photo straight to it, then confirms and stays on the current screen. Each section has a shared themed stack header. Sign-in gates the shell. The log detail is a shared modal over Dashboard, Logs, or Issues, so closing it returns to the originating section.
+Expo Router provides typed routes. `AppShell` uses headless tabs with wide side navigation and narrow bottom tabs; a drawer gives narrow screens access to all sections. The center bottom-tab button is a camera (`ShiftCaptureButton`), not a route: it asks which of the signed-in Shift Manager's open forms the photo is for, opens the camera, and saves the photo straight to that form, then confirms and stays on the current screen. Each section has a shared themed stack header. Sign-in gates the shell. The log detail is a shared modal over Dashboard, Logs, or Issues, so closing it returns to the originating section.
 
 Queries show loading, error with Retry, and stale-data warnings where data is cached. Failed mutations keep the relevant draft visible. A root render error boundary catches render errors.
 

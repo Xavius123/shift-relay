@@ -1,11 +1,12 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   ActivityIndicator,
   Linking,
   Modal,
+  Platform,
   Pressable,
   View,
 } from 'react-native';
@@ -13,19 +14,20 @@ import {
 import { Button, Card, makeStyles, Text, useTheme } from '@/design-system';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
 import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
-import { currentPhotoLog } from '@/features/logs/logPermissions';
+import { photoLogs } from '@/features/logs/logPermissions';
 import { phaseLabels } from '@/features/logs/logTemplates';
 import { useAddWalkPhotosMutation } from '@/features/logs/logsApi';
 import { ShiftLogModal } from '@/features/logs/ShiftLogModal';
-import type { ShiftPhase } from '@/features/logs/types';
+import type { ShiftLog, ShiftPhase } from '@/features/logs/types';
 import { useTodayLogs } from '@/features/logs/useTodayLogs';
 import { useAppSelector } from '@/store/hooks';
 
 /**
- * The center bottom-tab button: a direct camera. It opens the camera for the Shift Manager's
- * current form that is not closed (day shift: Morning, then Midday; night shift: Midday, then
- * Night) and saves the photo straight to that shift, staying on the current screen with a
- * short confirmation. The camera's own Use Photo / Retake is the review step.
+ * The center bottom-tab button: a direct camera. It always asks which of today's open forms the
+ * photo is for, then opens the camera and saves the photo straight to that form, staying on the
+ * current screen with a short confirmation. A Shift Manager is offered their own shift's forms
+ * (day shift: Morning and Midday; night shift: Midday and Night); the Operations Manager is
+ * offered all of the day's open forms. The camera's own Use Photo / Retake is the review step.
  * It is never a dead button: with no open form it says why and points to Shift Photos.
  */
 export function ShiftCaptureButton() {
@@ -36,25 +38,33 @@ export function ShiftCaptureButton() {
   const isLoading = query.isLoading;
   const [openLogId, setOpenLogId] = useState<string | null>(null);
   const [noticeOpen, setNoticeOpen] = useState(false);
+  const [choosing, setChoosing] = useState(false);
   const [saved, setSaved] = useState<{ logId: string; phase: ShiftPhase; count: number } | null>(
     null,
   );
   const [saveError, setSaveError] = useState<string | null>(null);
   const [savePhotos, saving] = useAddWalkPhotosMutation();
+  // The form the next photo is for. A ref, because the picker's callback runs after the tap
+  // that chose it, and must not see the previous render's choice.
+  const target = useRef<ShiftLog | null>(null);
+  // iOS cannot present the camera while a modal is still closing, so the launch waits for it.
+  const launchAfterClose = useRef(false);
 
-  const current = currentPhotoLog(accountId, todayLogs);
+  const forms = photoLogs(accountId, todayLogs);
   const picker = usePhotoPicker((photos) => {
-    if (current === null || accountId === null || photos.length === 0) return;
-    savePhotos({ id: current.id, photos, accountId })
+    const log = target.current;
+    if (log === null || accountId === null || photos.length === 0) return;
+    savePhotos({ id: log.id, photos, accountId })
       .unwrap()
       .then(() => {
-        setSaved({ logId: current.id, phase: current.phase, count: photos.length });
+        setSaved({ logId: log.id, phase: log.phase, count: photos.length });
         AccessibilityInfo.announceForAccessibility(
-          `${photos.length === 1 ? 'Photo' : 'Photos'} saved to ${phaseLabels[current.phase]}`,
+          `${photos.length === 1 ? 'Photo' : 'Photos'} saved to ${phaseLabels[log.phase]}`,
         );
       })
       .catch(() => setSaveError("The photo wasn't saved. Try again."));
   });
+  const verb = picker.canUseCamera ? 'Take' : 'Upload';
   const busy = isLoading || picker.working === 'camera' || saving.isLoading;
   const showNotice = noticeOpen || picker.error !== null || saveError !== null || saved !== null;
   const closeNotice = () => {
@@ -65,10 +75,31 @@ export function ShiftCaptureButton() {
   };
   const problem = picker.error?.message ?? saveError;
 
-  const press = () => {
-    if (current === null) setNoticeOpen(true);
+  const capture = () => {
+    if (Platform.OS === 'ios' && (choosing || showNotice)) launchAfterClose.current = true;
     else void picker.takePhoto();
   };
+  const flushLaunch = () => {
+    if (!launchAfterClose.current) return;
+    launchAfterClose.current = false;
+    void picker.takePhoto();
+  };
+  const takeFor = (log: ShiftLog) => {
+    target.current = log;
+    setChoosing(false);
+    capture();
+  };
+
+  const press = () => {
+    if (forms.length === 0) setNoticeOpen(true);
+    else setChoosing(true);
+  };
+
+  const tabLabel = isLoading
+    ? 'Loading shift forms'
+    : forms.length === 0
+      ? 'Camera: no open shift form'
+      : `${verb} a photo: choose a shift`;
 
   return (
     <View style={styles.slot}>
@@ -76,13 +107,7 @@ export function ShiftCaptureButton() {
         onPress={press}
         disabled={busy}
         accessibilityRole="button"
-        accessibilityLabel={
-          isLoading
-            ? 'Loading shift forms'
-            : current === null
-              ? 'Camera: no open shift form'
-              : `${picker.canUseCamera ? 'Take' : 'Upload'} a photo for ${phaseLabels[current.phase]}`
-        }
+        accessibilityLabel={tabLabel}
         aria-busy={busy}
         testID="nav-camera"
         style={({ pressed }) => [styles.button, pressed && styles.pressed]}
@@ -100,7 +125,49 @@ export function ShiftCaptureButton() {
 
       <ShiftLogModal logId={openLogId} onClose={() => setOpenLogId(null)} />
 
-      <Modal visible={showNotice} transparent animationType="fade" onRequestClose={closeNotice}>
+      <Modal
+        visible={choosing}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setChoosing(false)}
+        onDismiss={flushLaunch}
+      >
+        <View style={styles.scrim}>
+          <Card testID="camera-choose">
+            <Text variant="title">Which shift is this photo for?</Text>
+            <Text tone="muted">
+              {`The photo is saved to the shift you pick. ${picker.canUseCamera ? 'The camera opens next.' : 'A file picker opens next.'}`}
+            </Text>
+            {forms.map((log) => (
+              <Button
+                key={log.id}
+                variant="outline"
+                onPress={() => takeFor(log)}
+                accessibilityLabel={`${verb} a photo for the ${phaseLabels[log.phase]} shift`}
+                testID={`camera-choose-${log.phase}`}
+              >
+                {`${phaseLabels[log.phase]} shift`}
+              </Button>
+            ))}
+            <Button
+              variant="ghost"
+              onPress={() => setChoosing(false)}
+              accessibilityLabel="Cancel"
+              testID="camera-choose-cancel"
+            >
+              Cancel
+            </Button>
+          </Card>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={showNotice}
+        transparent
+        animationType="fade"
+        onRequestClose={closeNotice}
+        onDismiss={flushLaunch}
+      >
         <View style={styles.scrim}>
           <Card testID="camera-notice">
             <Text variant="title">
@@ -117,9 +184,7 @@ export function ShiftCaptureButton() {
                 ? `${saved.count === 1 ? 'Saved' : `${saved.count} photos saved`} to the ${phaseLabels[saved.phase]} shift.`
                 : problem
                   ? problem
-                  : accountId === 'elena'
-                    ? 'Shift Managers add photos to their own forms. You can review saved photos on Shift Photos.'
-                    : "Today's forms for your shift are all closed. Saved photos are on Shift Photos."}
+                  : "Today's forms are all closed, so there is nothing to add photos to. Saved photos are on Shift Photos."}
             </Text>
             {picker.error?.openSettings ? (
               <Button
@@ -135,14 +200,12 @@ export function ShiftCaptureButton() {
                 <Button
                   onPress={() => {
                     closeNotice();
-                    void picker.takePhoto();
+                    capture();
                   }}
-                  accessibilityLabel={
-                    picker.canUseCamera ? 'Take another photo' : 'Upload another photo'
-                  }
+                  accessibilityLabel={`${verb} another photo for the ${phaseLabels[saved.phase]} shift`}
                   testID="camera-notice-again"
                 >
-                  {picker.canUseCamera ? 'Take another photo' : 'Upload another photo'}
+                  {`${verb} another photo`}
                 </Button>
                 <Button
                   variant="outline"

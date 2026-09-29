@@ -132,9 +132,13 @@ const mockBaseQuery: BaseQueryFn<MockQuery, unknown, LogsApiError> = async (quer
     const { input } = query;
     const log = logs.find((item) => item.id === input.id);
     if (!log) return error(404, "This shift log doesn't exist.");
-    // Photos go on today's form that is not closed, from the Shift Manager who owns that phase.
+    // Photos go on today's form that is not closed, from the Shift Manager who owns that phase
+    // or the Operations Manager.
     if (!canAddWalkPhotos(input.accountId, log)) {
-      return error(409, "Photos can only be added to today's open forms, by their Shift Manager.");
+      return error(
+        409,
+        "Photos can only be added to today's open forms, by their Shift Manager or the Operations Manager.",
+      );
     }
     const actor = demoActor(input.accountId);
     const at = new Date().toISOString();

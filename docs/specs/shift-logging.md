@@ -6,7 +6,7 @@ Status: built · updated 2026-09-28
 
 Each operational date has one Morning, one Midday handoff, and one Night log. The Daily Sheet groups these records; it is derived, not stored. The previous 21 days are complete fictional history. Today starts with three pending logs. Each log has one required check (restock), an optional note, sign-offs, a check history, and Shift Photos.
 
-The day runs in order. Jordan signs Morning, then sends the Midday handoff. Avery reviews the open issues, acknowledges them when receiving Midday, then signs Night. Elena can inspect logs and issues but cannot sign or raise them. The mock API enforces sequence and account permissions as well as the UI.
+The day runs in order. Jordan signs Morning, then sends the Midday handoff. Avery reviews the open issues, acknowledges them when receiving Midday, then signs Night. Elena can inspect logs and issues, and add photos to any open form, but cannot sign or raise them. The mock API enforces sequence and account permissions as well as the UI.
 
 | Phase | Required checks |
 | --- | --- |
@@ -18,11 +18,11 @@ Checking a box saves immediately and records the actor and time. Sign-off requir
 
 ## Screens and actions
 
-- Dashboard shows today's Daily Sheet, the signed-in account's next action, and open issues. Elena also sees this week's metrics and every open issue.
+- Dashboard shows today's Daily Sheet, the signed-in account's next action, and open issues. Each shift card shows its name, status, and initials, plus small previews of its photos (up to four, then "+N"; unsaved drafts are dashed) instead of a description. Elena also sees this week's metrics and every open issue.
 - Logs groups Daily Sheets by date and opens a log in the shared modal without changing sections.
 - The modal shows checks and their history, issue review and linked issues, sign-off metadata, note, and Shift Photos. It is read-only when the account cannot edit the log.
 - The Issues tab lets Shift Managers raise and resolve issues across shifts. See [issues.md](issues.md).
-- Photos can be added two ways. The center camera tab (phones) opens the camera and saves the photo straight to the account's current open form, then shows a confirmation with Take another photo, Open shift, and Done; it does not open the sheet. The camera bar pinned to the bottom of a shift sheet is one tap from the sign-off button (Take photo and Library on a phone; a single Upload photos on a desktop browser, which has no camera, so the photos are tagged Uploaded); its photos land as drafts at the top of the sheet to review and save. Jordan can add to Morning and Midday and Avery to Midday and Night, while the form is not signed off and it is today's. Elena cannot add photos.
+- Photos can be added two ways. The center camera tab (phones) asks which of the account's open forms the photo is for (Jordan: Morning or Midday; Avery: Midday or Night; Elena: any of the three), opens the camera, and saves the photo straight to that form, then shows a confirmation with Take another photo (for the same form), Open shift, and Done; it does not open the sheet. It always asks, even with one open form, and says so when none is open. The camera bar pinned to the bottom of a shift sheet is one tap from the sign-off button (Take photo and Library on a phone; a single Upload photos on a desktop browser, which has no camera, so the photos are tagged Uploaded); its photos land as drafts at the top of the sheet to review and save. Jordan can add to Morning and Midday and Avery to Midday and Night, and Elena to any of them, while the form is not signed off and it is today's.
 - Shift Photos shows saved photos by day and phase. See [the data model](../data-model.md) for draft and deletion rules.
 
 The modal has a Close action, uses safe areas, and returns to its originating screen. Sign-off is blocked while photo drafts remain unsaved. Closing the form discards its local note draft; saved checks and shift photos remain in the mock API.

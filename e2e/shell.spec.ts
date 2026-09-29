@@ -107,10 +107,12 @@ test('narrow: no Sign in tab, and the center camera takes a photo for the open s
   const xs = boxes.map((box) => (box ? box.x : -1));
   expect(xs).toEqual([...xs].sort((a, b) => a - b));
 
-  // The camera tab goes straight to the picker (a file input on web) and saves the photo to
-  // the open shift, staying on the Dashboard.
-  const chooser = page.waitForEvent('filechooser');
+  // The camera tab asks which form the photo is for, then goes to the picker (a file input on
+  // web) and saves the photo to that form, staying on the Dashboard.
   await camera.click();
+  await expect(page.getByTestId('camera-choose')).toBeVisible();
+  const chooser = page.waitForEvent('filechooser');
+  await page.getByTestId('camera-choose-morning').click();
   await (await chooser).setFiles('assets/favicon-shift-relay.png');
   await expect(page.getByTestId('camera-notice')).toContainText('Saved to the Morning shift');
   await expect(page.getByTestId('shift-log-modal')).toHaveCount(0);

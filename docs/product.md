@@ -34,7 +34,7 @@ Sign-in is a demo gate, not authentication: three one-tap fictional accounts, no
 - Once signed in, every section header shows **Sign out** next to the theme toggle; signing out returns to the gate on the same URL.
 - The Sign in screen still shows the active account, so switching accounts takes one tap.
 - Jordan initiates the Midday handoff; Avery receives it with a second sign-off. There is no Midday account; Midday is the handoff event between Morning and Night.
-- Elena can inspect the Dashboard and Logs but cannot sign logs, raise issues, or resolve them.
+- Elena can inspect the Dashboard and Logs and add photos to any of the day's open shifts, but cannot sign logs, raise issues, or resolve them.
 - Reloading resets the session. `sessionSlice` stores only the selected account ID or `null`.
 - Account buttons are labeled, at least 44×44, and the active role is stated in words, never by color alone.
 

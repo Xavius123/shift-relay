@@ -69,12 +69,14 @@ export function requiredSignerMessage(log: SignableLog): string {
 }
 
 /**
- * The forms each Shift Manager can add photos to: the day shift opens (Morning) and hands off
- * (Midday); the night shift receives the handoff (Midday) and closes (Night).
+ * The forms each account can add photos to. A Shift Manager gets their own shift's forms: the
+ * day shift opens (Morning) and hands off (Midday); the night shift receives the handoff
+ * (Midday) and closes (Night). The Operations Manager can add to any of the day's forms.
  */
 function photoPhasesFor(accountId: DemoAccountId | null): readonly ShiftLog['phase'][] {
   if (accountId === null) return [];
-  const { shift } = demoAccounts[accountId];
+  const { shift, role } = demoAccounts[accountId];
+  if (role === 'manager') return ['morning', 'midday', 'night'];
   if (shift === 'morning') return ['morning', 'midday'];
   if (shift === 'night') return ['midday', 'night'];
   return [];
@@ -82,7 +84,8 @@ function photoPhasesFor(accountId: DemoAccountId | null): readonly ShiftLog['pha
 
 /**
  * Photos can be added to today's form that is not closed yet, by the Shift Manager who owns
- * that phase. It does not have to be their turn to sign: photos can come before or after.
+ * that phase or by the Operations Manager. It does not have to be their turn to sign: photos
+ * can come before or after.
  */
 export function canAddWalkPhotos(
   accountId: DemoAccountId | null,
@@ -96,12 +99,13 @@ export function canAddWalkPhotos(
   );
 }
 
-/** The first of today's forms, in day order, that this account can still add photos to. */
-export function currentPhotoLog<T extends Pick<ShiftLog, 'phase' | 'status' | 'operationalDate'>>(
+/** Today's forms, in day order, that this account can still add photos to. */
+export function photoLogs<T extends Pick<ShiftLog, 'phase' | 'status' | 'operationalDate'>>(
   accountId: DemoAccountId | null,
   todayLogs: readonly T[],
-): T | null {
+): T[] {
   const order: readonly ShiftLog['phase'][] = ['morning', 'midday', 'night'];
-  const ordered = [...todayLogs].sort((a, b) => order.indexOf(a.phase) - order.indexOf(b.phase));
-  return ordered.find((log) => canAddWalkPhotos(accountId, log)) ?? null;
+  return [...todayLogs]
+    .sort((a, b) => order.indexOf(a.phase) - order.indexOf(b.phase))
+    .filter((log) => canAddWalkPhotos(accountId, log));
 }
