@@ -1,7 +1,4 @@
-import type Ionicons from '@expo/vector-icons/Ionicons';
-import type { ComponentProps } from 'react';
-
-type IconName = ComponentProps<typeof Ionicons>['name'];
+import type { IconName } from '@/design-system';
 
 export interface NavItem {
   /** Tab route name; also the testID suffix (`nav-{name}`). */

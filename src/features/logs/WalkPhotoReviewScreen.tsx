@@ -14,9 +14,9 @@ import { canDeleteWalkPhotos } from './logPermissions';
 import { localDateKey, phaseIcons, phaseLabels } from './logTemplates';
 import { useGetShiftLogsQuery, useRemoveWalkPhotoMutation } from './logsApi';
 import { NoPhotosTile } from './NoPhotosTile';
-import { PhotoPreview, type PreviewPhoto } from './PhotoPreview';
+import { PhotoPreview } from './PhotoPreview';
 import { ShiftLogModal } from './ShiftLogModal';
-import type { ShiftLog } from './types';
+import type { PreviewPhoto, ShiftLog } from './types';
 
 /**
  * Every account's view of saved shift photos: one card per day, newest first,

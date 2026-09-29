@@ -4,7 +4,7 @@ import { AccessibilityInfo, Image, Pressable, View } from 'react-native';
 
 import { Button, Card, makeStyles, Text, useTheme } from '@/design-system';
 import { demoActor } from '@/features/auth/demoAccounts';
-import type { DemoAccountId } from '@/features/auth/sessionSlice';
+import type { DemoAccountId } from '@/features/auth/types';
 import { Initials } from '@/features/common/Initials';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
@@ -12,8 +12,8 @@ import { canDeleteWalkPhotos } from './logPermissions';
 import { phaseLabels } from './logTemplates';
 import { isLogsApiError, useAddWalkPhotosMutation, useRemoveWalkPhotoMutation } from './logsApi';
 import { NoPhotosTile } from './NoPhotosTile';
-import { PhotoPreview, type PreviewPhoto } from './PhotoPreview';
-import type { ShiftLog, WalkPhoto } from './types';
+import { PhotoPreview } from './PhotoPreview';
+import type { PreviewPhoto, ShiftLog, WalkPhoto } from './types';
 import { clearWalkDrafts, discardWalkDraft, selectWalkDrafts } from './walkDraftsSlice';
 
 const time = new Intl.DateTimeFormat(undefined, { timeStyle: 'short' });

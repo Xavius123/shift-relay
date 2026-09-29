@@ -1,7 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-export type DemoRole = 'shiftManager' | 'manager';
-export type DemoAccountId = 'jordan' | 'avery' | 'elena';
+import type { DemoAccountId } from './types';
 
 interface SessionState {
   accountId: DemoAccountId | null;

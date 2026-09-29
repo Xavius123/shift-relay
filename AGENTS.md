@@ -14,6 +14,7 @@ A React Native + TypeScript demo app built on its own small design system. This 
 - **TypeScript strict.** No `any`, no `@ts-ignore`, no non-null `!` without a comment saying why.
 - **Tokens only.** No color literals, no raw spacing/radius/font-size numbers, no inline styles. Read everything from `useTheme()`.
 - **Shared types.** Variant and size unions (`Size`, `ButtonVariant`, `StatusVariant`, …) live in `src/design-system/types.ts` and are reused, never redefined per component.
+- **Where types live.** Route files in `src/app/` declare none. Domain types go in the feature's `types.ts` (`features/auth/types.ts`, `features/logs/types.ts`, …), never in a slice or component file that other files import from. A `Props` type used by one component stays beside it.
 - **State.** Server data lives only in RTK Query. Slices hold UI state (filters, color scheme, accent, dev flags). Never copy query results into a slice.
 - **Typed hooks only.** Use `useAppSelector` and `useAppDispatch`, never the raw `useSelector` and `useDispatch`.
 - **Every screen has loading, empty, and error states.** Errors show a message and a retry. The app never white-screens; the error boundary catches the rest.

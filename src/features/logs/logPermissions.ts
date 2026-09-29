@@ -1,5 +1,5 @@
 import { demoAccounts } from '@/features/auth/demoAccounts';
-import type { DemoAccountId } from '@/features/auth/sessionSlice';
+import type { DemoAccountId } from '@/features/auth/types';
 
 import { localDateKey } from './logTemplates';
 import type { ShiftLog } from './types';

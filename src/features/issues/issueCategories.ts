@@ -1,9 +1,6 @@
-import type Ionicons from '@expo/vector-icons/Ionicons';
-import type { ComponentProps } from 'react';
+import type { IconName } from '@/design-system';
 
 import type { Issue, IssueCategory } from './types';
-
-type IconName = ComponentProps<typeof Ionicons>['name'];
 
 export const issueCategoryOrder = [
   'safety',

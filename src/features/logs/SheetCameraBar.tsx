@@ -1,7 +1,7 @@
 import { Linking, View } from 'react-native';
 
 import { Button, makeStyles, Text } from '@/design-system';
-import type { DemoAccountId } from '@/features/auth/sessionSlice';
+import type { DemoAccountId } from '@/features/auth/types';
 
 import { canAddWalkPhotos } from './logPermissions';
 import type { ShiftLog } from './types';

@@ -1,4 +1,6 @@
 // Shared variant and size unions. Components reuse these; never redefine them per component.
+import type Ionicons from '@expo/vector-icons/Ionicons';
+import type { ComponentProps } from 'react';
 
 export type Size = 'sm' | 'md' | 'lg';
 
@@ -20,3 +22,6 @@ export type { Accent, Scheme } from './tokens/generated';
 
 /** What the user picked. `system` follows the device setting. */
 export type ColorSchemePreference = 'system' | 'light' | 'dark';
+
+/** The name of an Ionicons glyph. */
+export type IconName = ComponentProps<typeof Ionicons>['name'];

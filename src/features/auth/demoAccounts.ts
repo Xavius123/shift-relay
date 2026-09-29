@@ -1,6 +1,6 @@
 import type { ShiftPhase } from '@/features/logs/types';
 
-import type { DemoAccountId, DemoRole } from './sessionSlice';
+import type { DemoAccountId, DemoRole } from './types';
 
 export const demoAccounts = {
   jordan: {

@@ -1,4 +1,4 @@
-import type { DemoAccountId } from '@/features/auth/sessionSlice';
+import type { DemoAccountId } from '@/features/auth/types';
 
 import { phaseOrder } from './logTemplates';
 import type { ShiftLog } from './types';

@@ -6,13 +6,7 @@ import { Button, makeStyles, Text } from '@/design-system';
 import { formatDateTime } from '@/features/common/formatDateTime';
 import { Initials } from '@/features/common/Initials';
 
-import type { WalkPhoto } from './types';
-
-export interface PreviewPhoto {
-  photo: WalkPhoto;
-  /** Where it was taken, e.g. "Morning · Sep 28". */
-  context: string;
-}
+import type { PreviewPhoto } from './types';
 
 /**
  * One shift photo at full size, with who took it and when; Previous and Next step through the set.

@@ -1,4 +1,4 @@
-import type { DemoAccountId } from '@/features/auth/sessionSlice';
+import type { DemoAccountId } from '@/features/auth/types';
 
 /** The preset high-priority kinds a Shift Manager can pick, plus a written-in Other. */
 export type IssueCategory = 'safety' | 'equipment' | 'security' | 'temperature' | 'other';

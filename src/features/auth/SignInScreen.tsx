@@ -1,15 +1,13 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
-import type { ComponentProps } from 'react';
 import { ScrollView, useWindowDimensions, View } from 'react-native';
 
-import { Button, Card, makeStyles, Text, useTheme } from '@/design-system';
+import { Button, Card, makeStyles, Text, useTheme, type IconName } from '@/design-system';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 import { demoAccounts } from './demoAccounts';
-import { selectDemoAccountId, signIn, type DemoAccountId } from './sessionSlice';
-
-type IconName = ComponentProps<typeof Ionicons>['name'];
+import { selectDemoAccountId, signIn } from './sessionSlice';
+import type { DemoAccountId } from './types';
 
 const accountOrder: readonly DemoAccountId[] = ['jordan', 'avery', 'elena'];
 

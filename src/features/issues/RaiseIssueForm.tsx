@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { AccessibilityInfo, Image, Pressable, View } from 'react-native';
 
 import { Button, Card, Input, makeStyles, Text, useTheme } from '@/design-system';
-import type { DemoAccountId } from '@/features/auth/sessionSlice';
+import type { DemoAccountId } from '@/features/auth/types';
 import { isLogsApiError, useRaiseIssueMutation } from '@/features/logs/logsApi';
 import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
 

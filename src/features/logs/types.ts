@@ -1,4 +1,4 @@
-import type { DemoAccountId } from '@/features/auth/sessionSlice';
+import type { DemoAccountId } from '@/features/auth/types';
 
 export type ShiftPhase = 'morning' | 'midday' | 'night';
 export type LogStatus = 'pending' | 'awaitingSecondSignOff' | 'signedOff';
@@ -82,4 +82,10 @@ export interface ToggleCheckInput {
   checkId: string;
   checked: boolean;
   accountId: DemoAccountId;
+}
+
+/** A photo in the full-size viewer, with where it was taken, e.g. "Morning · Sep 28". */
+export interface PreviewPhoto {
+  photo: WalkPhoto;
+  context: string;
 }
