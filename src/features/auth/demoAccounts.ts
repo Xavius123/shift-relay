@@ -1,3 +1,4 @@
+import { phaseOrder } from '@/features/logs/logTemplates';
 import type { ShiftPhase } from '@/features/logs/types';
 
 import type { DemoAccountId, DemoRole } from './types';
@@ -44,7 +45,7 @@ export function visiblePhases(accountId: DemoAccountId | null): readonly ShiftPh
   if (accountId !== null && demoAccounts[accountId].shift === 'morning') {
     return ['morning', 'midday'];
   }
-  return ['morning', 'midday', 'night'];
+  return phaseOrder;
 }
 
 export function demoActor(accountId: DemoAccountId | null): string {

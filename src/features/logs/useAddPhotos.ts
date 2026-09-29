@@ -1,9 +1,9 @@
 import { AccessibilityInfo } from 'react-native';
 
 import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
+import { plural } from '@/features/common/plural';
 import { useAppDispatch } from '@/store/hooks';
 
-import { plural } from './WalkPhotos';
 import { addWalkDrafts } from './walkDraftsSlice';
 
 /**

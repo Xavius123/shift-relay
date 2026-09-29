@@ -1,7 +1,7 @@
 import { demoAccounts } from '@/features/auth/demoAccounts';
 import type { DemoAccountId } from '@/features/auth/types';
 
-import { localDateKey } from './logTemplates';
+import { phaseOrder, todayKey } from './logTemplates';
 import type { ShiftLog } from './types';
 
 type SignableLog = Pick<ShiftLog, 'phase' | 'status'>;
@@ -49,7 +49,7 @@ export function canToggleChecks(
   accountId: DemoAccountId | null,
   log: Pick<ShiftLog, 'phase' | 'status' | 'operationalDate'>,
   dayLogs: readonly SignableLog[],
-  today: string = localDateKey(new Date()),
+  today: string = todayKey(),
 ): boolean {
   return (
     log.status === 'pending' && log.operationalDate === today && canSignLog(accountId, log, dayLogs)
@@ -76,7 +76,7 @@ export function requiredSignerMessage(log: SignableLog): string {
 function photoPhasesFor(accountId: DemoAccountId | null): readonly ShiftLog['phase'][] {
   if (accountId === null) return [];
   const { shift, role } = demoAccounts[accountId];
-  if (role === 'manager') return ['morning', 'midday', 'night'];
+  if (role === 'manager') return phaseOrder;
   if (shift === 'morning') return ['morning', 'midday'];
   if (shift === 'night') return ['midday', 'night'];
   return [];
@@ -90,7 +90,7 @@ function photoPhasesFor(accountId: DemoAccountId | null): readonly ShiftLog['pha
 export function canAddWalkPhotos(
   accountId: DemoAccountId | null,
   log: Pick<ShiftLog, 'phase' | 'status' | 'operationalDate'>,
-  today: string = localDateKey(new Date()),
+  today: string = todayKey(),
 ): boolean {
   return (
     log.status !== 'signedOff' &&
@@ -104,8 +104,7 @@ export function photoLogs<T extends Pick<ShiftLog, 'phase' | 'status' | 'operati
   accountId: DemoAccountId | null,
   todayLogs: readonly T[],
 ): T[] {
-  const order: readonly ShiftLog['phase'][] = ['morning', 'midday', 'night'];
   return [...todayLogs]
-    .sort((a, b) => order.indexOf(a.phase) - order.indexOf(b.phase))
+    .sort((a, b) => phaseOrder.indexOf(a.phase) - phaseOrder.indexOf(b.phase))
     .filter((log) => canAddWalkPhotos(accountId, log));
 }

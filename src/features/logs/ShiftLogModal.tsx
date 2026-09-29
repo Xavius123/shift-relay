@@ -9,7 +9,8 @@ import { Initials } from '@/features/common/Initials';
 import { demoActor } from '@/features/auth/demoAccounts';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
 import type { PickedPhoto } from '@/features/camera/types';
-import { formatDateTime } from '@/features/common/formatDateTime';
+import { formatDateTime, formatDayFull } from '@/features/common/formatDate';
+import { plural } from '@/features/common/plural';
 import { LoadingState, ScreenState } from '@/features/common/ScreenState';
 import { canManageIssues } from '@/features/issues/issuePermissions';
 import { issueTitle } from '@/features/issues/issueCategories';
@@ -18,7 +19,7 @@ import { RaiseIssueForm } from '@/features/issues/RaiseIssueForm';
 import { useAppSelector } from '@/store/hooks';
 
 import { logStatusLabel } from './dailySheet';
-import { localDateKey, phaseDescriptions, phaseLabels } from './logTemplates';
+import { phaseDescriptions, phaseLabels, todayKey } from './logTemplates';
 import {
   canSignLog,
   canAddWalkPhotos,
@@ -27,6 +28,7 @@ import {
   sequenceBlockMessage,
 } from './logPermissions';
 import {
+  apiErrorMessage,
   isLogsApiError,
   useGetIssuesQuery,
   useGetShiftLogQuery,
@@ -37,7 +39,7 @@ import {
 } from './logsApi';
 import type { LogConfirmation } from './types';
 import { SheetCameraBar } from './SheetCameraBar';
-import { plural, WalkPhotos } from './WalkPhotos';
+import { WalkPhotos } from './WalkPhotos';
 import { selectWalkDrafts } from './walkDraftsSlice';
 
 export interface ShiftLogModalProps {
@@ -163,7 +165,7 @@ function ShiftLogContent({
   const linkedIssues = (issuesQuery.data ?? []).filter((item) => item.sourceLogId === log.id);
   const openIssues = (issuesQuery.data ?? []).filter((item) => item.status === 'open');
   const canManage = canManageIssues(accountId);
-  const canFlag = canManage && log.operationalDate === localDateKey(new Date());
+  const canFlag = canManage && log.operationalDate === todayKey();
   const signed = log.status === 'signedOff';
   const awaitingSecond = log.status === 'awaitingSecondSignOff';
   const reviewed = signed || awaitingSecond;
@@ -173,9 +175,10 @@ function ShiftLogContent({
   const blockedMessage = sequenceBlockMessage(log, dayLogs);
   const signerMessage = blockedMessage ?? requiredSignerMessage(log);
   const busy = signOffResult.isLoading;
-  const mutationMessage = isLogsApiError(signOffResult.error)
-    ? signOffResult.error.data.message
-    : 'The log could not be signed off. Try again.';
+  const mutationMessage = apiErrorMessage(
+    signOffResult.error,
+    'The log could not be signed off. Try again.',
+  );
   const title = log.phase === 'midday' ? 'Midday handoff' : `${phaseLabels[log.phase]} shift`;
   const needsIssueReview = awaitingSecond && openIssues.length > 0;
 
@@ -217,7 +220,7 @@ function ShiftLogContent({
     <>
       <ModalHeader
         title={title}
-        subtitle={log.operationalDate}
+        subtitle={formatDayFull(log.operationalDate)}
         status={logStatusLabel(log)}
         statusVariant={signed ? 'success' : 'warning'}
         onClose={onClose}
@@ -250,9 +253,7 @@ function ShiftLogContent({
           ))}
           {toggleResult.isError ? (
             <Text variant="bodySm" tone="error" weight="semibold" testID="check-toggle-error">
-              {isLogsApiError(toggleResult.error)
-                ? toggleResult.error.data.message
-                : 'The check could not be saved. Try again.'}
+              {apiErrorMessage(toggleResult.error, 'The check could not be saved. Try again.')}
             </Text>
           ) : null}
         </View>

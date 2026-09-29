@@ -1,16 +1,8 @@
+import { formatDay } from '@/features/common/formatDate';
+
 import { groupDailySheets, logStatusLabel, type DailySheet } from './dailySheet';
 import { phaseLabels, phaseOrder } from './logTemplates';
 import type { ShiftLog } from './types';
-
-const dayFormat = new Intl.DateTimeFormat(undefined, {
-  weekday: 'short',
-  month: 'short',
-  day: 'numeric',
-});
-
-export function formatOperationalDate(date: string): string {
-  return dayFormat.format(new Date(`${date}T12:00:00`));
-}
 
 export function signedByLabel(log: ShiftLog): string {
   return log.signOffs.length > 0
@@ -23,7 +15,7 @@ function searchText(log: ShiftLog): string {
   return [
     log.id,
     log.operationalDate,
-    formatOperationalDate(log.operationalDate),
+    formatDay(log.operationalDate),
     phaseLabels[log.phase],
     logStatusLabel(log),
     signedByLabel(log),

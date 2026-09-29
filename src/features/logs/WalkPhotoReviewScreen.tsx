@@ -3,15 +3,16 @@ import { useState } from 'react';
 import { FlatList, Image, Pressable, View } from 'react-native';
 
 import { Badge, Button, Card, makeStyles, Text, useTheme } from '@/design-system';
+import { formatDay, formatDayFull } from '@/features/common/formatDate';
+import { plural } from '@/features/common/plural';
 import { Initials } from '@/features/common/Initials';
 import { LoadingState, ScreenState } from '@/features/common/ScreenState';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
 import { useAppSelector } from '@/store/hooks';
 
 import { groupDailySheets, logStatusLabel, type DailySheet } from './dailySheet';
-import { formatOperationalDate } from './logFilters';
 import { canDeleteWalkPhotos } from './logPermissions';
-import { localDateKey, phaseIcons, phaseLabels } from './logTemplates';
+import { phaseIcons, phaseLabels, todayKey } from './logTemplates';
 import { useGetShiftLogsQuery, useRemoveWalkPhotoMutation } from './logsApi';
 import { NoPhotosTile } from './NoPhotosTile';
 import { PhotoPreview } from './PhotoPreview';
@@ -48,7 +49,7 @@ export function WalkPhotoReviewScreen() {
     );
   }
 
-  const today = localDateKey(new Date());
+  const today = todayKey();
   const days = groupDailySheets(logsQuery.data).filter(
     (day) => day.date === today || day.logs.some((log) => log.walkPhotos.length > 0),
   );
@@ -58,7 +59,7 @@ export function WalkPhotoReviewScreen() {
       log.walkPhotos.map((photo) => ({
         photo,
         logId: log.id,
-        context: `${phaseLabels[log.phase]} shift · ${formatOperationalDate(day.date)}`,
+        context: `${phaseLabels[log.phase]} shift · ${formatDay(day.date)}`,
       })),
     ),
   );
@@ -88,7 +89,7 @@ export function WalkPhotoReviewScreen() {
             <Text variant="caption" tone="subtle" testID="walk-review-total">
               {total === 0
                 ? 'No shift photos yet.'
-                : `${total} ${total === 1 ? 'photo' : 'photos'} across ${days.length} ${days.length === 1 ? 'day' : 'days'}`}
+                : `${plural(total, 'photo')} across ${plural(days.length, 'day')}`}
             </Text>
             {logsQuery.isError ? (
               <Card testID="walk-review-stale">
@@ -144,7 +145,7 @@ function DayCard({
   return (
     <Card testID={`walk-review-day-${day.date}`}>
       <View style={styles.dayHeader}>
-        <Text variant="title">{formatOperationalDate(day.date)}</Text>
+        <Text variant="title">{formatDay(day.date)}</Text>
         {today ? <Badge variant="accent">Today</Badge> : null}
       </View>
       {day.logs.map((log) => (
@@ -188,7 +189,7 @@ function ShiftPhotos({
           variant="ghost"
           size="sm"
           onPress={() => onOpenLog(log.id)}
-          accessibilityLabel={`Open ${phaseLabels[log.phase]} sheet for ${log.operationalDate}`}
+          accessibilityLabel={`Open ${phaseLabels[log.phase]} sheet for ${formatDayFull(log.operationalDate)}`}
           testID={`walk-review-open-log-${log.id}`}
         >
           Open sheet

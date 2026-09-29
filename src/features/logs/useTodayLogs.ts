@@ -1,5 +1,5 @@
 import { useGetShiftLogsQuery } from './logsApi';
-import { localDateKey, phaseOrder } from './logTemplates';
+import { phaseOrder, todayKey } from './logTemplates';
 import type { ShiftLog } from './types';
 
 /**
@@ -8,7 +8,7 @@ import type { ShiftLog } from './types';
  */
 export function useTodayLogs() {
   const query = useGetShiftLogsQuery();
-  const today = localDateKey(new Date());
+  const today = todayKey();
   const todayLogs = phaseOrder
     .map((phase) =>
       (query.data ?? []).find((log) => log.operationalDate === today && log.phase === phase),

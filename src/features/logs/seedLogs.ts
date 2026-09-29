@@ -1,4 +1,4 @@
-import { confirmationTemplates, localDateKey, logId, phaseOrder } from './logTemplates';
+import { confirmationTemplates, localDateKey, logId, phaseOrder, todayKey } from './logTemplates';
 import type { Issue } from '@/features/issues/types';
 
 import { seedWalkPhotos } from './generated/seedWalkPhotos';
@@ -118,7 +118,7 @@ function createLog(
 export function createSeedData(): { logs: ShiftLog[]; issues: Issue[] } {
   const logs: ShiftLog[] = [];
 
-  const today = localDateKey(new Date());
+  const today = todayKey();
   for (const phase of phaseOrder) logs.push(createLog(today, phase, null));
 
   for (let daysAgo = 1; daysAgo <= 21; daysAgo += 1) {

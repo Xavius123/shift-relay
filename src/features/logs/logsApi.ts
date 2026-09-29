@@ -1,5 +1,5 @@
 import { createApi, type BaseQueryFn } from '@reduxjs/toolkit/query/react';
-import { localDateKey } from './logTemplates';
+import { todayKey } from './logTemplates';
 
 import { demoActor } from '@/features/auth/demoAccounts';
 import type { DevState } from '@/features/dev/devSlice';
@@ -43,6 +43,11 @@ export interface LogsApiError {
 export function isLogsApiError(error: unknown): error is LogsApiError {
   if (typeof error !== 'object' || error === null || !('status' in error)) return false;
   return error.status === 404 || error.status === 409 || error.status === 503;
+}
+
+/** The API's own message for a failed call, or `fallback` for anything else (say, a crash). */
+export function apiErrorMessage(error: unknown, fallback: string): string {
+  return isLogsApiError(error) ? error.data.message : fallback;
 }
 
 interface StateWithDev {
@@ -216,7 +221,7 @@ const mockBaseQuery: BaseQueryFn<MockQuery, unknown, LogsApiError> = async (quer
     }
     const activeLog = logs.find(
       (log) =>
-        log.operationalDate === localDateKey(new Date()) &&
+        log.operationalDate === todayKey() &&
         log.status !== 'signedOff' &&
         (input.accountId === 'jordan'
           ? log.phase === 'morning'

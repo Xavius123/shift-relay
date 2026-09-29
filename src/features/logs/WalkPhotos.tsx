@@ -6,22 +6,18 @@ import { Button, Card, makeStyles, Text, useTheme } from '@/design-system';
 import { demoActor } from '@/features/auth/demoAccounts';
 import type { DemoAccountId } from '@/features/auth/types';
 import { hasCamera } from '@/features/camera/captureSupport';
+import { formatDayFull, formatTime } from '@/features/common/formatDate';
+import { plural } from '@/features/common/plural';
 import { Initials } from '@/features/common/Initials';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 import { canDeleteWalkPhotos } from './logPermissions';
 import { phaseLabels } from './logTemplates';
-import { isLogsApiError, useAddWalkPhotosMutation, useRemoveWalkPhotoMutation } from './logsApi';
+import { apiErrorMessage, useAddWalkPhotosMutation, useRemoveWalkPhotoMutation } from './logsApi';
 import { NoPhotosTile } from './NoPhotosTile';
 import { PhotoPreview } from './PhotoPreview';
 import type { PreviewPhoto, ShiftLog, WalkPhoto } from './types';
 import { clearWalkDrafts, discardWalkDraft, selectWalkDrafts } from './walkDraftsSlice';
-
-const time = new Intl.DateTimeFormat(undefined, { timeStyle: 'short' });
-
-export function plural(count: number, word: string): string {
-  return `${count} ${word}${count === 1 ? '' : 's'}`;
-}
 
 /**
  * The top of every shift sheet: shift photos. The Shift Manager on duty takes
@@ -49,7 +45,7 @@ export function WalkPhotos({
 
   const saved = log.walkPhotos;
   const canDelete = canDeleteWalkPhotos(accountId);
-  const context = `${phaseLabels[log.phase]} shift · ${log.operationalDate}`;
+  const context = `${phaseLabels[log.phase]} shift · ${formatDayFull(log.operationalDate)}`;
   const actor = demoActor(accountId);
   const draftPreview: PreviewPhoto[] = drafts.map((draft) => ({
     photo: {
@@ -148,9 +144,7 @@ export function WalkPhotos({
 
       {apiError ? (
         <Text variant="bodySm" tone="error" weight="semibold" testID="walk-photos-save-error">
-          {isLogsApiError(apiError)
-            ? apiError.data.message
-            : "The photos couldn't be saved. Try again."}
+          {apiErrorMessage(apiError, "The photos couldn't be saved. Try again.")}
         </Text>
       ) : null}
 
@@ -212,7 +206,7 @@ function SavedTile({
       <View style={styles.meta}>
         <Initials names={[photo.actor]} />
         <Text variant="caption" tone="muted">
-          {time.format(new Date(photo.at))}
+          {formatTime(photo.at)}
         </Text>
         {photo.source === 'upload' ? (
           <Text variant="caption" tone="muted" testID="walk-photo-uploaded">

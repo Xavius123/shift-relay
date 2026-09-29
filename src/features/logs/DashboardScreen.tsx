@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Image, ScrollView, View } from 'react-native';
 
 import { Badge, Button, Card, makeStyles, Text } from '@/design-system';
+import { formatDayLong } from '@/features/common/formatDate';
+import { plural } from '@/features/common/plural';
 import { Initials } from '@/features/common/Initials';
 import { demoAccounts, visiblePhases } from '@/features/auth/demoAccounts';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
@@ -25,12 +27,6 @@ import { ShiftLogModal } from './ShiftLogModal';
 import { useTodayLogs } from './useTodayLogs';
 import type { ShiftLog } from './types';
 import { selectWalkDrafts } from './walkDraftsSlice';
-
-const todayLabel = new Intl.DateTimeFormat(undefined, {
-  weekday: 'long',
-  month: 'long',
-  day: 'numeric',
-});
 
 const rowLabels = {
   morning: 'Morning',
@@ -90,7 +86,7 @@ export function DashboardScreen() {
       >
         <View style={styles.header}>
           <Text variant="title" testID="dashboard-date">
-            {todayLabel.format(new Date(`${today}T12:00:00`))}
+            {formatDayLong(today)}
           </Text>
 
           {logsQuery.isError || issuesQuery.isError ? (
@@ -217,10 +213,7 @@ function SheetRow({ log, onOpen }: { log: ShiftLog; onOpen: () => void }) {
   ];
   const shown = thumbnails.slice(0, maxThumbnails);
   const hidden = thumbnails.length - shown.length;
-  const photoNote =
-    thumbnails.length > 0
-      ? `, ${thumbnails.length} ${thumbnails.length === 1 ? 'photo' : 'photos'}`
-      : '';
+  const photoNote = thumbnails.length > 0 ? `, ${plural(thumbnails.length, 'photo')}` : '';
   return (
     <Card
       variant="interactive"

@@ -9,7 +9,8 @@ import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
 import { phaseLabels } from '@/features/logs/logTemplates';
 import type { ShiftLog } from '@/features/logs/types';
 
-import { formatDateTime } from '@/features/common/formatDateTime';
+import { formatDateTime, formatDayFull } from '@/features/common/formatDate';
+import { plural } from '@/features/common/plural';
 
 import { issueCategories, issueTitle } from './issueCategories';
 import type { Issue } from './types';
@@ -93,7 +94,7 @@ export function IssueRow({
     (line) => !compact || line.type !== 'photoAdded',
   );
   const source = sourceLog
-    ? `${phaseLabels[sourceLog.phase]} · ${sourceLog.operationalDate}`
+    ? `${phaseLabels[sourceLog.phase]} · ${formatDayFull(sourceLog.operationalDate)}`
     : 'Raised from Issues';
 
   return (
@@ -153,7 +154,7 @@ export function IssueRow({
       ) : null}
       {uploadedCount > 0 ? (
         <Text variant="caption" tone="muted" testID={`issue-uploaded-${issue.id}`}>
-          {`${uploadedCount} of ${issue.photos.length} ${issue.photos.length === 1 ? 'photo was' : 'photos were'} uploaded from a file`}
+          {`${uploadedCount} of ${plural(issue.photos.length, 'photo')} ${issue.photos.length === 1 ? 'was' : 'were'} uploaded from a file`}
         </Text>
       ) : null}
 

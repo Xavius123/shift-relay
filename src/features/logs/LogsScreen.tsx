@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import { Badge, Button, Card, Input, makeStyles, Text, useTheme } from '@/design-system';
+import { formatDay, formatDayFull } from '@/features/common/formatDate';
 import { Initials } from '@/features/common/Initials';
 import { LoadingState, ScreenState } from '@/features/common/ScreenState';
 import {
@@ -25,7 +26,6 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { dailySheetStatus, dailySheetStatusLabels, logStatusLabel } from './dailySheet';
 import {
   filterDays,
-  formatOperationalDate,
   nextSort,
   signedByLabel,
   sortLogs,
@@ -210,7 +210,7 @@ function DayGroup({
     <View style={styles.table} testID={`log-day-${day.sheet.date}`}>
       <View style={styles.dayHeading}>
         <Text variant="bodySm" weight="semibold">
-          {formatOperationalDate(day.sheet.date)}
+          {formatDay(day.sheet.date)}
         </Text>
         <Badge variant={status === 'complete' ? 'success' : 'warning'}>
           {`Daily Sheet · ${dailySheetStatusLabels[status]}`}
@@ -353,7 +353,7 @@ function LogRow({
     <Pressable
       onPress={() => onOpen(log.id)}
       accessibilityRole="button"
-      accessibilityLabel={`Open ${log.operationalDate} ${phaseLabels[log.phase]} log`}
+      accessibilityLabel={`Open ${formatDayFull(log.operationalDate)} ${phaseLabels[log.phase]} log`}
       testID={`log-row-${log.id}`}
       style={({ pressed }) => [
         styles.row,
@@ -365,7 +365,7 @@ function LogRow({
       {showDate ? (
         <View style={styles.dateCell}>
           <Text variant="bodySm" weight="medium">
-            {formatOperationalDate(log.operationalDate)}
+            {formatDay(log.operationalDate)}
           </Text>
         </View>
       ) : null}

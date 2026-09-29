@@ -4,7 +4,7 @@ import { AccessibilityInfo, Image, Pressable, View } from 'react-native';
 
 import { Button, Card, Input, makeStyles, Text, useTheme } from '@/design-system';
 import type { DemoAccountId } from '@/features/auth/types';
-import { isLogsApiError, useRaiseIssueMutation } from '@/features/logs/logsApi';
+import { apiErrorMessage, useRaiseIssueMutation } from '@/features/logs/logsApi';
 import type { PickedPhoto } from '@/features/camera/types';
 import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
 
@@ -169,9 +169,7 @@ export function RaiseIssueForm({
       ) : null}
       {result.isError ? (
         <Text variant="bodySm" tone="error" weight="semibold" testID="raise-issue-error">
-          {isLogsApiError(result.error)
-            ? result.error.data.message
-            : 'The issue could not be flagged. Try again.'}
+          {apiErrorMessage(result.error, 'The issue could not be flagged. Try again.')}
         </Text>
       ) : null}
 

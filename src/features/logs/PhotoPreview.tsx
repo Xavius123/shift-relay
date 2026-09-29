@@ -4,7 +4,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, makeStyles, Text } from '@/design-system';
 import { CloseButton } from '@/features/common/CloseButton';
-import { formatDateTime } from '@/features/common/formatDateTime';
+import { formatDateTime } from '@/features/common/formatDate';
 import { Initials } from '@/features/common/Initials';
 
 import type { PreviewPhoto } from './types';

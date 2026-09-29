@@ -38,6 +38,11 @@ export function localDateKey(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+/** Today's operational date, in the device's timezone. */
+export function todayKey(): string {
+  return localDateKey(new Date());
+}
+
 export function logId(date: string, phase: ShiftPhase): string {
   return `LOG-${date}-${phase}`;
 }

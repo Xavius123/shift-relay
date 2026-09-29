@@ -4,6 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { Button, Card, makeStyles, Text } from '@/design-system';
 import { demoAccounts } from '@/features/auth/demoAccounts';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
+import { formatDateTime, formatDayFull } from '@/features/common/formatDate';
 import { LoadingState, ScreenState } from '@/features/common/ScreenState';
 import { IssueRow } from '@/features/issues/IssueRow';
 import { useGetIssuesQuery, useGetShiftLogsQuery } from '@/features/logs/logsApi';
@@ -56,7 +57,7 @@ export default function DailyReportRoute() {
   );
   return (
     <ScrollView style={styles.page} contentContainerStyle={styles.content}>
-      <Text variant="heading">Daily Report · {date}</Text>
+      <Text variant="heading">Daily Report · {formatDayFull(date)}</Text>
       {logs.map((log) => (
         <Card key={log.id}>
           <Text variant="title">{phaseDescriptions[log.phase]}</Text>
@@ -75,7 +76,7 @@ export default function DailyReportRoute() {
           {log.checkEvents.map((event) => (
             <Text key={`${event.checkId}-${event.at}`} variant="caption" tone="muted">
               {event.actor} {event.checked ? 'confirmed' : 'reopened'} {event.label} ·{' '}
-              {new Date(event.at).toLocaleString()}
+              {formatDateTime(event.at)}
             </Text>
           ))}
         </Card>
