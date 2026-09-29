@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
-import { Image, View } from 'react-native';
+import { Image, useWindowDimensions, View } from 'react-native';
 
 import { Badge, Button, Card, makeStyles, Text, useTheme } from '@/design-system';
 import { Initials } from '@/features/common/Initials';
@@ -38,6 +38,7 @@ export function IssueRow({
 }) {
   const styles = useStyles();
   const theme = useTheme();
+  const compact = useWindowDimensions().width < theme.breakpoint.wide;
   const [resolving, setResolving] = useState(false);
   const [resolutionPhotos, setResolutionPhotos] = useState<string[]>([]);
   const [resolveError, setResolveError] = useState<string | null>(null);
@@ -47,6 +48,10 @@ export function IssueRow({
   const category = issueCategories[issue.category];
   const open = issue.status === 'open';
   const title = issueTitle(issue);
+  // Phones show who raised it and who resolved it; photo events stay in the full trail.
+  const trailEvents = compact
+    ? issue.events.filter((event) => event.type !== 'photoAdded')
+    : issue.events;
   const source = sourceLog
     ? `${phaseLabels[sourceLog.phase]} · ${sourceLog.operationalDate}`
     : 'Raised from Issues';
@@ -54,23 +59,25 @@ export function IssueRow({
   return (
     <Card testID={`issue-${issue.id}`}>
       <View style={styles.heading}>
-        <View
-          style={[styles.icon, open ? styles.iconOpen : styles.iconResolved]}
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-        >
-          <Ionicons
-            name={category.icon}
-            size={theme.fontSize.lg}
-            color={open ? theme.color.error : theme.color.success}
-          />
-        </View>
+        {compact ? null : (
+          <View
+            style={[styles.icon, open ? styles.iconOpen : styles.iconResolved]}
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          >
+            <Ionicons
+              name={category.icon}
+              size={theme.fontSize.lg}
+              color={open ? theme.color.error : theme.color.success}
+            />
+          </View>
+        )}
         <View style={styles.copy}>
           <Text variant="bodySm" weight="semibold">
             {title}
           </Text>
           {issue.category !== 'other' && issue.details ? (
-            <Text variant="bodySm" tone="muted">
+            <Text variant="bodySm" tone="muted" {...(compact ? { numberOfLines: 2 } : {})}>
               {issue.details}
             </Text>
           ) : null}
@@ -82,7 +89,7 @@ export function IssueRow({
       </View>
 
       <View style={styles.trail} testID={`issue-trail-${issue.id}`}>
-        {issue.events.map((event) => (
+        {trailEvents.map((event) => (
           <View key={`${event.type}-${event.at}`} style={styles.eventRow}>
             <Initials names={[event.actor]} />
             <Text variant="caption" tone="muted">
@@ -98,7 +105,7 @@ export function IssueRow({
             <Image
               key={photo.id}
               source={{ uri: photo.uri }}
-              style={styles.photo}
+              style={[styles.photo, compact && styles.photoCompact]}
               accessibilityLabel={`${photo.purpose} photo`}
             />
           ))}
@@ -210,6 +217,7 @@ export function IssueRow({
 const useStyles = makeStyles((t) => ({
   eventRow: { flexDirection: 'row', alignItems: 'center', gap: t.spacing[2] },
   photos: { flexDirection: 'row', flexWrap: 'wrap', gap: t.spacing[2] },
+  photoCompact: { width: t.spacing[12], height: t.spacing[12] },
   resolution: { gap: t.spacing[2] },
   resolutionPhoto: { flexDirection: 'row', alignItems: 'center', gap: t.spacing[2] },
   photo: {

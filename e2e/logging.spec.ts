@@ -86,11 +86,11 @@ test('Daily Sheet runs Morning, handoff, and Night in modals, with a flagged iss
 
   // Avery receives the handoff, then completes Night.
   await signInAs(page, 'avery');
-  await expectSession(page, 'Avery Morgan');
+  await expectSession(page, 'Avery Smith');
   await expect(page.getByTestId('shift-card-night')).toBeVisible();
   await expect(page.getByTestId('next-action-button')).toHaveText('Receive handoff');
   await page.getByTestId('next-action-button').click();
-  await expect(page.getByTestId('second-sign-off')).toContainText('Reviewing as Avery Morgan');
+  await expect(page.getByTestId('second-sign-off')).toContainText('Reviewing as Avery Smith');
   // Night must acknowledge every open issue before receiving the handoff.
   const approve = page.getByTestId('approve-second-sign-off');
   await expect(approve).toHaveAttribute('aria-disabled', 'true');
@@ -124,19 +124,19 @@ test('Daily Sheet runs Morning, handoff, and Night in modals, with a flagged iss
   await expect(page.getByTestId('log-status')).toHaveText('Received');
   const summary = page.getByTestId('log-sign-off-summary');
   await expect(summary).toContainText('Morning sent · Jordan Lee');
-  await expect(summary).toContainText('Night received · Avery Morgan');
+  await expect(summary).toContainText('Night received · Avery Smith');
   await expect(page.getByTestId('handoff-issues-acknowledged')).toHaveText(
-    'Avery Morgan reviewed 3 open issues on receipt',
+    'Avery Smith reviewed 3 open issues on receipt',
   );
   // The acknowledgement is in the history, which stays folded away until asked for.
   await expect(page.getByTestId('check-events')).toHaveCount(0);
   await page.getByTestId('check-history-toggle').click();
   await expect(page.getByTestId('check-events')).toContainText(
-    'Avery Morgan checked Open issues reviewed (3)',
+    'Avery Smith checked Open issues reviewed (3)',
   );
   const linked = page.getByTestId('log-issues').getByTestId('issue-ISS-007');
   await expect(linked).toContainText('Resolved');
-  await expect(linked).toContainText('Resolved by Avery Morgan');
+  await expect(linked).toContainText('Resolved by Avery Smith');
 });
 
 test('the sequence and read-only views are enforced per account', async ({ page }) => {

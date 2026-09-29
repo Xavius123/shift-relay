@@ -9,11 +9,11 @@ Reviewers can choose a fictional Shift Manager or Manager identity from a top-le
 ## Behavior
 
 - A fresh app session is signed out and shows only the sign-in gate: brand, theme toggle, and the three demo accounts. No navigation or screens are reachable until an account is chosen.
-- A deep link (e.g. `/logs`) stays on that route after sign-in. The root and `/sign-in` land on the role's home: Dashboard for Shift Managers, Overview for the Manager.
+- Every sign-in lands on the Dashboard, including after a deep link (e.g. `/logs`).
 - Once signed in, every section header shows **Sign out** at the top right, next to the theme toggle. Signing out returns to the gate on the same URL.
 - The navigation is unchanged once signed in, including the Sign in tab for switching accounts.
 - Jordan Lee is the Morning Shift Manager and initiates the Midday handoff.
-- Avery Morgan is the Night Shift Manager and receives the Midday handoff with its second sign-off.
+- Avery Smith is the Night Shift Manager and receives the Midday handoff with its second sign-off.
 - Elena Ruiz is the Operations Manager. She can inspect Dashboard and Logs but cannot sign logs or complete urgent issues.
 - There is no Midday Shift Manager account; Midday describes the handoff event between Morning and Night.
 - The active role and fictional name remain visible when returning to Sign In during the same running session.

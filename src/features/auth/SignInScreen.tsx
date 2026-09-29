@@ -26,10 +26,9 @@ export const landingRoutes: Record<DemoAccountId, '/'> = {
 };
 
 /**
- * Demo account picker. By default, choosing an account lands on that role's home screen;
- * the sign-in gate passes `onSignedIn` to keep a deep-linked route instead.
+ * Demo account picker. Choosing an account signs in and lands on the Dashboard.
  */
-export function SignInScreen({ onSignedIn }: { onSignedIn?: (id: DemoAccountId) => void }) {
+export function SignInScreen() {
   const styles = useStyles();
   const theme = useTheme();
   const { width } = useWindowDimensions();
@@ -54,8 +53,7 @@ export function SignInScreen({ onSignedIn }: { onSignedIn?: (id: DemoAccountId) 
             fillRow={wide}
             onSelect={() => {
               dispatch(signIn(id));
-              if (onSignedIn) onSignedIn(id);
-              else router.replace(landingRoutes[id]);
+              router.replace(landingRoutes[id]);
             }}
           />
         ))}

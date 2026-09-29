@@ -1,22 +1,20 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { router, usePathname } from 'expo-router';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { makeStyles, Text, useTheme } from '@/design-system';
 import { ThemeToggle } from '@/features/shell/ThemeToggle';
 
-import { landingRoutes, SignInScreen } from './SignInScreen';
+import { SignInScreen } from './SignInScreen';
 
 /**
- * Shown instead of the app while no demo account is signed in. A deep link (e.g. /logs)
- * stays where it was after sign-in; the root and /sign-in land on the role's home screen.
+ * Shown instead of the app while no demo account is signed in. Every sign-in lands on the
+ * Dashboard, including after a deep link such as /logs.
  */
 export function SignInGate() {
   const styles = useStyles();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const pathname = usePathname();
 
   return (
     <View style={styles.root} testID="sign-in-gate">
@@ -33,11 +31,7 @@ export function SignInGate() {
         </View>
         <ThemeToggle />
       </View>
-      <SignInScreen
-        onSignedIn={(id) => {
-          if (pathname === '/' || pathname === '/sign-in') router.replace(landingRoutes[id]);
-        }}
-      />
+      <SignInScreen />
     </View>
   );
 }

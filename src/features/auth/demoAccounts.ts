@@ -11,7 +11,7 @@ export const demoAccounts = {
     shift: 'morning',
   },
   avery: {
-    name: 'Avery Morgan',
+    name: 'Avery Smith',
     title: 'Night Shift Manager',
     description: 'Receive the Midday handoff and prepare the next Morning shift.',
     role: 'shiftManager',

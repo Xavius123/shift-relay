@@ -41,15 +41,15 @@ test('Shift Manager and Operations Manager demo accounts expose the correct role
   await expect(page.getByTestId('manager-week')).toHaveCount(0);
 });
 
-test('a deep link stays put after sign-in, and signing out hides it again', async ({ page }) => {
+test('every sign-in lands on the Dashboard, even from a deep link', async ({ page }) => {
   await page.goto('/logs');
   await expect(page.getByTestId('sign-in-gate')).toBeVisible();
   await expect(page.getByTestId('screen-logs')).toHaveCount(0);
 
   await page.getByTestId('demo-sign-in-avery').click();
-  await expect(page.getByTestId('screen-logs')).toBeVisible();
-  await expect(page).toHaveURL(/\/logs$/);
+  await expect(page.getByTestId('screen-dashboard')).toBeVisible();
+  await expect(page).toHaveURL(/\/$/);
 
   await signOutFromHeader(page);
-  await expect(page.getByTestId('screen-logs')).toHaveCount(0);
+  await expect(page.getByTestId('screen-dashboard')).toHaveCount(0);
 });

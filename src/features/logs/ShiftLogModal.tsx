@@ -18,6 +18,7 @@ import { logStatusLabel } from './dailySheet';
 import { localDateKey, phaseDescriptions, phaseLabels } from './logTemplates';
 import {
   canSignLog,
+  canAddWalkPhotos,
   canToggleChecks,
   requiredSignerMessage,
   sequenceBlockMessage,
@@ -225,7 +226,7 @@ function ShiftLogContent({
       <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent}>
         <Text tone="muted">{phaseDescriptions[log.phase]}</Text>
 
-        <WalkPhotos log={log} accountId={accountId} canEdit={canToggle} />
+        <WalkPhotos log={log} accountId={accountId} canEdit={canAddWalkPhotos(accountId, log)} />
 
         <View style={styles.section}>
           <Text variant="title">Required checks</Text>
@@ -355,7 +356,7 @@ function ShiftLogContent({
             {awaitingSecond ? (
               <View style={styles.section} testID="second-sign-off">
                 <Text variant="bodySm" tone="muted">
-                  Avery Morgan, Night Shift Manager, must review and receive Jordan&apos;s Morning
+                  Avery Smith, Night Shift Manager, must review and receive Jordan&apos;s Morning
                   handoff.
                 </Text>
                 <Text variant="caption" tone="subtle">

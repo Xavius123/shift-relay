@@ -67,3 +67,41 @@ export function requiredSignerMessage(log: SignableLog): string {
   const account = demoAccounts[accountId];
   return `${account.name}, ${account.title}, must provide this sign-off.`;
 }
+
+/**
+ * The forms each Shift Manager can add photos to: the day shift opens (Morning) and hands off
+ * (Midday); the night shift receives the handoff (Midday) and closes (Night).
+ */
+export function photoPhasesFor(accountId: DemoAccountId | null): readonly ShiftLog['phase'][] {
+  if (accountId === null) return [];
+  const { shift } = demoAccounts[accountId];
+  if (shift === 'morning') return ['morning', 'midday'];
+  if (shift === 'night') return ['midday', 'night'];
+  return [];
+}
+
+/**
+ * Photos can be added to today's form that is not closed yet, by the Shift Manager who owns
+ * that phase. It does not have to be their turn to sign: photos can come before or after.
+ */
+export function canAddWalkPhotos(
+  accountId: DemoAccountId | null,
+  log: Pick<ShiftLog, 'phase' | 'status' | 'operationalDate'>,
+  today: string = localDateKey(new Date()),
+): boolean {
+  return (
+    log.status !== 'signedOff' &&
+    log.operationalDate === today &&
+    photoPhasesFor(accountId).includes(log.phase)
+  );
+}
+
+/** The first of today's forms, in day order, that this account can still add photos to. */
+export function currentPhotoLog<T extends Pick<ShiftLog, 'phase' | 'status' | 'operationalDate'>>(
+  accountId: DemoAccountId | null,
+  todayLogs: readonly T[],
+): T | null {
+  const order: readonly ShiftLog['phase'][] = ['morning', 'midday', 'night'];
+  const ordered = [...todayLogs].sort((a, b) => order.indexOf(a.phase) - order.indexOf(b.phase));
+  return ordered.find((log) => canAddWalkPhotos(accountId, log)) ?? null;
+}

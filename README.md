@@ -16,7 +16,7 @@ A small React Native app for handing work from one field shift to the next. It i
 
 ## Screens
 
-1. **Sign in**: three one-tap demo accounts: Jordan Lee (Morning Shift Manager), Avery Morgan (Night Shift Manager), and Elena Ruiz (Operations Manager)
+1. **Sign in**: three one-tap demo accounts: Jordan Lee (Morning Shift Manager), Avery Smith (Night Shift Manager), and Elena Ruiz (Operations Manager)
 2. **Dashboard**: today's Daily Sheet (Morning → Midday handoff → Night), the account's next action, and open high-priority issues. For Elena, this week's handoff and issue numbers sit above the Daily Sheet and the full open-issue list below it
 3. **Shift sheet** (a modal over Dashboard or Logs): Shift Photos at the top (take or choose, review, save), three required checks, issues, note, and sign-off
 4. **Logs**: today and 21 complete operational days, grouped by date, with search and sorting

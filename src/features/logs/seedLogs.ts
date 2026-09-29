@@ -6,7 +6,7 @@ import { seedWalkPhotos } from './generated/seedWalkPhotos';
 import type { ShiftLog, WalkPhoto } from './types';
 
 const morningManager = 'Jordan Lee';
-const nightManager = 'Avery Morgan';
+const nightManager = 'Avery Smith';
 
 function dateBeforeToday(daysAgo: number): Date {
   const date = new Date();

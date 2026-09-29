@@ -9,6 +9,7 @@ import type { Issue, RaiseIssueInput, ResolveIssueInput } from '@/features/issue
 
 import {
   canDeleteWalkPhotos,
+  canAddWalkPhotos,
   canToggleChecks,
   requiredSignerAccountId,
   requiredSignerMessage,
@@ -131,10 +132,9 @@ const mockBaseQuery: BaseQueryFn<MockQuery, unknown, LogsApiError> = async (quer
     const { input } = query;
     const log = logs.find((item) => item.id === input.id);
     if (!log) return error(404, "This shift log doesn't exist.");
-    const dayLogs = logs.filter((item) => item.operationalDate === log.operationalDate);
-    // Same rule as the checks: only today's open log, by the Shift Manager on duty.
-    if (!canToggleChecks(input.accountId, log, dayLogs)) {
-      return error(409, "Only today's open log can be changed, by the Shift Manager on duty.");
+    // Photos go on today's form that is not closed, from the Shift Manager who owns that phase.
+    if (!canAddWalkPhotos(input.accountId, log)) {
+      return error(409, "Photos can only be added to today's open forms, by their Shift Manager.");
     }
     const actor = demoActor(input.accountId);
     const at = new Date().toISOString();
