@@ -22,6 +22,7 @@ export const navItems: readonly NavItem[] = [
     label: 'Sign in',
     icon: 'person-circle-outline',
     iconActive: 'person-circle',
+    sideOnly: true,
   },
   { name: 'dashboard', href: '/', label: 'Dashboard', icon: 'grid-outline', iconActive: 'grid' },
   {
@@ -55,8 +56,8 @@ export const navItems: readonly NavItem[] = [
   },
 ];
 
-/** Phone bottom tabs, left to right; Issues then Dashboard end the row. */
-const bottomOrder: readonly string[] = ['sign-in', 'logs', 'photos', 'issues', 'dashboard'];
+/** Phone bottom tabs, left to right. The camera button sits after the second (see AppShell). */
+const bottomOrder: readonly string[] = ['logs', 'photos', 'issues', 'dashboard'];
 
 export function bottomNavItems(items: readonly NavItem[]): readonly NavItem[] {
   return bottomOrder.flatMap((name) =>

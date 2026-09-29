@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
+import { openSignIn } from './nav';
 import { openAs } from './session';
 
 // On web the picker is a file input, so a fixture image stands in for the camera.
@@ -12,7 +13,7 @@ async function choosePhoto(page: Page) {
 }
 
 async function switchTo(page: Page, account: 'jordan' | 'avery' | 'elena') {
-  await page.getByTestId('nav-sign-in').click();
+  await openSignIn(page);
   await page.getByTestId(`demo-sign-in-${account}`).click();
 }
 

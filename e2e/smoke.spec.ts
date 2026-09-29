@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { openDesignSystem } from './nav';
+import { openDesignSystem, openSignIn } from './nav';
 
 // Sign-in is required: signed out shows only the gate; signed in, every top-level screen renders.
 test('all top-level screens render after sign-in', async ({ page }) => {
@@ -18,6 +18,6 @@ test('all top-level screens render after sign-in', async ({ page }) => {
   await openDesignSystem(page);
   await expect(page.getByTestId('screen-design-system')).toBeVisible();
 
-  await page.getByTestId('nav-sign-in').click();
+  await openSignIn(page);
   await expect(page.getByTestId('screen-sign-in')).toBeVisible();
 });

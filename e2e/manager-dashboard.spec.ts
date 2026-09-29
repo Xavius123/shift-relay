@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { openSignIn } from './nav';
 
 test("the Operations Manager's Dashboard shows this week's numbers and every open issue", async ({
   page,
@@ -19,6 +20,13 @@ test("the Operations Manager's Dashboard shows this week's numbers and every ope
   await expect(page.getByTestId('metric-awaiting')).toContainText('0');
   await expect(page.getByTestId('metric-raised')).toContainText('2');
   await expect(page.getByTestId('metric-open')).toContainText('2');
+  // All four metrics share one row, even on a phone.
+  const tops = await Promise.all(
+    ['complete', 'awaiting', 'raised', 'open'].map(
+      async (name) => (await page.getByTestId(`metric-${name}`).boundingBox())?.y,
+    ),
+  );
+  expect(tops).toEqual([tops[0], tops[0], tops[0], tops[0]]);
   // The short Shift Manager issue card is replaced by the full list.
   await expect(page.getByTestId('dashboard-issues')).toHaveCount(0);
 
@@ -53,7 +61,7 @@ test("a sent handoff counts as awaiting Night on the manager's Dashboard", async
     await expect(page.getByTestId('shift-log-modal')).toHaveCount(0);
   }
 
-  await page.getByTestId('nav-sign-in').click();
+  await openSignIn(page);
   await page.getByTestId('demo-sign-in-elena').click();
   await expect(page.getByTestId('metric-complete')).toContainText('19 of 21');
   await expect(page.getByTestId('metric-awaiting')).toContainText('1');

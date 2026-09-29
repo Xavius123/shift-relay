@@ -88,3 +88,25 @@ test('header theme toggle switches to dark everywhere', async ({ page }) => {
     )
     .toBe(DARK_BG);
 });
+
+test('narrow: no Sign in tab, and the center camera opens the pending shift sheet', async ({
+  page,
+}, info) => {
+  test.skip(info.project.name !== 'phone', 'bottom tabs are for phones');
+  await openAs(page, '/');
+  const nav = page.getByTestId('bottom-nav');
+  await expect(nav.getByTestId('nav-sign-in')).toHaveCount(0);
+
+  // Camera is the middle of five: two tabs on each side.
+  const camera = nav.getByTestId('nav-camera');
+  const boxes = await Promise.all(
+    ['nav-logs', 'nav-photos', 'nav-camera', 'nav-issues', 'nav-dashboard'].map((id) =>
+      nav.getByTestId(id).boundingBox(),
+    ),
+  );
+  const xs = boxes.map((box) => (box ? box.x : -1));
+  expect(xs).toEqual([...xs].sort((a, b) => a - b));
+
+  await camera.click();
+  await expect(page.getByTestId('shift-log-modal')).toBeVisible();
+});

@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 
+import { openSignIn } from './nav';
 import { expectSession, signOutFromHeader } from './session';
 
 test('Shift Manager and Operations Manager demo accounts expose the correct roles', async ({
@@ -26,7 +27,7 @@ test('Shift Manager and Operations Manager demo accounts expose the correct role
   await expect(page.getByTestId('resolve-issue-ISS-001')).toHaveCount(0);
   await expect(page.getByTestId('flag-issue')).toHaveCount(0);
 
-  await page.getByTestId('nav-sign-in').click();
+  await openSignIn(page);
   await expect(page.getByTestId('demo-sign-in-elena')).toHaveAttribute('aria-disabled', 'true');
 
   // Sign out sits at the top right of the header and returns to the gate.

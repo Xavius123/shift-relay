@@ -38,6 +38,7 @@ export function ManagerWeekMetrics({
           label="Handoffs complete"
           value={`${percent(current.complete, current.scheduled)}%`}
           detail={`${current.complete} of ${current.scheduled} forms`}
+          compactDetail={`${current.complete} of ${current.scheduled}`}
           testID="metric-complete"
         />
         <Metric
@@ -105,12 +106,13 @@ export function ManagerOpenIssues({
   );
 }
 
-/** A stat box: two per row on phones, four across when wide. */
+/** A stat box: four across on one row, tighter on phones. */
 function Metric({
   wide,
   label,
   value,
   detail,
+  compactDetail,
   tone = 'default',
   testID,
 }: {
@@ -118,21 +120,25 @@ function Metric({
   label: string;
   value: string;
   detail: string;
+  /** Shown instead of `detail` on phones; omitted there when not given. */
+  compactDetail?: string;
   tone?: 'default' | 'error';
   testID: string;
 }) {
   const styles = useStyles();
   return (
     <View style={[styles.metric, wide ? styles.metricWide : styles.metricNarrow]} testID={testID}>
-      <Text variant="heading" tone={tone}>
+      <Text variant={wide ? 'heading' : 'title'} tone={tone}>
         {value}
       </Text>
-      <Text variant="bodySm" weight="semibold">
+      <Text variant={wide ? 'bodySm' : 'caption'} weight="semibold">
         {label}
       </Text>
-      <Text variant="caption" tone="subtle">
-        {detail}
-      </Text>
+      {wide || compactDetail ? (
+        <Text variant="caption" tone="subtle">
+          {wide ? detail : compactDetail}
+        </Text>
+      ) : null}
     </View>
   );
 }
@@ -146,7 +152,7 @@ const useStyles = makeStyles((t) => ({
     justifyContent: 'space-between',
     gap: t.spacing[3],
   },
-  metricGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: t.spacing[3] },
+  metricGrid: { flexDirection: 'row', gap: t.spacing[2] },
   metric: {
     flexGrow: 1,
     gap: t.spacing[1],
@@ -154,7 +160,7 @@ const useStyles = makeStyles((t) => ({
     backgroundColor: t.color.bgSubtle,
     borderRadius: t.radius.lg,
   },
-  // Basis under a half or a quarter so the gap fits; flexGrow evens them out.
-  metricNarrow: { flexBasis: '40%' },
-  metricWide: { flexBasis: '20%' },
+  // Zero basis with equal grow keeps all four on one row at any width.
+  metricNarrow: { flexBasis: 0, padding: t.spacing[2], borderRadius: t.radius.md },
+  metricWide: { flexBasis: 0 },
 }));

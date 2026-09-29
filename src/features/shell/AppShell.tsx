@@ -14,6 +14,7 @@ import { useAppSelector } from '@/store/hooks';
 import { NavButton } from './NavButton';
 import { bottomNavItems, navItems } from './navItems';
 import { SessionSummary } from './SessionSummary';
+import { ShiftCaptureButton } from './ShiftCaptureButton';
 import { ShellMenuProvider } from './ShellMenu';
 
 /**
@@ -113,11 +114,12 @@ export function AppShell() {
               style={[styles.bottom, { paddingBottom: Math.max(insets.bottom, theme.spacing[2]) }]}
               testID="bottom-nav"
             >
-              {bottomNavItems(navItems).map((item) => (
+              {bottomNavItems(navItems).flatMap((item, index) => [
+                ...(index === 2 ? [<ShiftCaptureButton key="capture" />] : []),
                 <TabTrigger key={item.name} name={item.name} asChild>
                   <NavButton item={item} layout="bottom" badge={badgeFor(item.name)} />
-                </TabTrigger>
-              ))}
+                </TabTrigger>,
+              ])}
             </View>
           )}
 

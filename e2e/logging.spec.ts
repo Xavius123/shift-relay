@@ -1,9 +1,10 @@
 import { expect, test, type Page } from '@playwright/test';
 
+import { openSignIn } from './nav';
 import { expectSession, openAs } from './session';
 
 async function signInAs(page: Page, account: 'jordan' | 'avery' | 'elena') {
-  await page.getByTestId('nav-sign-in').click();
+  await openSignIn(page);
   await page.getByTestId(`demo-sign-in-${account}`).click();
 }
 

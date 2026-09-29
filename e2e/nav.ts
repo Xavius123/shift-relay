@@ -9,3 +9,13 @@ export async function openDesignSystem(page: Page) {
   await page.locator('[data-testid="menu-button"]:visible').click();
   await page.getByTestId('drawer-nav-design-system').click();
 }
+
+/** Sign in is in the side nav when wide and only in the drawer on phones. */
+export async function openSignIn(page: Page) {
+  if (await page.getByTestId('side-nav').isVisible()) {
+    await page.getByTestId('nav-sign-in').click();
+    return;
+  }
+  await page.locator('[data-testid="menu-button"]:visible').click();
+  await page.getByTestId('drawer-nav-sign-in').click();
+}
