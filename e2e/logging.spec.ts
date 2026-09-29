@@ -59,7 +59,7 @@ test('Daily Sheet runs Morning, handoff, and Night in modals, with a flagged iss
   await page.getByTestId('raise-issue-submit').click();
   const issue = page.getByTestId('log-issues').getByTestId('issue-ISS-007');
   await expect(issue).toContainText('Safety hazard');
-  await expect(issue).toContainText('Raised by Jordan Lee');
+  await expect(issue.getByLabel('Raised by Jordan Lee')).toHaveText('JL');
   await page.getByTestId('sign-off-log').click();
   await expect(modal).toHaveCount(0);
   await expect(page.getByTestId('dashboard-issues')).toContainText('3 open');
@@ -124,7 +124,7 @@ test('Daily Sheet runs Morning, handoff, and Night in modals, with a flagged iss
   );
   const linked = page.getByTestId('log-issues').getByTestId('issue-ISS-007');
   await expect(linked).toContainText('Resolved');
-  await expect(linked).toContainText('Resolved by Avery Smith');
+  await expect(linked.getByLabel('Resolved by Avery Smith')).toHaveText('AS');
 });
 
 test('the sequence and read-only views are enforced per account', async ({ page }) => {

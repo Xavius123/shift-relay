@@ -43,7 +43,9 @@ test('Issues tab: nav badge, preset and written-in issues, resolve, and filters'
   await expect(screen.getByTestId('issue-ISS-008')).toHaveCount(0);
   await expect(page.getByTestId('issues-filter-open')).toHaveText('Open · 3');
   await page.getByTestId('issues-filter-resolved').click();
-  await expect(screen.getByTestId('issue-ISS-008')).toContainText('Resolved by Jordan Lee');
+  await expect(
+    screen.getByTestId('issue-ISS-008').getByLabel('Resolved by Jordan Lee'),
+  ).toBeVisible();
   await page.getByTestId('issues-filter-all').click();
   await expect(page.getByTestId('issues-filter-all')).toHaveText('All · 8');
 });
@@ -55,8 +57,10 @@ test('a photo added while raising an issue is one line with the raise, not two',
   await page.getByTestId('demo-sign-in-jordan').click();
   await page.getByTestId('nav-issues').click();
   const trail = page.getByTestId('issue-trail-ISS-001');
-  await expect(trail).toContainText('Raised by Avery Smith');
-  await expect(trail).toContainText('1 photo');
+  // The trail shows initials and the time, not "Raised by"; the full name is the label.
+  await expect(trail.getByLabel('Raised by Avery Smith')).toHaveText('AS');
+  await expect(trail).not.toContainText('Raised by');
+  await expect(trail).not.toContainText('photo');
   await expect(trail).not.toContainText('Photo added');
-  await expect(trail.getByText(/Raised by/)).toHaveCount(1);
+  await expect(trail.getByLabel(/Raised by/)).toHaveCount(1);
 });

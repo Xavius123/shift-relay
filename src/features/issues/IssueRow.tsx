@@ -24,11 +24,21 @@ interface TrailLine {
   type: Issue['events'][number]['type'];
   actor: string;
   at: string;
-  /** Photos added by the same person at the same moment as this event. */
-  photos: number;
 }
 
-/** Folds each `photoAdded` event into the raised or resolved event it happened with. */
+/**
+ * The words beside a trail line's initials. Who did it is the initials (labelled in full for
+ * screen readers); a raise is the first line, so it needs no verb.
+ */
+function trailText(line: TrailLine): string {
+  const time = formatDateTime(line.at);
+  return line.type === 'raised' ? time : `${eventVerbs[line.type]} · ${time}`;
+}
+
+/**
+ * Drops each `photoAdded` event made with a raise or resolve: the photos show as thumbnails,
+ * so they need no line or count of their own.
+ */
 function mergePhotoEvents(events: Issue['events']): TrailLine[] {
   const lines: TrailLine[] = [];
   for (const event of events) {
@@ -39,8 +49,7 @@ function mergePhotoEvents(events: Issue['events']): TrailLine[] {
       previous.type !== 'photoAdded' &&
       previous.actor === event.actor &&
       previous.at === event.at;
-    if (together && previous) previous.photos += 1;
-    else lines.push({ type: event.type, actor: event.actor, at: event.at, photos: 0 });
+    if (!together) lines.push({ type: event.type, actor: event.actor, at: event.at });
   }
   return lines;
 }
@@ -122,9 +131,9 @@ export function IssueRow({
       <View style={styles.trail} testID={`issue-trail-${issue.id}`}>
         {trailLines.map((line) => (
           <View key={`${line.type}-${line.at}`} style={styles.eventRow}>
-            <Initials names={[line.actor]} />
+            <Initials names={[line.actor]} label={`${eventVerbs[line.type]} by ${line.actor}`} />
             <Text variant="caption" tone="muted">
-              {`${eventVerbs[line.type]} by ${line.actor} · ${formatDateTime(line.at)}${line.photos > 0 ? ` · ${line.photos} ${line.photos === 1 ? 'photo' : 'photos'}` : ''}`}
+              {trailText(line)}
             </Text>
           </View>
         ))}
