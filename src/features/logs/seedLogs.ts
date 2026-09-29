@@ -21,11 +21,11 @@ function timestampFor(date: Date, hour: number): string {
   return timestamp.toISOString();
 }
 
-/** One to three photos per past day; some individual shifts still have none. */
+/** Every signed-off shift has one or two photos: [Morning, Midday, Night], repeating by day. */
 const dailyPhotoCounts = [
-  [2, 0, 1],
-  [0, 1, 0],
-  [1, 1, 0],
+  [2, 1, 1],
+  [1, 1, 1],
+  [1, 2, 1],
 ] as const;
 
 function seedPhotos(

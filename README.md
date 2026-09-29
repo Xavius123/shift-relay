@@ -30,7 +30,7 @@ This app was built with a combination of **Cursor**, **Claude** (Opus and Sonnet
 3. **Shift sheet** (a modal over Dashboard or Logs): Shift Photos at the top (take or choose, review, save) with a camera bar pinned to the bottom, one required restock check, issues, note, and sign-off
 4. **Logs**: today and 21 complete operational days, grouped by date, with search and sorting
 5. **Issues**: flag, resolve, and filter high-priority issues
-6. **Shift Photos** (every account): each day's saved photos, newest first, split into Morning, Midday, and Night, with a placeholder where a shift has none (past days have one to three fictional drawings, including a mouse on duty); tap one to view it full size, or open the sheet it came from. Only Elena can delete a saved photo
+6. **Shift Photos** (every account): each day's saved photos, newest first, split into Morning, Midday, and Night, with a placeholder only where today's shifts have none yet (every finished shift has one or two fictional drawings, including a mouse on duty); tap one to view it full size, or open the sheet it came from. Only Elena can delete a saved photo
 7. **Design system**: light/dark themes, selectable accents, components, and the simulated-failure control
 
 Everyone who signs, checks, raises, resolves, or photographs something shows as initials beside it.

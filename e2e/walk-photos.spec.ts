@@ -188,15 +188,16 @@ test('inside a shift sheet a pinned camera bar takes photos; closed forms have n
   await expect(page.getByTestId('sheet-camera-bar')).toHaveCount(0);
 });
 
-test('each past day has one to three shift photos, including the mouse', async ({ page }) => {
+test('every finished shift has one or two shift photos, including the mouse', async ({ page }) => {
   await openAs(page, '/photos', 'avery');
   const screen = page.getByTestId('screen-walk-photos');
-  await expect(page.getByTestId('walk-review-total')).toHaveText('42 photos across 22 days');
-  // Yesterday: two on the Morning shift, none at Midday, one at Night.
+  await expect(page.getByTestId('walk-review-total')).toHaveText('77 photos across 22 days');
+  // Yesterday: two on the Morning shift, one at Midday, one at Night.
+
   const yesterday = screen.locator('[data-testid^="walk-review-day-"]').nth(1);
   const shifts = yesterday.locator('[data-testid^="walk-review-shift-"]');
   await expect(shifts.nth(0).getByTestId('walk-review-photo')).toHaveCount(2);
-  await expect(shifts.nth(1).getByTestId('walk-review-no-photos')).toBeVisible();
+  await expect(shifts.nth(1).getByTestId('walk-review-photo')).toHaveCount(1);
   await expect(shifts.nth(2).getByTestId('walk-review-photo')).toHaveCount(1);
 
   await shifts.nth(0).getByTestId('walk-review-photo').first().click();
@@ -211,14 +212,15 @@ test('each past day has one to three shift photos, including the mouse', async (
 
   const twoDaysAgo = screen.locator('[data-testid^="walk-review-day-"]').nth(2);
   const secondDayShifts = twoDaysAgo.locator('[data-testid^="walk-review-shift-"]');
-  await expect(secondDayShifts.nth(0).getByTestId('walk-review-no-photos')).toBeVisible();
-  await expect(secondDayShifts.nth(1).getByTestId('walk-review-photo')).toHaveCount(1);
-  await expect(secondDayShifts.nth(2).getByTestId('walk-review-no-photos')).toBeVisible();
+  for (const shift of [0, 1, 2]) {
+    await expect(secondDayShifts.nth(shift).getByTestId('walk-review-photo')).toHaveCount(1);
+  }
 
   // Every past day (all but today, the first) has at least one photo. The list renders in
   // windows, so scroll to the end and record each day as it appears.
   const days = screen.locator('[data-testid^="walk-review-day-"]');
   const withPhotos = new Set<string>();
+  const emptyShifts = new Map<string, number>();
   const seen = new Set<string>();
   for (let pass = 0; pass < 12 && seen.size < 22; pass += 1) {
     const count = await days.count();
@@ -227,12 +229,14 @@ test('each past day has one to three shift photos, including the mouse', async (
       const id = (await day.getAttribute('data-testid')) ?? '';
       seen.add(id);
       if ((await day.getByTestId('walk-review-photo').count()) > 0) withPhotos.add(id);
+      emptyShifts.set(id, await day.getByTestId('walk-review-no-photos').count());
     }
     await days.last().scrollIntoViewIfNeeded();
     await page.mouse.wheel(0, 1500);
     await page.waitForTimeout(300);
   }
   expect(seen.size).toBe(22);
-  // Today is the only day without photos.
+  // Today is the only day without photos, and its three shifts are the only empty ones.
   expect(withPhotos.size).toBe(21);
+  expect([...emptyShifts.values()].reduce((sum, count) => sum + count, 0)).toBe(3);
 });
