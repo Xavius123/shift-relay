@@ -8,7 +8,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? 'github' : 'list',
   use: {
-    baseURL: 'http://localhost:8081',
+    baseURL: 'http://localhost:8181',
     trace: 'retain-on-failure',
   },
   projects: [
@@ -16,8 +16,8 @@ export default defineConfig({
     { name: 'phone', use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' } },
   ],
   webServer: {
-    command: 'npx expo start --web --port 8081',
-    url: 'http://localhost:8081',
+    command: 'npx expo start --web --port 8181',
+    url: 'http://localhost:8181',
     reuseExistingServer: true,
     timeout: 180_000,
   },

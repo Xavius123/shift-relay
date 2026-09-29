@@ -7,7 +7,7 @@
 | **Every change** | `typecheck`, `lint`, Playwright E2E on the web build, and a manual check on the iPhone | Test what the user sees from the start. Catch "it compiles but doesn't launch" early |
 | **Planned** | Jest + React Native Testing Library unit tests | Added once components and slices are stable, so tests aren't rewritten every time the design moves |
 
-Interview line: *E2E from day one because that is what the user sees; unit tests once the parts stopped churning.*
+E2E comes first because it tests what the user sees; unit tests follow once the parts stop churning.
 
 ## E2E (Playwright, web)
 
@@ -23,9 +23,9 @@ Flows, all kept green:
 | `e2e/shell.spec.ts`, `e2e/initials.spec.ts`, `e2e/manager-dashboard.spec.ts` | Responsive shell, initials attribution, and the manager Dashboard |
 | `e2e/errors.spec.ts` | Simulated failure → raise-issue error shown, form kept, nothing added |
 
-`npm run e2e` runs `playwright test`. It starts `expo start --web` on port 8081, or reuses a dev server that is already running. Every spec runs twice: a desktop Chrome viewport and a phone viewport. A few skip on the viewport they do not apply to (for example, bottom-tab tests skip on desktop). Specs find elements with `getByTestId`, because React Native Web renders `testID` as `data-testid` (see [components.md](design-system/components.md) rule 6). **If another Expo project is already serving port 8081, Playwright reuses it and tests that app instead.** Stop the other server first, or run this repo's server and point the config at it. `npm run e2e:ui` opens the Playwright UI for debugging. First-time setup: `npx playwright install chromium`.
+`npm run e2e` runs `playwright test`. It starts `expo start --web` on its own port, 8181 (so a dev server for another project on the default 8081 is never picked up), or reuses this repo's server if one is already on 8181. Every spec runs twice: a desktop Chrome viewport and a phone viewport. A few skip on the viewport they do not apply to (for example, bottom-tab tests skip on desktop). Specs find elements with `getByTestId`, because React Native Web renders `testID` as `data-testid` (see [components.md](design-system/components.md) rule 6). If something else is already serving port 8181, Playwright reuses it and tests that app instead, so stop it first. `npm run e2e:ui` opens the Playwright UI for debugging. First-time setup: `npx playwright install chromium`.
 
-**What web E2E misses:** native-only behavior (shadows, `Pressable` feedback, safe areas, font metrics). The iPhone check below covers the demo paths. See [ADR 0007](decisions/0007-web-and-ios-targets-playwright-e2e.md).
+**What web E2E misses:** native-only behavior (shadows, `Pressable` feedback, safe areas, font metrics). The iPhone check below covers the main flows. See [ADR 0007](decisions/0007-web-and-ios-targets-playwright-e2e.md).
 
 ### iPhone check (manual)
 

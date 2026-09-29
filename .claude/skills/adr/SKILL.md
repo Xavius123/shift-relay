@@ -33,4 +33,4 @@ description: >-
 3. Add a row to the README table.
 4. Status stays **Proposed** until the human accepts it. To supersede an old ADR, the new one says `Supersedes NNNN` and the old one's status becomes `Superseded by NNNN`. The old Decision section is not edited.
 
-Keep it under a page. An ADR is for the interviewer who asks "why did you do it this way?"
+Keep it under a page. An ADR is for the reader who asks "why was it done this way?"

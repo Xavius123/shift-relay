@@ -2,7 +2,7 @@
 
 How the pieces connect at runtime (theme, Redux, `makeStyles`): [theming.md](theming.md).
 
-The company-adjacent color reset is specified in [palette.md](../specs/palette.md). The tables below describe the implemented baseline.
+The palette is specified in [palette.md](../specs/palette.md). The tables below describe the implemented baseline.
 
 The design system's tokens live in this repo, in `tokens/`, as W3C DTCG JSON (`$type` / `$value`). Style Dictionary builds them into a typed React Native theme, plus a CSS file to prove the same source serves web ([ADR 0006](../decisions/0006-own-palette-and-in-repo-token-pipeline.md)).
 
@@ -18,7 +18,7 @@ Components read **semantic** tokens plus the spacing, radius, type, and shadow s
 
 ## The palette
 
-A blue-charcoal neutral (`ink`) with company-adjacent Care blue, Plum, and Sea glass accents. Coral, gold, completion green, and information blue remain fixed semantic colors; status badges include explicit labels so meaning never relies on hue alone.
+A blue-charcoal neutral (`ink`) with Care blue, Plum, and Sea glass accents. Coral, gold, completion green, and information blue remain fixed semantic colors; status badges include explicit labels so meaning never relies on hue alone.
 
 ### `ink` — neutrals
 

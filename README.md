@@ -2,7 +2,7 @@
 
 A small React Native app for handing work from one field shift to the next. It is built with TypeScript, Redux Toolkit, RTK Query, and its own design system.
 
-> **Status: in development.** The Shift Relay workflow, Shift Photos, three-theme design system, responsive shell, and Care-blue brand asset are built. The final iPhone check is still to do.
+Shift Relay is fully runnable from a fresh clone: it needs no backend, accounts, or API keys, and all data is fictional. Web and iOS (Expo Go) are supported.
 
 ## What it shows
 
@@ -35,7 +35,9 @@ This app was built with a combination of **Cursor**, **Claude** (Opus and Sonnet
 
 Everyone who signs, checks, raises, resolves, or photographs something shows as initials beside it.
 
-## Demo script
+## Walkthrough
+
+A suggested path through the app:
 
 1. Sign in as **Jordan**. On the Dashboard, tap **Complete Morning**.
 2. Take a photo, either way: the center **camera** tab on a phone (it opens the camera, then the form), or **Take photo** / **Library** in the bar pinned to the bottom of the sheet (camera on iPhone, file picker on web). Review the photos, remove any you don't want, and **Save**. Signing off is blocked while photos are unsaved; once saved, Jordan can't delete them.
@@ -53,7 +55,7 @@ There is no backend. A mock RTK Query API serves generated, fictional data from 
 |-----|----------------|
 | [DESIGN.md](DESIGN.md) | How screens use the design system: tokens, spacing, state patterns |
 | [docs/background.md](docs/background.md) | Product rationale and current technical direction |
-| [docs/requirements.md](docs/requirements.md) | What the project must demonstrate |
+| [docs/requirements.md](docs/requirements.md) | Project goals and where each is met |
 | [docs/setup.md](docs/setup.md) | Machine setup: Node, Playwright, Expo Go on the iPhone |
 | [docs/architecture.md](docs/architecture.md) | Folders, state, data flow, theming |
 | [docs/design-system/theming.md](docs/design-system/theming.md) | How tokens, the theme, and the Redux store fit together; how to use and change them |

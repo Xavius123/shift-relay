@@ -13,7 +13,7 @@ Shift Managers need to photograph issues and attach the photos to the issue they
 
 ## Consequences
 - No new dependency, no native config beyond the existing `cameraPermission` / `photosPermission` strings in `app.json`.
-- Photos disappear on reload or restart: web gives `blob:`/`data:` URIs and iOS gives cache-file URIs. This matches the mock API, which also resets, and is stated in the demo script.
+- Photos disappear on reload or restart: web gives `blob:`/`data:` URIs and iOS gives cache-file URIs. This matches the mock API, which also resets, and is stated in the README walkthrough.
 - A real backend would replace the URI hand-off with an upload step that returns a server URL. Components only render `uri`, so the swap stays inside `logsApi`.
 - Web `data:` URIs can be large; the 5-photo limit and `quality: 0.7` keep the in-memory store small.
 - Rejected: `expo-camera` (custom camera UI, more code, nothing gained over the system camera for this); base64 in Redux slices (violates "server data only in RTK Query" and bloats the store); `expo-file-system` copies (extra dependency for persistence the mock doesn't have).

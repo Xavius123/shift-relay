@@ -10,7 +10,7 @@ The product offers three accent themes. These change primary actions, links, sel
 
 | Internal name | Display label | Role | Default |
 |---------------|---------------|------|---------|
-| `care` | Care blue | Clear, dependable company-adjacent primary | yes |
+| `care` | Care blue | Clear, dependable primary | yes |
 | `plum` | Plum | Warmer, quieter alternative | no |
 | `seaGlass` | Sea glass | Calm operational alternative | no |
 

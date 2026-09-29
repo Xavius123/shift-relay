@@ -1,7 +1,7 @@
 {
   "ink": {
     "$type": "color",
-    "$description": "Company-adjacent blue-charcoal neutrals",
+    "$description": "Blue-charcoal neutrals",
     "0": { "$value": "#FFFFFF" },
     "25": { "$value": "#FCFCFB" },
     "50": { "$value": "#F6F7F7" },

@@ -3,7 +3,7 @@
 Status: Accepted · 2026-09-21
 
 ## Context
-The app must run live on an emulator in an interview, install cleanly from a public repo, and be built in a week.
+The app must run on a device or in a browser, install cleanly from a fresh clone of a public repo, and be small enough to build quickly.
 
 ## Decision
 Expo (latest stable SDK at scaffold time) with Expo Router and the TypeScript template. Native packages are added with `npx expo install` so versions match the SDK.

@@ -15,7 +15,7 @@ The app needs one installable, auditable token source for React Native and web. 
 ## Consequences
 - One repo, one install, no sync step. A fresh clone has everything.
 - The palette was designed for this app and checked for contrast before any code exists; the check becomes a build gate.
-- Loses the "my web design system went cross-platform" story. It is replaced by "tokens → RN + CSS from one source, with contrast enforced at build time."
-- Rejected: a cross-repo token dependency, direct reuse of a client palette, and a general-purpose color library. The local palette is tuned to this app's states and contrast requirements.
+- Tokens reach React Native and CSS from one source, with contrast enforced at build time.
+- Rejected: a cross-repo token dependency, reuse of an existing product's palette, and a general-purpose color library. The local palette is tuned to this app's states and contrast requirements.
 
 The 2026-09-23 amendment finalized blue-charcoal neutrals with Care blue as default and Plum / Sea glass options. Fixed coral, gold, green, and information-blue families retain semantic meaning.
