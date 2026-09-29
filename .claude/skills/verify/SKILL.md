@@ -1,8 +1,8 @@
 ---
 name: verify
 description: >-
-  Run the Shift Relay quality gate (typecheck, lint, Playwright E2E on web, and Jest once
-  set up) and report each check as pass, fail, or skipped. Use when the user
+  Run the Shift Relay quality gate (typecheck, lint, format, Playwright E2E on web, the
+  contrast check when tokens changed, and Jest once set up) and report each check as pass, fail, or skipped. Use when the user
   says /verify, check it, run the gate, is it green, or before calling any
   feature or component done.
 ---
@@ -19,9 +19,12 @@ Run the checks in order and report every one. **Never report a check as passing 
 | 2 | Lint | `npm run lint` | yes |
 | 3 | Format | `npm run format:check` | yes |
 | 4 | E2E | `npm run e2e` (Playwright against the Expo web build; starts the server if needed) | yes |
-| 5 | Unit | `npm test -- --ci` | once set up |
+| 5 | Contrast | `node scripts/check-contrast.mjs` (after `npm run tokens` if `tokens/` changed) | only when `tokens/` changed |
+| 6 | Unit | `npm test -- --ci` | once set up |
 
-Checks 1–3 together are `npm run check`, but run them one by one so the report shows each result. If E2E can't run, `npm run doctor:env` says which tool is missing; include its output in the report.
+Checks 1–3 together are `npm run check`, but run them one by one so the report shows each result. Before check 4, make sure the right server will answer. `playwright.config.ts` reuses whatever already listens on port 8181, and a different project's dev server there once made the suite test the wrong code. Look at the listener (PowerShell: `Get-NetTCPConnection -LocalPort 8181`, then its process command line). If it is not this repo's `expo start`, report E2E as **skipped (wrong server on port 8181)** and tell the human to stop it. No listener is fine: Playwright starts its own.
+
+If E2E can't run, `npm run doctor:env` says which tool is missing; include its output in the report.
 
 ## Rules
 
@@ -31,7 +34,8 @@ Checks 1–3 together are `npm run check`, but run them one by one so the report
 - After the checks, list the iPhone check as **manual (ask the human)**. It is part of the release check, not of this report's automated result.
 - Keep going after a failure so the report shows every check. The exception is when types fail so badly that lint output is noise; then say so.
 - For failures, show the first relevant error lines, not the whole log.
-- If Jest is not set up yet, report check 5 as **not required yet** instead of running it.
+- If `tokens/` is unchanged (`git diff --name-only HEAD -- tokens` is empty), report check 5 as **not needed (tokens unchanged)** instead of running it. Never hand-edit `src/design-system/tokens/generated/`.
+- If Jest is not set up yet, report check 6 as **not required yet** instead of running it.
 
 ## Report
 
@@ -41,6 +45,7 @@ Verify
   lint       ✗ fail   src/features/logs/LogsScreen.tsx:14  react-native/no-color-literals
   format     ✓ pass
   e2e        ✓ pass   2 specs × desktop, phone
+  contrast   · not needed (tokens unchanged)
   iphone     ? manual (ask the human)
   test       · not required yet
 Gate: FAIL

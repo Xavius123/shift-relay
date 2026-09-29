@@ -6,7 +6,7 @@
 
 | Skill | Use |
 |-------|-----|
-| `/verify` | Run typecheck, lint, E2E. Report pass / fail / skipped per check |
+| `/verify` | Run typecheck, lint, format, E2E, and the contrast check when tokens changed. Report pass / fail / skipped per check |
 | `/new-component {Name}` | Build a component from its spec, tokens only, then verify |
 | `/adr {title}` | Record an architecture decision in docs/decisions/ |
 

@@ -21,7 +21,7 @@ Open `docs/specs/components/{name}.md` (lowercase).
 
 ## Step 2 — Check shared types
 
-Read `src/design-system/types.ts`. Reuse the shared unions (`Size`, `ButtonVariant`, `StatusVariant`, `CardVariant`, `CardPadding`) instead of redefining them. A new shared union goes in that file, not in the component.
+Read `src/design-system/types.ts`. Reuse the shared unions in it (`Size`, `ButtonVariant`, `StatusVariant`, `CardVariant`, `CardPadding`, `TextVariant`, `TextTone`, `FontWeightName`, and whatever has been added since) instead of redefining them. A new shared union goes in that file, not in the component.
 
 ## Step 3 — Build
 
@@ -51,3 +51,7 @@ Verify:     typecheck ✓ · lint ✓ · e2e ✓
 ```
 
 If you had to deviate from the spec, say so. Do not quietly change the spec to match the code.
+
+## Not a design-system component
+
+A component shared across features that is not part of the design system (for example `src/features/common/CloseButton.tsx`) does not need a spec or this skill. It still follows the code rules in `AGENTS.md`: tokens only through `useTheme()`, no inline styles, shared types, an `accessibilityRole` and label, and touch targets of at least 44×44. It goes in `src/features/common/`.
