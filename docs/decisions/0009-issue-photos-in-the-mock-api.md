@@ -1,6 +1,6 @@
 # 0009 — Issue photos: expo-image-picker, URIs kept in the mock API
 
-Status: Proposed · 2026-09-26
+Status: Accepted · 2026-09-26
 
 ## Context
 Shift Managers need to photograph issues and attach the photos to the issue they raise or resolve, and the Operations Manager reviews them later ([issue photos spec](../specs/issue-photos.md)). The app runs on web and on the iPhone through Expo Go ([ADR 0007](0007-web-and-ios-targets-playwright-e2e.md)), and all data lives in an in-memory mock API ([ADR 0002](0002-redux-toolkit-and-rtk-query.md)). `expo-image-picker` 57.0.20 (checked in `node_modules` today) is already installed for the `/camera` test bench.

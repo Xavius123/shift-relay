@@ -20,7 +20,8 @@ Flows, all kept green:
 | `e2e/design-system.spec.ts` | Every component `testID` is visible |
 | `e2e/logging.spec.ts` | Sign in → choose shift → sign off with issue → complete issue; verify 21-day history |
 | `e2e/sign-in.spec.ts`, `e2e/issues.spec.ts`, `e2e/walk-photos.spec.ts` | Demo sign-in, issue lifecycle, and Shift Photos |
-| `e2e/errors.spec.ts` (planned) | Simulate failure → error → retry → recovers |
+| `e2e/shell.spec.ts`, `e2e/initials.spec.ts`, `e2e/manager-dashboard.spec.ts` | Responsive shell, initials attribution, and the manager Dashboard |
+| `e2e/errors.spec.ts` | Simulated failure → raise-issue error shown, form kept, nothing added |
 
 `npm run e2e` runs `playwright test`. It starts `expo start --web` on port 8081, or reuses a dev server that is already running. Every spec runs twice: a desktop Chrome viewport and a phone viewport. Specs find elements with `getByTestId`, because React Native Web renders `testID` as `data-testid` (see [components.md](design-system/components.md) rule 6). `npm run e2e:ui` opens the Playwright UI for debugging. First-time setup: `npx playwright install chromium`.
 

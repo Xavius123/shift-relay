@@ -94,4 +94,3 @@ npm start                # scan the QR code with the iPhone to open it in Expo G
 | `npx expo export --platform web` | Production web build into `dist/` |
 | `doctor:env` | Machine setup check (Node, Playwright, Chromium) |
 | `tokens` / `tokens:self-test` | Build tokens and check contrast / prove the contrast check fails on a bad color |
-| `test` | Jest unit tests (planned) |

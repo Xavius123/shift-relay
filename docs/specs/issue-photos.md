@@ -1,6 +1,6 @@
 # Issue photos and the Manager Daily Report
 
-Status: proposed · 2026-09-26
+Status: built · 2026-09-26
 
 ## Outcome
 

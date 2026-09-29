@@ -13,7 +13,7 @@ Jordan is the Morning Shift Manager, Avery is the Night Shift Manager, and Elena
 5. **Shift Photos:** each shift can save reviewed photos. Every account can view saved photos; only Elena can delete one. Historical examples are generated drawings, including a mouse on duty.
 6. **Design system:** token-driven themes, reusable components, and a failure simulator for development.
 
-See [shift logging](specs/shift-logging.md) and [issues](specs/issues.md) for current behavior. [Issue evidence photos and a Manager Daily Report](specs/issue-photos.md) are specified separately.
+See [shift logging](specs/shift-logging.md) and [issues](specs/issues.md) for current behavior. [Issue evidence photos and a Manager Daily Report](specs/issue-photos.md) are built; see that spec.
 
 ## State and scope
 
