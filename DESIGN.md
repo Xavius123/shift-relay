@@ -89,7 +89,7 @@ Wide (≥ breakpoint.wide, 768)                 Narrow (phones)
 - Detail screens keep the platform Back control in the header instead of showing the hamburger.
 - Each section is its own stack. Detail screens push inside their section and get a Back button.
 - Page content is centered with `maxWidth: size.content`.
-- The header theme toggle flips light / dark. Full scheme and accent controls live on the Design system screen.
+- The header theme toggle flips light / dark. The full System / Light / Dark control lives on the Design system screen.
 
 ## Screen anatomy
 

@@ -1,21 +1,31 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Linking, Modal, Pressable, View } from 'react-native';
+import {
+  AccessibilityInfo,
+  ActivityIndicator,
+  Linking,
+  Modal,
+  Pressable,
+  View,
+} from 'react-native';
 
 import { Button, Card, makeStyles, Text, useTheme } from '@/design-system';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
+import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
 import { currentPhotoLog } from '@/features/logs/logPermissions';
 import { phaseLabels } from '@/features/logs/logTemplates';
+import { useAddWalkPhotosMutation } from '@/features/logs/logsApi';
 import { ShiftLogModal } from '@/features/logs/ShiftLogModal';
-import { useAddPhotos } from '@/features/logs/useAddPhotos';
+import type { ShiftPhase } from '@/features/logs/types';
 import { useTodayLogs } from '@/features/logs/useTodayLogs';
 import { useAppSelector } from '@/store/hooks';
 
 /**
  * The center bottom-tab button: a direct camera. It opens the camera for the Shift Manager's
  * current form that is not closed (day shift: Morning, then Midday; night shift: Midday, then
- * Night), then opens that form with the photo waiting to be reviewed and saved.
+ * Night) and saves the photo straight to that shift, staying on the current screen with a
+ * short confirmation. The camera's own Use Photo / Retake is the review step.
  * It is never a dead button: with no open form it says why and points to Shift Photos.
  */
 export function ShiftCaptureButton() {
@@ -26,15 +36,34 @@ export function ShiftCaptureButton() {
   const isLoading = query.isLoading;
   const [openLogId, setOpenLogId] = useState<string | null>(null);
   const [noticeOpen, setNoticeOpen] = useState(false);
+  const [saved, setSaved] = useState<{ logId: string; phase: ShiftPhase; count: number } | null>(
+    null,
+  );
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [savePhotos, saving] = useAddWalkPhotosMutation();
 
   const current = currentPhotoLog(accountId, todayLogs);
-  const picker = useAddPhotos(current?.id ?? null, setOpenLogId);
-  const busy = isLoading || picker.working === 'camera';
-  const showNotice = noticeOpen || picker.error !== null;
+  const picker = usePhotoPicker((uris) => {
+    if (current === null || accountId === null || uris.length === 0) return;
+    savePhotos({ id: current.id, uris, accountId })
+      .unwrap()
+      .then(() => {
+        setSaved({ logId: current.id, phase: current.phase, count: uris.length });
+        AccessibilityInfo.announceForAccessibility(
+          `${uris.length === 1 ? 'Photo' : 'Photos'} saved to ${phaseLabels[current.phase]}`,
+        );
+      })
+      .catch(() => setSaveError("The photo wasn't saved. Try again."));
+  });
+  const busy = isLoading || picker.working === 'camera' || saving.isLoading;
+  const showNotice = noticeOpen || picker.error !== null || saveError !== null || saved !== null;
   const closeNotice = () => {
     setNoticeOpen(false);
+    setSaved(null);
+    setSaveError(null);
     picker.clearError();
   };
+  const problem = picker.error?.message ?? saveError;
 
   const press = () => {
     if (current === null) setNoticeOpen(true);
@@ -71,14 +100,22 @@ export function ShiftCaptureButton() {
         <View style={styles.scrim}>
           <Card testID="camera-notice">
             <Text variant="title">
-              {picker.error ? "Can't open the camera" : 'No open shift form'}
+              {saved
+                ? 'Photo saved'
+                : picker.error
+                  ? "Can't open the camera"
+                  : saveError
+                    ? "Couldn't save the photo"
+                    : 'No open shift form'}
             </Text>
             <Text tone="muted">
-              {picker.error
-                ? picker.error.message
-                : accountId === 'elena'
-                  ? 'Shift Managers add photos to their own forms. You can review saved photos on Shift Photos.'
-                  : "Today's forms for your shift are all closed. Saved photos are on Shift Photos."}
+              {saved
+                ? `${saved.count === 1 ? 'Saved' : `${saved.count} photos saved`} to the ${phaseLabels[saved.phase]} shift.`
+                : problem
+                  ? problem
+                  : accountId === 'elena'
+                    ? 'Shift Managers add photos to their own forms. You can review saved photos on Shift Photos.'
+                    : "Today's forms for your shift are all closed. Saved photos are on Shift Photos."}
             </Text>
             {picker.error?.openSettings ? (
               <Button
@@ -89,23 +126,49 @@ export function ShiftCaptureButton() {
                 Open Settings
               </Button>
             ) : null}
-            <Button
-              onPress={() => {
-                closeNotice();
-                router.navigate('/photos');
-              }}
-              accessibilityLabel="Go to Shift Photos"
-              testID="camera-notice-photos"
-            >
-              Shift Photos
-            </Button>
+            {saved ? (
+              <>
+                <Button
+                  onPress={() => {
+                    closeNotice();
+                    void picker.takePhoto();
+                  }}
+                  accessibilityLabel="Take another photo"
+                  testID="camera-notice-again"
+                >
+                  Take another photo
+                </Button>
+                <Button
+                  variant="outline"
+                  onPress={() => {
+                    setOpenLogId(saved.logId);
+                    closeNotice();
+                  }}
+                  accessibilityLabel="Open the shift"
+                  testID="camera-notice-open"
+                >
+                  Open shift
+                </Button>
+              </>
+            ) : (
+              <Button
+                onPress={() => {
+                  closeNotice();
+                  router.navigate('/photos');
+                }}
+                accessibilityLabel="Go to Shift Photos"
+                testID="camera-notice-photos"
+              >
+                Shift Photos
+              </Button>
+            )}
             <Button
               variant="ghost"
               onPress={closeNotice}
-              accessibilityLabel="Close"
+              accessibilityLabel={saved ? 'Done' : 'Close'}
               testID="camera-notice-close"
             >
-              Close
+              {saved ? 'Done' : 'Close'}
             </Button>
           </Card>
         </View>

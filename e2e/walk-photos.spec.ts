@@ -153,9 +153,13 @@ test('narrow: the camera tab is a direct camera for a Shift Manager and never de
   const chooser = page.waitForEvent('filechooser');
   await page.getByTestId('nav-camera').click();
   await (await chooser).setFiles(fixture);
+  // It saves straight to Midday and stays put; the shift then shows it as a saved photo.
+  await expect(page.getByTestId('camera-notice')).toContainText('Saved to the Midday shift');
+  await page.getByTestId('camera-notice-open').click();
   const modal = page.getByTestId('shift-log-modal');
   await expect(modal).toContainText('Midday');
-  await expect(modal.getByTestId('walk-draft')).toHaveCount(1);
+  await expect(modal.getByTestId('walk-photo')).toHaveCount(1);
+  await expect(modal.getByTestId('walk-draft')).toHaveCount(0);
   await page.getByTestId('close-shift-log').click();
 
   // Elena has no form to add to: the button still answers, and leads to Shift Photos.

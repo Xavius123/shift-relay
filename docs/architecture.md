@@ -38,11 +38,11 @@ The mock base query serves fictional logs and issues from memory, with optional 
 
 ## Theming
 
-Style Dictionary builds typed theme tokens and CSS from `tokens/`. The contrast script validates the palette. `uiSlice` stores color scheme and accent; `AppThemeProvider` resolves them and exposes the theme through `useTheme()`. Components use `makeStyles()` with token values. Generated token files are not edited by hand.
+Style Dictionary builds typed theme tokens and CSS from `tokens/`. The contrast script validates the palette. `uiSlice` stores the color scheme; `AppThemeProvider` resolves it and exposes the theme through `useTheme()`. Components use `makeStyles()` with token values. Generated token files are not edited by hand.
 
 ## Navigation and errors
 
-Expo Router provides typed routes. `AppShell` uses headless tabs with wide side navigation and narrow bottom tabs; a drawer gives narrow screens access to all sections. The center bottom-tab button is a camera (`ShiftCaptureButton`), not a route: it opens the camera for the signed-in Shift Manager's first open form, then that form with the photo waiting to be saved. Each section has a shared themed stack header. Sign-in gates the shell. The log detail is a shared modal over Dashboard, Logs, or Issues, so closing it returns to the originating section.
+Expo Router provides typed routes. `AppShell` uses headless tabs with wide side navigation and narrow bottom tabs; a drawer gives narrow screens access to all sections. The center bottom-tab button is a camera (`ShiftCaptureButton`), not a route: it opens the camera for the signed-in Shift Manager's first open form and saves the photo straight to it, then confirms and stays on the current screen. Each section has a shared themed stack header. Sign-in gates the shell. The log detail is a shared modal over Dashboard, Logs, or Issues, so closing it returns to the originating section.
 
 Queries show loading, error with Retry, and stale-data warnings where data is cached. Failed mutations keep the relevant draft visible. A root render error boundary catches render errors.
 

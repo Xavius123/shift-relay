@@ -40,7 +40,7 @@ Everyone who signs, checks, raises, resolves, or photographs something shows as 
 A suggested path through the app:
 
 1. Sign in as **Jordan**. On the Dashboard, tap **Complete Morning**.
-2. Take a photo, either way: the center **camera** tab on a phone (it opens the camera, then the form), or **Take photo** / **Library** in the bar pinned to the bottom of the sheet (camera on iPhone, file picker on web). Review the photos, remove any you don't want, and **Save**. Signing off is blocked while photos are unsaved; once saved, Jordan can't delete them.
+2. Take a photo, either way. The center **camera** tab on a phone opens the camera and saves the photo straight to Jordan's open shift (Morning), then confirms and stays where you were. Or use **Take photo** / **Library** in the bar pinned to the bottom of a shift sheet (camera on iPhone, file picker on web); those photos wait in the sheet to review, remove any you don't want, and **Save**. Signing off is blocked while sheet photos are unsaved; once saved, Jordan can't delete them.
 3. Tick the restock check and sign off. Open the Midday handoff, flag an issue, and send it.
 4. Switch to **Avery**. Review the open issue, receive the handoff, and complete Night.
 5. Switch to **Elena**. Her Dashboard shows this week's numbers and every open issue. **Shift Photos** shows today's Morning photo; tap it to preview, and delete it if it shouldn't be on the record. The sheets are read-only for her.

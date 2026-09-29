@@ -8,7 +8,7 @@ import { addWalkDrafts } from './walkDraftsSlice';
 
 /**
  * Take or choose photos for one shift log. They land as unsaved drafts on that log, to be
- * reviewed and saved in its sheet. `onAdded` runs after photos arrive, e.g. to open the sheet.
+ * reviewed and saved in its sheet. `onAdded` runs after photos arrive, e.g. to scroll to them.
  * With no `logId` (nothing open to add to) picked photos are ignored.
  */
 export function useAddPhotos(logId: string | null, onAdded?: (logId: string) => void) {
