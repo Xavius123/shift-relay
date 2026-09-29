@@ -72,7 +72,7 @@ There is no backend. A mock RTK Query API serves generated, fictional data from 
 
 **Prerequisites:** Node 20+, and [Expo Go](https://expo.dev/go) on an iPhone. Setup: [docs/setup.md](docs/setup.md).
 
-**Camera:** `expo-image-picker`, which runs in Expo Go. iOS asks for camera access the first time; on web, the camera button opens the browser's file picker, and camera capture needs HTTPS or `localhost`.
+**Camera:** `expo-image-picker`, which runs in Expo Go. iOS asks for camera access the first time. A desktop browser has no camera, so it shows "Upload photos" and opens a file picker; those photos are tagged "Uploaded", while camera photos from a phone or the iPhone app are not. On a phone browser, camera capture needs HTTPS or `localhost`.
 
 ### Quick start
 

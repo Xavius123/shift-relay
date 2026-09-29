@@ -1,4 +1,5 @@
 import type { DemoAccountId } from '@/features/auth/types';
+import type { PhotoSource, PickedPhoto } from '@/features/camera/types';
 
 export type ShiftPhase = 'morning' | 'midday' | 'night';
 export type LogStatus = 'pending' | 'awaitingSecondSignOff' | 'signedOff';
@@ -30,6 +31,8 @@ export interface WalkPhoto {
   uri: string;
   /** What the photo shows, when known (the seed's drawings); null for photos taken in the app. */
   caption: string | null;
+  /** Taken with a camera, or uploaded from a file or the photo library. */
+  source: PhotoSource;
   actor: string;
   at: string;
 }
@@ -67,7 +70,7 @@ export interface SignOffLogInput {
 
 export interface AddWalkPhotosInput {
   id: string;
-  uris: string[];
+  photos: PickedPhoto[];
   accountId: DemoAccountId;
 }
 

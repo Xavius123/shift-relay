@@ -8,7 +8,7 @@ const fixture = 'assets/favicon-shift-relay.png';
 
 async function choosePhoto(page: Page) {
   const chooser = page.waitForEvent('filechooser');
-  await page.getByTestId('sheet-choose-photos').click();
+  await page.getByTestId('sheet-take-photo').click();
   await (await chooser).setFiles(fixture);
 }
 
@@ -123,7 +123,7 @@ test('a walk with no photos shows the placeholder', async ({ page }) => {
   await openAs(page, '/', 'jordan');
   await page.getByTestId('shift-card-midday').click();
   const modal = page.getByTestId('shift-log-modal');
-  await expect(modal.getByTestId('walk-photos-count')).toContainText('Take photos');
+  await expect(modal.getByTestId('walk-photos-count')).toContainText(/(Take|Upload) photos/);
   await expect(modal.getByTestId('walk-no-photos')).toBeVisible();
   await expect(modal.getByTestId('sheet-take-photo')).toBeVisible();
 });
@@ -180,7 +180,7 @@ test('inside a shift sheet a pinned camera bar takes photos; closed forms have n
   const modal = page.getByTestId('shift-log-modal');
   await expect(modal.getByTestId('sheet-camera-bar')).toBeVisible();
   const chooser = page.waitForEvent('filechooser');
-  await modal.getByTestId('sheet-choose-photos').click();
+  await modal.getByTestId('sheet-take-photo').click();
   await (await chooser).setFiles(fixture);
   await expect(modal.getByTestId('walk-draft')).toHaveCount(1);
   await page.getByTestId('close-shift-log').click();
@@ -243,4 +243,41 @@ test('every finished shift has one or two shift photos, including the mouse', as
   // Today is the only day without photos, and its three shifts are the only empty ones.
   expect(withPhotos.size).toBe(21);
   expect([...emptyShifts.values()].reduce((sum, count) => sum + count, 0)).toBe(3);
+});
+
+test('photos record where they came from: uploads are tagged, camera photos are not', async ({
+  page,
+}, info) => {
+  const phone = info.project.name === 'phone';
+  await openAs(page, '/', 'jordan');
+  await page.getByTestId('next-action-button').click();
+  const modal = page.getByTestId('shift-log-modal');
+
+  // A phone offers a camera and a library; a desktop browser only offers an upload.
+  await expect(modal.getByTestId('sheet-take-photo')).toContainText(
+    phone ? 'Take photo' : 'Upload photos',
+  );
+  await expect(modal.getByTestId('sheet-choose-photos')).toHaveCount(phone ? 1 : 0);
+
+  // The primary button: a camera photo on a phone, an upload on desktop.
+  let chooser = page.waitForEvent('filechooser');
+  await modal.getByTestId('sheet-take-photo').click();
+  await (await chooser).setFiles(fixture);
+  await modal.getByTestId('walk-save-photos').click();
+  await expect(modal.getByTestId('walk-photo')).toHaveCount(1);
+  await expect(modal.getByTestId('walk-photo-uploaded')).toHaveCount(phone ? 0 : 1);
+
+  if (phone) {
+    // A photo picked from the library is an upload.
+    chooser = page.waitForEvent('filechooser');
+    await modal.getByTestId('sheet-choose-photos').click();
+    await (await chooser).setFiles(fixture);
+    await modal.getByTestId('walk-save-photos').click();
+    await expect(modal.getByTestId('walk-photo')).toHaveCount(2);
+    await expect(modal.getByTestId('walk-photo-uploaded')).toHaveCount(1);
+  }
+
+  // The full-size viewer says so too.
+  await modal.getByTestId('walk-photo-open').last().click();
+  await expect(page.getByTestId('photo-preview-uploaded')).toBeVisible();
 });

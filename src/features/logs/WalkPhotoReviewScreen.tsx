@@ -203,7 +203,7 @@ function ShiftPhotos({
               key={photo.id}
               onPress={() => onOpenPhoto(photo.id)}
               accessibilityRole="button"
-              accessibilityLabel={`View ${phaseLabels[log.phase]} shift photo ${index + 1}${photo.caption ? `, ${photo.caption}` : ''}, by ${photo.actor}`}
+              accessibilityLabel={`View ${phaseLabels[log.phase]} shift photo ${index + 1}${photo.caption ? `, ${photo.caption}` : ''}, by ${photo.actor}${photo.source === 'upload' ? ', uploaded' : ''}`}
               testID="walk-review-photo"
               style={({ pressed }) => [styles.tile, pressed && styles.pressed]}
             >

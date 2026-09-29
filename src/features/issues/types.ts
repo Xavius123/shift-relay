@@ -1,4 +1,5 @@
 import type { DemoAccountId } from '@/features/auth/types';
+import type { PhotoSource, PickedPhoto } from '@/features/camera/types';
 
 /** The preset high-priority kinds a Shift Manager can pick, plus a written-in Other. */
 export type IssueCategory = 'safety' | 'equipment' | 'security' | 'temperature' | 'other';
@@ -14,6 +15,8 @@ export interface IssuePhoto {
   id: string;
   uri: string;
   purpose: 'evidence' | 'resolution';
+  /** Taken with a camera, or uploaded from a file or the photo library. */
+  source: PhotoSource;
   takenBy: string;
   takenAt: string;
 }
@@ -39,12 +42,12 @@ export interface RaiseIssueInput {
   category: IssueCategory;
   details: string;
   sourceLogId: string | null;
-  photoUris?: string[];
+  photos?: PickedPhoto[];
   accountId: DemoAccountId;
 }
 
 export interface ResolveIssueInput {
   id: string;
   accountId: DemoAccountId;
-  photoUris?: string[];
+  photos?: PickedPhoto[];
 }

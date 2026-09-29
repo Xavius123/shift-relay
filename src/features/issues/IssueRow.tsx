@@ -4,6 +4,7 @@ import { Image, useWindowDimensions, View } from 'react-native';
 
 import { Badge, Button, Card, makeStyles, Text, useTheme } from '@/design-system';
 import { Initials } from '@/features/common/Initials';
+import type { PickedPhoto } from '@/features/camera/types';
 import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
 import { phaseLabels } from '@/features/logs/logTemplates';
 import type { ShiftLog } from '@/features/logs/types';
@@ -45,7 +46,7 @@ function mergePhotoEvents(events: Issue['events']): TrailLine[] {
 }
 
 interface ResolveAction {
-  onResolve: (photoUris: string[]) => Promise<void>;
+  onResolve: (photos: PickedPhoto[]) => Promise<void>;
   loading: boolean;
 }
 
@@ -68,13 +69,14 @@ export function IssueRow({
   const theme = useTheme();
   const compact = useWindowDimensions().width < theme.breakpoint.wide;
   const [resolving, setResolving] = useState(false);
-  const [resolutionPhotos, setResolutionPhotos] = useState<string[]>([]);
+  const [resolutionPhotos, setResolutionPhotos] = useState<PickedPhoto[]>([]);
   const [resolveError, setResolveError] = useState<string | null>(null);
-  const picker = usePhotoPicker((uris) =>
-    setResolutionPhotos((current) => [...current, ...uris].slice(0, 5)),
+  const picker = usePhotoPicker((picked) =>
+    setResolutionPhotos((current) => [...current, ...picked].slice(0, 5)),
   );
   const category = issueCategories[issue.category];
   const open = issue.status === 'open';
+  const uploadedCount = issue.photos.filter((photo) => photo.source === 'upload').length;
   const title = issueTitle(issue);
   // A photo added at the moment of raising or resolving is part of that line, not its own.
   // Phones drop any photo that was added on its own.
@@ -135,10 +137,15 @@ export function IssueRow({
               key={photo.id}
               source={{ uri: photo.uri }}
               style={[styles.photo, compact && styles.photoCompact]}
-              accessibilityLabel={`${photo.purpose} photo`}
+              accessibilityLabel={`${photo.purpose} photo${photo.source === 'upload' ? ', uploaded' : ''}`}
             />
           ))}
         </View>
+      ) : null}
+      {uploadedCount > 0 ? (
+        <Text variant="caption" tone="muted" testID={`issue-uploaded-${issue.id}`}>
+          {`${uploadedCount} of ${issue.photos.length} ${issue.photos.length === 1 ? 'photo was' : 'photos were'} uploaded from a file`}
+        </Text>
       ) : null}
 
       {(sourceLog && onOpenSource) || (open && resolve) ? (
@@ -174,28 +181,32 @@ export function IssueRow({
             Resolution photos (optional)
           </Text>
           <View style={styles.actions}>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={picker.busy || resolutionPhotos.length >= 5}
-              onPress={() => void picker.takePhoto()}
-              loading={picker.working === 'camera'}
-              accessibilityLabel="Take a resolution photo"
-            >
-              Camera
-            </Button>
+            {picker.canUseCamera ? (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={picker.busy || resolutionPhotos.length >= 5}
+                onPress={() => void picker.takePhoto()}
+                loading={picker.working === 'camera'}
+                accessibilityLabel="Take a resolution photo"
+              >
+                Camera
+              </Button>
+            ) : null}
             <Button
               variant="outline"
               size="sm"
               disabled={picker.busy || resolutionPhotos.length >= 5}
               onPress={() => void picker.choosePhotos()}
               loading={picker.working === 'library'}
-              accessibilityLabel="Choose resolution photos"
+              accessibilityLabel={
+                picker.canUseCamera ? 'Choose resolution photos' : 'Upload resolution photos'
+              }
             >
-              Choose photos
+              {picker.canUseCamera ? 'Choose photos' : 'Upload photos'}
             </Button>
           </View>
-          {resolutionPhotos.map((uri, index) => (
+          {resolutionPhotos.map(({ uri }, index) => (
             <View key={`${uri}-${index}`} style={styles.resolutionPhoto}>
               <Image
                 source={{ uri }}

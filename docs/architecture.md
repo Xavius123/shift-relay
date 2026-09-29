@@ -8,7 +8,7 @@ src/
   design-system/    Tokens, theme, shared types, and components
   features/
     auth/           Demo accounts and session
-    camera/         Shared photo picker
+    camera/         Shared photo picker, camera detection, and photo source
     common/         Screen states, initials, and shared formatting
     dev/            Failure simulation and mock latency
     issues/         Issue form, list, categories, permissions

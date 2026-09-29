@@ -5,6 +5,7 @@ import { AccessibilityInfo, Image, Pressable, View } from 'react-native';
 import { Button, Card, Input, makeStyles, Text, useTheme } from '@/design-system';
 import type { DemoAccountId } from '@/features/auth/types';
 import { isLogsApiError, useRaiseIssueMutation } from '@/features/logs/logsApi';
+import type { PickedPhoto } from '@/features/camera/types';
 import { usePhotoPicker } from '@/features/camera/usePhotoPicker';
 
 import { issueCategories, issueCategoryOrder, issueDraftError } from './issueCategories';
@@ -26,9 +27,9 @@ export function RaiseIssueForm({
   const [category, setCategory] = useState<IssueCategory | null>(null);
   const [details, setDetails] = useState('');
   const [draftError, setDraftError] = useState<string | null>(null);
-  const [photoUris, setPhotoUris] = useState<string[]>([]);
-  const picker = usePhotoPicker((uris) =>
-    setPhotoUris((current) => [...current, ...uris].slice(0, 5)),
+  const [photos, setPhotos] = useState<PickedPhoto[]>([]);
+  const picker = usePhotoPicker((picked) =>
+    setPhotos((current) => [...current, ...picked].slice(0, 5)),
   );
   const other = category === 'other';
 
@@ -40,7 +41,7 @@ export function RaiseIssueForm({
     }
     setDraftError(null);
     try {
-      await raiseIssue({ category, details, sourceLogId, accountId, photoUris }).unwrap();
+      await raiseIssue({ category, details, sourceLogId, accountId, photos }).unwrap();
       AccessibilityInfo.announceForAccessibility('Issue flagged');
       onDone();
     } catch {
@@ -102,29 +103,33 @@ export function RaiseIssueForm({
           Evidence photos {category === 'safety' ? '(required)' : '(optional)'}
         </Text>
         <View style={styles.actions}>
-          <Button
-            variant="outline"
-            size="sm"
-            onPress={() => void picker.takePhoto()}
-            disabled={picker.busy || photoUris.length >= 5}
-            accessibilityLabel="Take an evidence photo"
-          >
-            Camera
-          </Button>
+          {picker.canUseCamera ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onPress={() => void picker.takePhoto()}
+              disabled={picker.busy || photos.length >= 5}
+              accessibilityLabel="Take an evidence photo"
+            >
+              Camera
+            </Button>
+          ) : null}
           <Button
             variant="outline"
             size="sm"
             onPress={() => void picker.choosePhotos()}
-            disabled={picker.busy || photoUris.length >= 5}
-            accessibilityLabel="Choose evidence photos"
+            disabled={picker.busy || photos.length >= 5}
+            accessibilityLabel={
+              picker.canUseCamera ? 'Choose evidence photos' : 'Upload evidence photos'
+            }
             testID="raise-issue-choose-photos"
           >
-            Choose photos
+            {picker.canUseCamera ? 'Choose photos' : 'Upload photos'}
           </Button>
         </View>
-        {photoUris.length > 0 ? (
+        {photos.length > 0 ? (
           <View style={styles.thumbnails}>
-            {photoUris.map((uri, index) => (
+            {photos.map(({ uri }, index) => (
               <View key={`${uri}-${index}`} style={styles.thumbnailWrap}>
                 <Image
                   source={{ uri }}
@@ -135,7 +140,7 @@ export function RaiseIssueForm({
                   variant="ghost"
                   size="sm"
                   onPress={() =>
-                    setPhotoUris((items) => items.filter((_, itemIndex) => itemIndex !== index))
+                    setPhotos((items) => items.filter((_, itemIndex) => itemIndex !== index))
                   }
                   accessibilityLabel={`Remove evidence photo ${index + 1}`}
                 >
@@ -150,7 +155,7 @@ export function RaiseIssueForm({
             {picker.error.message}
           </Text>
         ) : null}
-        {category === 'safety' && photoUris.length === 0 ? (
+        {category === 'safety' && photos.length === 0 ? (
           <Text variant="caption" tone="muted">
             Add at least one photo to flag a Safety hazard.
           </Text>

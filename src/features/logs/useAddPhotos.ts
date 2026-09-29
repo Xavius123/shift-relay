@@ -13,10 +13,10 @@ import { addWalkDrafts } from './walkDraftsSlice';
  */
 export function useAddPhotos(logId: string | null, onAdded?: (logId: string) => void) {
   const dispatch = useAppDispatch();
-  return usePhotoPicker((uris) => {
-    if (logId === null || uris.length === 0) return;
-    dispatch(addWalkDrafts(logId, uris));
-    AccessibilityInfo.announceForAccessibility(`${plural(uris.length, 'photo')} ready to review`);
+  return usePhotoPicker((photos) => {
+    if (logId === null || photos.length === 0) return;
+    dispatch(addWalkDrafts(logId, photos));
+    AccessibilityInfo.announceForAccessibility(`${plural(photos.length, 'photo')} ready to review`);
     onAdded?.(logId);
   });
 }

@@ -3,6 +3,7 @@ import { FlatList, View } from 'react-native';
 
 import { Button, Card, makeStyles, Text } from '@/design-system';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
+import type { PickedPhoto } from '@/features/camera/types';
 import { LoadingState, ScreenState } from '@/features/common/ScreenState';
 import {
   useGetIssuesQuery,
@@ -90,8 +91,8 @@ export function IssuesScreen() {
               ? {
                   resolve: {
                     loading: resolution.isLoading && resolution.originalArgs?.id === item.id,
-                    onResolve: async (photoUris: string[]) => {
-                      await resolveIssue({ id: item.id, accountId, photoUris }).unwrap();
+                    onResolve: async (photos: PickedPhoto[]) => {
+                      await resolveIssue({ id: item.id, accountId, photos }).unwrap();
                     },
                   },
                 }

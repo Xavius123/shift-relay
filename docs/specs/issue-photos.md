@@ -21,11 +21,11 @@ Enforced by the mock API as well as the screens.
 - `sourceLogId` is required on a stored issue. An issue raised from the Issues tab links to today's active log: the first of Morning → Midday → Night not yet signed, or Night when all are signed.
 - Each photo appends a `photoAdded` event after `raised` (or before `resolved`, when added at resolution).
 
-Types: [data-model.md](../data-model.md) (`IssuePhoto`, `Issue.photos`, and the `photoUris` inputs).
+Types: [data-model.md](../data-model.md) (`IssuePhoto`, `Issue.photos`, and the `photos` inputs, each with a `source`).
 
 ## Forms
 
-- **Raise issue** (shift log modal and Issues tab): category and details, then a **Photos** section with `Take photo` and `Choose photos` (both `expo-image-picker` through the shared `usePhotoPicker` hook, which handles permission and errors). Thumbnails have a labeled 44×44 `Remove photo N` action. Safety shows `Required: add at least one photo of the hazard.` A failed submit keeps the category, details, and photos.
+- **Raise issue** (shift log modal and Issues tab): category and details, then a **Photos** section with `Camera` and `Choose photos` on a device with a camera, or a single `Upload photos` on a desktop browser (all `expo-image-picker` through the shared `usePhotoPicker` hook, which handles permission and errors and tags each photo `camera` or `upload`). An issue that has uploaded photos says how many, in text. Thumbnails have a labeled 44×44 `Remove photo N` action. Safety shows `Required: add at least one photo of the hazard.` A failed submit keeps the category, details, and photos.
 - **Resolve issue:** `Resolve` opens a confirm step with an optional `Proof of fix` photo section.
 - **Sign-off:** the modal summarizes what the signature covers, for example `2 issues · 3 photos raised from this log`.
 

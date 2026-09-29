@@ -1,9 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
+import type { PhotoSource, PickedPhoto } from '@/features/camera/types';
+
 /** A photo taken on the walk but not saved to the log yet. */
 export interface WalkDraft {
   id: string;
   uri: string;
+  source: PhotoSource;
   at: string;
 }
 
@@ -26,13 +29,13 @@ export const walkDraftsSlice = createSlice({
         state[logId] = [...(state[logId] ?? []), ...drafts];
       },
       // Ids are made here, not in the reducer, so the reducer stays pure.
-      prepare(logId: string, uris: string[]) {
+      prepare(logId: string, photos: PickedPhoto[]) {
         return {
           payload: {
             logId,
-            drafts: uris.map((uri) => {
+            drafts: photos.map(({ uri, source }) => {
               draftCount += 1;
-              return { id: `draft-${draftCount}`, uri, at: new Date().toISOString() };
+              return { id: `draft-${draftCount}`, uri, source, at: new Date().toISOString() };
             }),
           },
         };

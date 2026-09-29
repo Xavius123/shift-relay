@@ -138,9 +138,16 @@ const mockBaseQuery: BaseQueryFn<MockQuery, unknown, LogsApiError> = async (quer
     }
     const actor = demoActor(input.accountId);
     const at = new Date().toISOString();
-    for (const uri of query.input.uris) {
+    for (const { uri, source } of input.photos) {
       walkPhotoCount += 1;
-      log.walkPhotos.push({ id: `${log.id}-P${walkPhotoCount}`, uri, caption: null, actor, at });
+      log.walkPhotos.push({
+        id: `${log.id}-P${walkPhotoCount}`,
+        uri,
+        caption: null,
+        source,
+        actor,
+        at,
+      });
     }
     return { data: cloneLog(log) };
   }
@@ -198,9 +205,9 @@ const mockBaseQuery: BaseQueryFn<MockQuery, unknown, LogsApiError> = async (quer
     }
     const invalid = issueDraftError(input.category, input.details);
     if (invalid) return error(409, invalid);
-    const photoUris = input.photoUris ?? [];
-    if (photoUris.length > 5) return error(409, 'Attach no more than five photos at a time.');
-    if (input.category === 'safety' && photoUris.length === 0) {
+    const picked = input.photos ?? [];
+    if (picked.length > 5) return error(409, 'Attach no more than five photos at a time.');
+    if (input.category === 'safety' && picked.length === 0) {
       return error(409, 'Add at least one evidence photo for a Safety hazard.');
     }
     const activeLog = logs.find(
@@ -217,9 +224,10 @@ const mockBaseQuery: BaseQueryFn<MockQuery, unknown, LogsApiError> = async (quer
     }
     const actor = demoActor(input.accountId);
     const at = new Date().toISOString();
-    const photos = photoUris.map((uri, index) => ({
+    const photos = picked.map(({ uri, source }, index) => ({
       id: `ISS-${String(issues.length + 1).padStart(3, '0')}-P${index + 1}`,
       uri,
+      source,
       purpose: 'evidence' as const,
       takenBy: actor,
       takenAt: at,
@@ -250,18 +258,19 @@ const mockBaseQuery: BaseQueryFn<MockQuery, unknown, LogsApiError> = async (quer
   if (!canManageIssues(input.accountId)) {
     return error(409, 'A Shift Manager must resolve this issue.');
   }
-  const photoUris = input.photoUris ?? [];
-  if (photoUris.length > 5) return error(409, 'Attach no more than five photos at a time.');
+  const picked = input.photos ?? [];
+  if (picked.length > 5) return error(409, 'Attach no more than five photos at a time.');
   if (issue.status === 'open') {
     const actor = demoActor(input.accountId);
     const at = new Date().toISOString();
     issue.status = 'resolved';
     issue.resolvedBy = actor;
     issue.resolvedAt = at;
-    for (const uri of photoUris) {
+    for (const { uri, source } of picked) {
       issue.photos.push({
         id: `${issue.id}-R${issue.photos.length + 1}`,
         uri,
+        source,
         purpose: 'resolution',
         takenBy: actor,
         takenAt: at,

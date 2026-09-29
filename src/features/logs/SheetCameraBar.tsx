@@ -51,22 +51,26 @@ export function SheetCameraBar({
             onPress={() => void picker.takePhoto()}
             loading={picker.working === 'camera'}
             disabled={picker.busy}
-            accessibilityLabel="Take a photo for this shift"
+            accessibilityLabel={
+              picker.canUseCamera ? 'Take a photo for this shift' : 'Upload photos for this shift'
+            }
             testID="sheet-take-photo"
           >
-            Take photo
+            {picker.canUseCamera ? 'Take photo' : 'Upload photos'}
           </Button>
         </View>
-        <Button
-          variant="secondary"
-          onPress={() => void picker.choosePhotos()}
-          loading={picker.working === 'library'}
-          disabled={picker.busy}
-          accessibilityLabel="Choose photos for this shift"
-          testID="sheet-choose-photos"
-        >
-          Library
-        </Button>
+        {picker.canUseCamera ? (
+          <Button
+            variant="secondary"
+            onPress={() => void picker.choosePhotos()}
+            loading={picker.working === 'library'}
+            disabled={picker.busy}
+            accessibilityLabel="Choose photos for this shift"
+            testID="sheet-choose-photos"
+          >
+            Library
+          </Button>
+        ) : null}
       </View>
     </View>
   );

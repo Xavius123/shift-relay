@@ -45,6 +45,7 @@ export interface WalkPhoto {
   id: string;
   uri: string; // local file URI on iOS; data or blob URI on web
   caption: string | null;
+  source: 'camera' | 'upload'; // see "Photo source" below
   actor: string;
   at: string;
 }
@@ -62,6 +63,7 @@ export interface IssuePhoto {
   id: string;
   uri: string;
   purpose: 'evidence' | 'resolution';
+  source: 'camera' | 'upload';
   takenBy: string;
   takenAt: string;
 }
@@ -83,7 +85,7 @@ export interface Issue {
 
 Issue types live in `src/features/issues/types.ts`; log types in `src/features/logs/types.ts`.
 
-`RaiseIssueInput.sourceLogId` is `string | null`: from the Issues tab it is `null` and the mock API links today's active log. `RaiseIssueInput` and `ResolveIssueInput` also take optional `photoUris`.
+`RaiseIssueInput.sourceLogId` is `string | null`: from the Issues tab it is `null` and the mock API links today's active log. `RaiseIssueInput` and `ResolveIssueInput` also take optional `photos: { uri, source }[]`, and `AddWalkPhotosInput` takes `photos` the same way.
 
 **Invariants:**
 
@@ -106,7 +108,11 @@ The UI also derives a `DailySheetSummary` for each operational date from its thr
 
 Issue photos are built ([issue-photos.md](specs/issue-photos.md)): `Issue.photos` holds evidence and resolution photos, and each photo adds a `photoAdded` event stamped with the same time as the raise or resolve it came with. The UI shows those as one trail line ("Raised by … · 1 photo").
 
-**Shift Photos** are built. Every `ShiftLog` has `walkPhotos: WalkPhoto[]` (`id`, `uri`, `caption`, `actor`, `at`), oldest first. A Shift Manager takes photos, reviews them as drafts, and saves them; drafts are UI state in `walkDraftsSlice` (per log, never sent to the API), and sign-off is refused while any remain. `addWalkPhotos(input)` saves drafts to today's form that is not signed off, from the Shift Manager who owns that phase: Jordan adds to Morning and Midday, Avery to Midday and Night. It does not have to be their turn to sign. Elena cannot add photos. `removeWalkPhoto(input)` is Operations Manager only, on any date: saved photos are the record. The URI points at the image on the device (a data or blob URI on web), and nothing is uploaded. Every signed-off historical shift has one or two fictional drawings from `scripts/build-seed-photos.mjs`, including a mouse on duty. Only today's pending shifts start with none.
+**Shift Photos** are built. Every `ShiftLog` has `walkPhotos: WalkPhoto[]` (`id`, `uri`, `caption`, `source`, `actor`, `at`), oldest first. A Shift Manager takes photos, reviews them as drafts, and saves them; drafts are UI state in `walkDraftsSlice` (per log, never sent to the API), and sign-off is refused while any remain. `addWalkPhotos(input)` saves drafts to today's form that is not signed off, from the Shift Manager who owns that phase: Jordan adds to Morning and Midday, Avery to Midday and Night. It does not have to be their turn to sign. Elena cannot add photos. `removeWalkPhoto(input)` is Operations Manager only, on any date: saved photos are the record. The URI points at the image on the device (a data or blob URI on web), and nothing is uploaded. Every signed-off historical shift has one or two fictional drawings from `scripts/build-seed-photos.mjs`, including a mouse on duty. Only today's pending shifts start with none.
+
+## Photo source
+
+Every shift photo and issue photo records where it came from. `camera` means a camera took it: a native build, or a touch-first browser (a phone or tablet). `upload` means it came from a file or the photo library, which includes the desktop browser's file picker and any photo picked from an iPhone's library. The device decides (`features/camera/captureSupport.ts`), so a desktop browser shows "Upload photos" instead of "Take photo" and never claims a camera. Uploads are allowed but tagged "Uploaded" wherever the photo is shown. Seed photos are `camera`. A real backend would also strip location metadata from uploads and compare the file's own timestamp with the shift.
 
 ## Seed dataset
 

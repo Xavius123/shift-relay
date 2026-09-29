@@ -43,14 +43,14 @@ export function ShiftCaptureButton() {
   const [savePhotos, saving] = useAddWalkPhotosMutation();
 
   const current = currentPhotoLog(accountId, todayLogs);
-  const picker = usePhotoPicker((uris) => {
-    if (current === null || accountId === null || uris.length === 0) return;
-    savePhotos({ id: current.id, uris, accountId })
+  const picker = usePhotoPicker((photos) => {
+    if (current === null || accountId === null || photos.length === 0) return;
+    savePhotos({ id: current.id, photos, accountId })
       .unwrap()
       .then(() => {
-        setSaved({ logId: current.id, phase: current.phase, count: uris.length });
+        setSaved({ logId: current.id, phase: current.phase, count: photos.length });
         AccessibilityInfo.announceForAccessibility(
-          `${uris.length === 1 ? 'Photo' : 'Photos'} saved to ${phaseLabels[current.phase]}`,
+          `${photos.length === 1 ? 'Photo' : 'Photos'} saved to ${phaseLabels[current.phase]}`,
         );
       })
       .catch(() => setSaveError("The photo wasn't saved. Try again."));
@@ -81,7 +81,7 @@ export function ShiftCaptureButton() {
             ? 'Loading shift forms'
             : current === null
               ? 'Camera: no open shift form'
-              : `Take a photo for ${phaseLabels[current.phase]}`
+              : `${picker.canUseCamera ? 'Take' : 'Upload'} a photo for ${phaseLabels[current.phase]}`
         }
         aria-busy={busy}
         testID="nav-camera"
@@ -90,7 +90,11 @@ export function ShiftCaptureButton() {
         {busy ? (
           <ActivityIndicator color={theme.color.accentFg} />
         ) : (
-          <Ionicons name="camera" size={theme.fontSize['2xl']} color={theme.color.accentFg} />
+          <Ionicons
+            name={picker.canUseCamera ? 'camera' : 'cloud-upload'}
+            size={theme.fontSize['2xl']}
+            color={theme.color.accentFg}
+          />
         )}
       </Pressable>
 
@@ -133,10 +137,12 @@ export function ShiftCaptureButton() {
                     closeNotice();
                     void picker.takePhoto();
                   }}
-                  accessibilityLabel="Take another photo"
+                  accessibilityLabel={
+                    picker.canUseCamera ? 'Take another photo' : 'Upload another photo'
+                  }
                   testID="camera-notice-again"
                 >
-                  Take another photo
+                  {picker.canUseCamera ? 'Take another photo' : 'Upload another photo'}
                 </Button>
                 <Button
                   variant="outline"

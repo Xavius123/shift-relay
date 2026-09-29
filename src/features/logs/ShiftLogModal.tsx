@@ -7,6 +7,7 @@ import { Badge, Button, Card, Input, makeStyles, Text, useTheme } from '@/design
 import { Initials } from '@/features/common/Initials';
 import { demoActor } from '@/features/auth/demoAccounts';
 import { selectDemoAccountId } from '@/features/auth/sessionSlice';
+import type { PickedPhoto } from '@/features/camera/types';
 import { formatDateTime } from '@/features/common/formatDateTime';
 import { LoadingState, ScreenState } from '@/features/common/ScreenState';
 import { canManageIssues } from '@/features/issues/issuePermissions';
@@ -285,8 +286,8 @@ function ShiftLogContent({
                 ? {
                     resolve: {
                       loading: resolution.isLoading && resolution.originalArgs?.id === issue.id,
-                      onResolve: async (photoUris: string[]) => {
-                        await resolveIssue({ id: issue.id, accountId, photoUris }).unwrap();
+                      onResolve: async (photos: PickedPhoto[]) => {
+                        await resolveIssue({ id: issue.id, accountId, photos }).unwrap();
                       },
                     },
                   }

@@ -92,6 +92,11 @@ export function PhotoPreview({
                       <Text variant="caption" tone="muted">
                         {formatDateTime(current.photo.at)}
                       </Text>
+                      {current.photo.source === 'upload' ? (
+                        <Text variant="caption" tone="muted" testID="photo-preview-uploaded">
+                          Uploaded from a file
+                        </Text>
+                      ) : null}
                     </View>
                   </View>
                   <View style={styles.steps}>

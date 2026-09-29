@@ -49,6 +49,7 @@ function seedPhotos(
       id: `${id}-P${index + 1}`,
       uri: image.uri,
       caption: image.label,
+      source: 'camera',
       actor,
       // Taken during the shift, before the checks were ticked and the log signed.
       at: new Date(new Date(before).getTime() - (20 - index * 3) * 60_000).toISOString(),
@@ -188,6 +189,7 @@ export function createSeedData(): { logs: ShiftLog[]; issues: Issue[] } {
             {
               id: `ISS-${String(index + 1).padStart(3, '0')}-P1`,
               uri: evidenceImage.uri,
+              source: 'camera' as const,
               purpose: 'evidence' as const,
               takenBy: raisedBy,
               takenAt: raisedAt,
@@ -200,6 +202,7 @@ export function createSeedData(): { logs: ShiftLog[]; issues: Issue[] } {
             {
               id: `ISS-${String(index + 1).padStart(3, '0')}-R1`,
               uri: resolutionImage.uri,
+              source: 'camera' as const,
               purpose: 'resolution' as const,
               takenBy: resolvedBy,
               takenAt: resolvedAt,

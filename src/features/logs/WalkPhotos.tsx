@@ -5,6 +5,7 @@ import { AccessibilityInfo, Image, Pressable, View } from 'react-native';
 import { Button, Card, makeStyles, Text, useTheme } from '@/design-system';
 import { demoActor } from '@/features/auth/demoAccounts';
 import type { DemoAccountId } from '@/features/auth/types';
+import { hasCamera } from '@/features/camera/captureSupport';
 import { Initials } from '@/features/common/Initials';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
@@ -51,7 +52,14 @@ export function WalkPhotos({
   const context = `${phaseLabels[log.phase]} shift · ${log.operationalDate}`;
   const actor = demoActor(accountId);
   const draftPreview: PreviewPhoto[] = drafts.map((draft) => ({
-    photo: { id: draft.id, uri: draft.uri, caption: null, actor, at: draft.at },
+    photo: {
+      id: draft.id,
+      uri: draft.uri,
+      caption: null,
+      source: draft.source,
+      actor,
+      at: draft.at,
+    },
     context: `${context} · not saved`,
   }));
   const savedPreview: PreviewPhoto[] = saved.map((photo) => ({ photo, context }));
@@ -61,7 +69,11 @@ export function WalkPhotos({
   const save = async () => {
     if (!accountId || drafts.length === 0) return;
     try {
-      await savePhotos({ id: log.id, uris: drafts.map((draft) => draft.uri), accountId }).unwrap();
+      await savePhotos({
+        id: log.id,
+        photos: drafts.map(({ uri, source }) => ({ uri, source })),
+        accountId,
+      }).unwrap();
       dispatch(clearWalkDrafts(log.id));
       AccessibilityInfo.announceForAccessibility(`${plural(drafts.length, 'photo')} saved`);
     } catch {
@@ -72,7 +84,7 @@ export function WalkPhotos({
   const summary =
     saved.length === 0
       ? canEdit
-        ? 'Take photos with the camera below, review them, then save them to this log.'
+        ? `${hasCamera() ? 'Take photos with the camera below' : 'Upload photos below'}, review them, then save them to this log.`
         : log.status === 'signedOff'
           ? 'No photos from this shift.'
           : 'No photos yet. The Shift Managers on this form add them.'
@@ -191,7 +203,7 @@ function SavedTile({
       <Pressable
         onPress={onOpen}
         accessibilityRole="button"
-        accessibilityLabel={`View ${photo.caption ?? `shift photo ${index + 1}`}, by ${photo.actor}`}
+        accessibilityLabel={`View ${photo.caption ?? `shift photo ${index + 1}`}, by ${photo.actor}${photo.source === 'upload' ? ', uploaded' : ''}`}
         testID="walk-photo-open"
         style={({ pressed }) => pressed && styles.pressed}
       >
@@ -202,6 +214,11 @@ function SavedTile({
         <Text variant="caption" tone="muted">
           {time.format(new Date(photo.at))}
         </Text>
+        {photo.source === 'upload' ? (
+          <Text variant="caption" tone="muted" testID="walk-photo-uploaded">
+            Uploaded
+          </Text>
+        ) : null}
       </View>
     </View>
   );
