@@ -8,11 +8,11 @@ How screens in Shift Relay are put together with its design system. **Read this 
 2. **One accent.** The accent color marks the single most important action or state on a screen. Everything else is neutral.
 3. **Meaning never relies on color alone.** Every colored badge or banner also says what it means in words.
 4. **Every state is designed.** Loading, empty, error, and "stale data" look deliberate and consistent, never like a crash.
-5. **Themes and accents are free.** Anything built from semantic tokens works in light, dark, and every accent with no extra code. If a screen needs a theme check (`scheme === 'dark'`), the token is wrong.
+5. **Themes are free.** Anything built from semantic tokens works in both light and dark with no extra code. If a screen needs a theme check (`scheme === 'dark'`), the token is wrong.
 
 ### Brand palette
 
-Care blue is the default theme, with Plum and Sea glass as the only alternatives. Coral urgent/error, gold warning, and green completion colors stay fixed across themes. Palette values are in [design-system.md](docs/design-system.md#palette).
+Care blue is the one accent. Coral urgent/error, gold warning, and green completion colors stay fixed across themes. Palette values are in [design-system.md](docs/design-system.md#palette).
 
 ## Which token for what
 

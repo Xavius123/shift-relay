@@ -17,13 +17,13 @@
       "$description": "Form field boundary: 3:1 against bg and surface (WCAG 1.4.11)"
     },
     "accent": {
-      "$value": "{accent.400}",
+      "$value": "{care.400}",
       "$description": "Flips to the lighter step: the 600 step is too dark on near-black"
     },
-    "accentHover": { "$value": "{accent.300}" },
-    "accentActive": { "$value": "{accent.200}" },
+    "accentHover": { "$value": "{care.300}" },
+    "accentActive": { "$value": "{care.200}" },
     "accentFg": { "$value": "{ink.950}" },
-    "borderFocus": { "$value": "{accent.400}" },
+    "borderFocus": { "$value": "{care.400}" },
     "overlay": { "$value": "rgba(0, 0, 0, 0.6)" },
     "success": { "$value": "{status.success.dark.fg}" },
     "successBg": { "$value": "{status.success.dark.bg}" },

@@ -18,7 +18,7 @@ export type TextTone = 'default' | 'muted' | 'subtle' | 'inverse' | 'accent' | '
 
 export type FontWeightName = 'regular' | 'medium' | 'semibold' | 'bold';
 
-export type { Accent, Scheme } from './tokens/generated';
+export type { Scheme } from './tokens/generated';
 
 /** What the user picked. `system` follows the device setting. */
 export type ColorSchemePreference = 'system' | 'light' | 'dark';

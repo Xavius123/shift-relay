@@ -5,51 +5,50 @@ How tokens become a theme, how the theme reaches components, and the rules compo
 ## The flow
 
 ```
-tokens/*.json ──npm run tokens──▶ generated/*.ts ──▶ createTheme(scheme, accent) ──▶ ThemeProvider ──▶ useTheme() / makeStyles()
+tokens/*.json ──npm run tokens──▶ generated/*.ts ──▶ createTheme(scheme) ──▶ ThemeProvider ──▶ useTheme() / makeStyles()
                   │                                        ▲
                   └─▶ check-contrast (fails the build)      │
-                                                  uiSlice { colorScheme, accent }  ◀── ThemeControls (dispatch)
+                                                  uiSlice { colorScheme }  ◀── ThemeControls (dispatch)
                                                            │
                                                   AppThemeProvider resolves "system" from the device
 ```
 
-1. **Source.** `tokens/` holds W3C DTCG JSON in three tiers ([ADR 0006](decisions/0006-own-palette-and-in-repo-token-pipeline.md)).
-2. **Build.** `npm run tokens` runs Style Dictionary once per scheme × accent (6 builds), writes the typed theme and `tokens.css`, then checks contrast.
-3. **State.** `uiSlice` holds `colorScheme` (`system` / `light` / `dark`) and `accent`. A fresh session starts with Light and Care blue.
-4. **Provide.** `AppThemeProvider` reads the slice, resolves `system` with `useColorScheme()`, and passes `scheme` and `accent` to `ThemeProvider`.
+1. **Source.** `tokens/` holds W3C DTCG JSON in two tiers ([ADR 0006](decisions/0006-own-palette-and-in-repo-token-pipeline.md)).
+2. **Build.** `npm run tokens` runs Style Dictionary once per scheme (2 builds), writes the typed theme and `tokens.css`, then checks contrast.
+3. **State.** `uiSlice` holds `colorScheme` (`system` / `light` / `dark`). A fresh session starts with Light.
+4. **Provide.** `AppThemeProvider` reads the slice, resolves `system` with `useColorScheme()`, and passes `scheme` to `ThemeProvider`.
 5. **Consume.** Components call `makeStyles((t) => …)` or `useTheme()`. A change in Redux re-themes the whole app.
 
-`src/design-system/` never imports the store. `ThemeProvider` takes `scheme` and `accent` as props; `AppThemeProvider` in `features/settings` is the only bridge.
+`src/design-system/` never imports the store. `ThemeProvider` takes `scheme` as a prop; `AppThemeProvider` in `features/settings` is the only bridge.
 
 ## Token tiers
 
 | Tier | Files | Holds | Referenced as |
 |------|-------|-------|---------------|
-| Primitive | `tokens/primitive/color.json`, `scale.json` | `ink` neutrals, `care` / `plum` / `seaGlass`, status colors; spacing, size, radius, type, opacity, shadow | `{ink.50}` |
-| Accent alias | `tokens/accent/{care,plum,seaGlass}.json` | Points `accent.200…800` at one accent scale | `{accent.600}` |
+| Primitive | `tokens/primitive/color.json`, `scale.json` | `ink` neutrals, the `care` accent, status colors; spacing, size, radius, type, opacity, shadow | `{ink.50}`, `{care.600}` |
 | Semantic | `tokens/semantic/{light,dark}.json` | What components use: `bg`, `text`, `accent`, `errorBg`, … | `theme.color.textMuted` |
 
-Components read **semantic** tokens plus the spacing, radius, type, and shadow scales, never a primitive color. The accent alias makes accents cheap: semantic tokens say `{accent.600}` (light) or `{accent.400}` (dark), and each build swaps which scale `accent` points at.
+Components read **semantic** tokens plus the spacing, radius, type, and shadow scales, never a primitive color. The semantic `accent` says `{care.600}` in light and `{care.400}` in dark.
 
 ## Palette
 
-A blue-charcoal neutral (`ink`) with Care blue (default), Plum, and Sea glass accents. Accents change primary actions, links, selection, focus rings, and the `accent` Badge only. Coral (error), gold (warning), green (success), and info blue are fixed across themes, and every status carries a text label, so meaning never relies on hue alone.
+A blue-charcoal neutral (`ink`) with one accent, Care blue. The accent drives primary actions, links, selection, focus rings, and the `accent` Badge. Coral (error), gold (warning), green (success), and info blue are fixed, and every status carries a text label, so meaning never relies on hue alone.
 
-| Step | `ink` | `care` (default) | `plum` | `seaGlass` |
-|------|-------|------------------|--------|------------|
-| 0 | `#FFFFFF` | | | |
-| 25 | `#FCFCFB` | | | |
-| 50 | `#F6F7F7` | | | |
-| 100 | `#ECEFEF` | | | |
-| 200 | `#DCE1E2` | `#B7E2F2` | `#E2CDE8` | `#B8E2DB` |
-| 300 | `#C3CCCE` | `#7CCAE4` | `#C9AAD3` | `#86CCC0` |
-| 400 | `#95A3A7` | `#43ADD4` | `#B58BC3` | `#55B3A3` |
-| 500 | `#5E6F74` | `#168CB8` | `#9366A3` | `#379484` |
-| 600 | `#506166` | `#0C6F96` | `#784B88` | `#287767` |
-| 700 | `#405057` | `#0A5878` | `#623B70` | `#205F53` |
-| 800 | `#303E44` | `#08435C` | `#4D2E59` | `#194A41` |
-| 900 | `#223137` | | | |
-| 950 | `#152126` | | | |
+| Step | `ink` | `care` |
+|------|-------|--------|
+| 0 | `#FFFFFF` | |
+| 25 | `#FCFCFB` | |
+| 50 | `#F6F7F7` | |
+| 100 | `#ECEFEF` | |
+| 200 | `#DCE1E2` | `#B7E2F2` |
+| 300 | `#C3CCCE` | `#7CCAE4` |
+| 400 | `#95A3A7` | `#43ADD4` |
+| 500 | `#5E6F74` | `#168CB8` |
+| 600 | `#506166` | `#0C6F96` |
+| 700 | `#405057` | `#0A5878` |
+| 800 | `#303E44` | `#08435C` |
+| 900 | `#223137` | |
+| 950 | `#152126` | |
 
 Care blue's `600` is dark enough for white button text to reach 4.5:1.
 
@@ -70,16 +69,16 @@ Care blue's `600` is dark enough for white button text to reach 4.5:1.
 | `textSubtle` / `textPlaceholder` | `ink.500` | `ink.400` |
 | `textInverse` | `ink.0` | `ink.950` |
 | `border` / `borderStrong` | `ink.200` / `ink.300` | `ink.800` / `ink.700` |
-| `accent` / `accentHover` / `accentActive` | accent `600` / `700` / `800` | accent `400` / `300` / `200` |
+| `accent` / `accentHover` / `accentActive` | `care.600` / `care.700` / `care.800` | `care.400` / `care.300` / `care.200` |
 | `accentFg` | `ink.0` | `ink.950` |
-| `borderFocus` | accent `500` | accent `400` |
+| `borderFocus` | `care.500` | `care.400` |
 | `overlay` | `rgba(21, 33, 38, 0.5)` | `rgba(0, 0, 0, 0.6)` |
 
 The accent flips in dark mode because a mid-tone that reads on white is too dark on near-black. The semantic name stays the same while the primitive changes; that is what the semantic tier is for.
 
 ## Contrast gate
 
-`scripts/check-contrast.mjs` checks 32 pairs in each of the 6 themes (192 checks) and **fails the token build** on any miss: text on backgrounds (4.5), accent as text (4.5), text on accent fills (4.5), status on its fill and on backgrounds (4.5), Button danger and secondary-pressed text (4.5), and placeholder, focus ring, and input border (3.0). The lowest text pair is dark Plum `accent` on `surface` at 4.77.
+`scripts/check-contrast.mjs` checks 32 pairs in each of the 2 themes (64 checks) and **fails the token build** on any miss: text on backgrounds (4.5), accent as text (4.5), text on accent fills (4.5), status on its fill and on backgrounds (4.5), Button danger and secondary-pressed text (4.5), and placeholder, focus ring, and input border (3.0). The lowest text pair is light `error` on `errorBg` at 4.81.
 
 **Rule:** `textSubtle` is never placed on `bgSubtle` (4.35 in light). Use `textMuted` there.
 
@@ -110,12 +109,10 @@ All in `src/design-system/tokens/generated/`, committed, never hand-edited.
 | File | Contents |
 |------|----------|
 | `base.ts` | The scales above |
-| `light.ts`, `dark.ts` | Semantic colors with the default accent |
-| `accents.ts` | Per accent × scheme, only the colors that differ from Care blue |
-| `palette.ts` | Primitive colors, for the design system screen only |
-| `index.ts` | `ColorTokens`, `Scheme`, `schemes`, typed overrides |
-| `tokens.css` | CSS variables: `:root`, `[data-theme="dark"]`, `[data-accent="…"]` |
-| `themes.json` | All 6 color sets, flat, read by `check-contrast` |
+| `light.ts`, `dark.ts` | Semantic colors |
+| `index.ts` | `ColorTokens`, `Scheme`, `schemes` |
+| `tokens.css` | CSS variables: `:root` (light) and `[data-theme="dark"]` |
+| `themes.json` | Both color sets, flat, read by `check-contrast` |
 
 Transforms in `scripts/build-tokens.mjs`:
 
@@ -129,8 +126,7 @@ Transforms in `scripts/build-tokens.mjs`:
 ## Type safety
 
 - `ColorTokens` is derived from `light.color`, and `schemes` is `Record<Scheme, { color: ColorTokens }>`, so **a key missing from `dark` is a compile error**.
-- Accent overrides are `Record<Accent, Record<Scheme, Partial<ColorTokens>>>`: every accent covers both schemes and can only override real tokens.
-- `Theme = typeof base & { scheme; accent; color: ColorTokens }`. Scales keep literal types, so `t.fontWeight.semibold` is `'600'`, not `string`.
+- `Theme = typeof base & { scheme; color: ColorTokens }`. Scales keep literal types, so `t.fontWeight.semibold` is `'600'`, not `string`.
 - Shared unions (`Size`, `ButtonVariant`, `StatusVariant`, `CardVariant`, `CardPadding`, `TextVariant`, `TextTone`, `ColorSchemePreference`) live in `src/design-system/types.ts`.
 
 ## Using the theme
@@ -159,7 +155,6 @@ const useStyles = makeStyles((t) => ({
 |------|-------|
 | Change a color | Edit `tokens/primitive/color.json`, then `npm run tokens`. A contrast failure names the pair |
 | Add a semantic token | Add it to **both** `semantic/light.json` and `dark.json`, then `npm run tokens`. Missing from one is a typecheck error |
-| Add an accent | Add the scale to `color.json`, add `tokens/accent/{name}.json`, add the name to `ACCENTS` in `build-tokens.mjs`, then `npm run tokens` |
 | Add a scale step | Edit `tokens/primitive/scale.json`, then `npm run tokens` |
 
 ## Components
@@ -188,7 +183,7 @@ Each component is a folder with `Component.tsx` and `index.ts`, exported from `s
 
 | Test | Checks |
 |------|--------|
-| `e2e/theme.spec.ts` | Dark toggle changes the background and carries across screens; `system` follows the device; accent choice is checked (`aria-checked`) and recolors the chip |
+| `e2e/theme.spec.ts` | Dark toggle changes the background and carries across screens; `system` follows the device; the chosen scheme is `aria-checked` |
 | `e2e/design-system.spec.ts` | Every component, variant, and size renders with its `testID` |
 | `npm run typecheck` | Theme completeness |
 | `npm run tokens` | Contrast |

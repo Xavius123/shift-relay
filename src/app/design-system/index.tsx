@@ -1,6 +1,6 @@
 import { DesignSystemReference } from '@/features/reference/DesignSystemReference';
 
-// Theme controls, component showcase, tokens.
+// Theme controls, failure simulator, component showcase.
 export default function DesignSystemRoute() {
   return <DesignSystemReference />;
 }

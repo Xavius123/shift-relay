@@ -1,23 +1,22 @@
 import { createContext, type ReactNode, useContext, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 
-import type { Accent, Scheme } from '../types';
+import type { Scheme } from '../types';
 import { createTheme, type Theme } from './theme';
 
 const ThemeContext = createContext<Theme | null>(null);
 
 interface ThemeProviderProps {
   scheme: Scheme;
-  accent: Accent;
   children: ReactNode;
 }
 
 /**
- * Provides the theme for a scheme × accent. The design system never reads the store:
- * the app decides the scheme and accent and passes them in.
+ * Provides the theme for a scheme. The design system never reads the store:
+ * the app decides the scheme and passes it in.
  */
-export function ThemeProvider({ scheme, accent, children }: ThemeProviderProps) {
-  const theme = useMemo(() => createTheme(scheme, accent), [scheme, accent]);
+export function ThemeProvider({ scheme, children }: ThemeProviderProps) {
+  const theme = useMemo(() => createTheme(scheme), [scheme]);
   return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>;
 }
 

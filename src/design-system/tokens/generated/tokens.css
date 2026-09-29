@@ -20,20 +20,6 @@
   --dk-care-600: #0c6f96;
   --dk-care-700: #0a5878;
   --dk-care-800: #08435c;
-  --dk-plum-200: #e2cde8;
-  --dk-plum-300: #c9aad3;
-  --dk-plum-400: #b58bc3;
-  --dk-plum-500: #9366a3;
-  --dk-plum-600: #784b88;
-  --dk-plum-700: #623b70;
-  --dk-plum-800: #4d2e59;
-  --dk-sea-glass-200: #b8e2db;
-  --dk-sea-glass-300: #86ccc0;
-  --dk-sea-glass-400: #55b3a3;
-  --dk-sea-glass-500: #379484;
-  --dk-sea-glass-600: #287767;
-  --dk-sea-glass-700: #205f53;
-  --dk-sea-glass-800: #194a41;
   --dk-status-success-light-fg: #247563;
   --dk-status-success-light-bg: #e2f4f0;
   --dk-status-success-dark-fg: #65c5b2;
@@ -91,13 +77,6 @@
   --dk-shadow-sm: 0px 1px 2px 0px rgba(16, 19, 23, 0.08);
   --dk-shadow-md: 0px 4px 8px -2px rgba(16, 19, 23, 0.1);
   --dk-shadow-lg: 0px 12px 24px -4px rgba(16, 19, 23, 0.14);
-  --dk-accent-200: #b7e2f2;
-  --dk-accent-300: #7ccae4;
-  --dk-accent-400: #43add4;
-  --dk-accent-500: #168cb8;
-  --dk-accent-600: #0c6f96;
-  --dk-accent-700: #0a5878;
-  --dk-accent-800: #08435c;
   --dk-color-bg: #f6f7f7;
   --dk-color-surface: #ffffff;
   --dk-color-bg-subtle: #ecefef;
@@ -124,20 +103,6 @@
   --dk-color-error-bg: #fbe8ec;
   --dk-color-info: #0c6f96;
   --dk-color-info-bg: #e2f2f8;
-}
-
-[data-accent='plum'] {
-  --dk-color-accent: #784b88;
-  --dk-color-accent-hover: #623b70;
-  --dk-color-accent-active: #4d2e59;
-  --dk-color-border-focus: #9366a3;
-}
-
-[data-accent='seaGlass'] {
-  --dk-color-accent: #287767;
-  --dk-color-accent-hover: #205f53;
-  --dk-color-accent-active: #194a41;
-  --dk-color-border-focus: #379484;
 }
 
 [data-theme='dark'] {
@@ -167,18 +132,4 @@
   --dk-color-error-bg: #35171e;
   --dk-color-info: #65bcdb;
   --dk-color-info-bg: #122b35;
-}
-
-[data-theme='dark'][data-accent='plum'] {
-  --dk-color-accent: #b58bc3; /** Flips to the lighter step: the 600 step is too dark on near-black */
-  --dk-color-accent-hover: #c9aad3;
-  --dk-color-accent-active: #e2cde8;
-  --dk-color-border-focus: #b58bc3;
-}
-
-[data-theme='dark'][data-accent='seaGlass'] {
-  --dk-color-accent: #55b3a3; /** Flips to the lighter step: the 600 step is too dark on near-black */
-  --dk-color-accent-hover: #86ccc0;
-  --dk-color-accent-active: #b8e2db;
-  --dk-color-border-focus: #55b3a3;
 }

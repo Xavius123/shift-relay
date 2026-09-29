@@ -41,10 +41,10 @@ Report it as **manual ✓ (date)** or **not done**, never as an automated pass.
 | Target | Cases |
 |--------|-------|
 | Log selectors / grouping | today phases, 21-day history, and open priority issues |
-| `uiSlice` | toggle scheme, set accent |
+| `uiSlice` | set the color scheme |
 | `mockBaseQuery` | query success; log sign-off and issue completion; `simulateFailure` returns an error; unknown id returns 404 |
 | Contrast script | fails on a too-light color, passes on the real palette |
-| Theme | light, dark, and each accent have every `ColorTokens` key |
+| Theme | light and dark have every `ColorTokens` key |
 | `Button` | renders label; `onPress` fires; not fired when disabled or loading |
 | `Badge` | `max` overflow shows `{max}+` |
 

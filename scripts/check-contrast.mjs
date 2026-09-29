@@ -1,4 +1,4 @@
-// `npm run tokens` (step 2 of 2): checks every required color pair in every scheme × accent
+// `npm run tokens` (step 2 of 2): checks every required color pair in light and dark
 // against its WCAG 2.x minimum, and exits 1 if any pair fails. Pairs are listed in
 // docs/design-system.md.
 //
@@ -72,7 +72,7 @@ const selfTest = process.argv.includes('--self-test');
 
 if (selfTest) {
   const broken = structuredClone(themes);
-  broken['light/care'].textMuted = '#C3CCCE';
+  broken.light.textMuted = '#C3CCCE';
   const { failures } = check(broken);
   if (failures.length === 0) {
     console.error('contrast self-test: FAILED. A too-light textMuted was not caught.');

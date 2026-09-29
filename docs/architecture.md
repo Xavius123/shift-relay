@@ -14,7 +14,7 @@ src/
     issues/         Issue form, list, categories, permissions
     logs/           Mock API, seed, Daily Sheets, log modal, Shift Photos
     manager/        Weekly metrics and open issues on Elena's Dashboard
-    reference/      Design system showcase
+    reference/      Design system screen: theme switch, failure simulator, components
     settings/       Theme and filter UI state
     shell/          Responsive navigation and shared headers
   store/            Redux store and typed hooks

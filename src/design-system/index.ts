@@ -1,7 +1,7 @@
 // Public API of the design system. Features import from '@/design-system' only.
 export { makeStyles, ThemeProvider, useTheme } from './theme/ThemeProvider';
 export { createTheme, type Theme } from './theme/theme';
-export { accentNames, defaultAccent, palette, type ColorTokens } from './tokens/generated';
+export type { ColorTokens } from './tokens/generated';
 export type * from './types';
 
 export { Badge, type BadgeProps } from './components/Badge';

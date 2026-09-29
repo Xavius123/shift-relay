@@ -1,13 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { type Accent, type ColorSchemePreference, defaultAccent } from '@/design-system';
+import type { ColorSchemePreference } from '@/design-system';
 import { defaultLogSort, type LogSort } from '@/features/logs/logFilters';
 
 export type IssuesFilter = 'open' | 'resolved' | 'all';
 
 export interface UiState {
   colorScheme: ColorSchemePreference;
-  accent: Accent;
   /** Logs screen: free-text filter and whether rows are grouped into Daily Sheets. */
   logsSearch: string;
   logsGroupByDay: boolean;
@@ -17,7 +16,6 @@ export interface UiState {
 
 const initialState: UiState = {
   colorScheme: 'light',
-  accent: defaultAccent,
   logsSearch: '',
   logsGroupByDay: true,
   logsSort: defaultLogSort,
@@ -30,9 +28,6 @@ export const uiSlice = createSlice({
   reducers: {
     setColorScheme(state, action: PayloadAction<ColorSchemePreference>) {
       state.colorScheme = action.payload;
-    },
-    setAccent(state, action: PayloadAction<Accent>) {
-      state.accent = action.payload;
     },
     setLogsSearch(state, action: PayloadAction<string>) {
       state.logsSearch = action.payload;
@@ -49,7 +44,6 @@ export const uiSlice = createSlice({
   },
   selectors: {
     selectColorScheme: (state) => state.colorScheme,
-    selectAccent: (state) => state.accent,
     selectLogsSearch: (state) => state.logsSearch,
     selectLogsGroupByDay: (state) => state.logsGroupByDay,
     selectLogsSort: (state) => state.logsSort,
@@ -57,17 +51,10 @@ export const uiSlice = createSlice({
   },
 });
 
-export const {
-  setColorScheme,
-  setAccent,
-  setLogsSearch,
-  setLogsGroupByDay,
-  setLogsSort,
-  setIssuesFilter,
-} = uiSlice.actions;
+export const { setColorScheme, setLogsSearch, setLogsGroupByDay, setLogsSort, setIssuesFilter } =
+  uiSlice.actions;
 export const {
   selectColorScheme,
-  selectAccent,
   selectLogsSearch,
   selectLogsGroupByDay,
   selectLogsSort,

@@ -31,7 +31,7 @@ This app was built with a combination of **Cursor**, **Claude** (Opus and Sonnet
 4. **Logs**: today and 21 complete operational days, grouped by date, with search and sorting
 5. **Issues**: flag, resolve, and filter high-priority issues
 6. **Shift Photos** (every account): each day's saved photos, newest first, split into Morning, Midday, and Night, with a placeholder only where today's shifts have none yet (every finished shift has one or two fictional drawings, including a mouse on duty); tap one to view it full size, or open the sheet it came from. Only Elena can delete a saved photo
-7. **Design system**: light/dark themes, selectable accents, components, and the simulated-failure control
+7. **Design system**: light/dark themes, every component, and the simulated-failure control
 
 Everyone who signs, checks, raises, resolves, or photographs something shows as initials beside it.
 

@@ -18,7 +18,7 @@
   },
   "care": {
     "$type": "color",
-    "$description": "Default accent: care blue",
+    "$description": "The accent: care blue",
     "200": { "$value": "#B7E2F2" },
     "300": { "$value": "#7CCAE4" },
     "400": { "$value": "#43ADD4" },
@@ -26,28 +26,6 @@
     "600": { "$value": "#0C6F96" },
     "700": { "$value": "#0A5878" },
     "800": { "$value": "#08435C" }
-  },
-  "plum": {
-    "$type": "color",
-    "$description": "Optional accent: muted plum",
-    "200": { "$value": "#E2CDE8" },
-    "300": { "$value": "#C9AAD3" },
-    "400": { "$value": "#B58BC3" },
-    "500": { "$value": "#9366A3" },
-    "600": { "$value": "#784B88" },
-    "700": { "$value": "#623B70" },
-    "800": { "$value": "#4D2E59" }
-  },
-  "seaGlass": {
-    "$type": "color",
-    "$description": "Optional accent: sea-glass teal",
-    "200": { "$value": "#B8E2DB" },
-    "300": { "$value": "#86CCC0" },
-    "400": { "$value": "#55B3A3" },
-    "500": { "$value": "#379484" },
-    "600": { "$value": "#287767" },
-    "700": { "$value": "#205F53" },
-    "800": { "$value": "#194A41" }
   },
   "status": {
     "$type": "color",
